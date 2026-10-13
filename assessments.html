@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 Assessments</title>
+<meta name="description" content="GED 106 assessments: grade weights, CLO distribution, and details of every quiz, lab assignment, exam and the final project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+/* Layout: one reading column; summary (weights, CLO matrix) first, then the week-by-week CLO grid, then one block per assessment. */
+:root{--c1:#1F6F8B;--c2:#9C3D6E;--c3:#B4562F;--c4:#2E7D5B;--c5:#5B3FA8;--wk:#2F55C8;--wk-soft:rgba(47,85,200,.10)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#7CC4DE;--c2:#EE9CC4;--c3:#F2A07E;--c4:#7FD3AA;--c5:#B9A3F5;--wk:#8AA6FF;--wk-soft:rgba(138,166,255,.14)}}
+:root[data-theme="dark"]{--c1:#7CC4DE;--c2:#EE9CC4;--c3:#F2A07E;--c4:#7FD3AA;--c5:#B9A3F5;--wk:#8AA6FF;--wk-soft:rgba(138,166,255,.14)}
+.wrap{max-width:1060px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.top a{font-family:var(--f-display);text-decoration:none;color:var(--muted)}
+.top a b{color:var(--ink)}
+h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:800;letter-spacing:-.03em;margin:36px 0 8px}
+.lede{font-family:var(--f-display);color:var(--muted);max-width:62ch;margin:0 0 28px}
+h2.sec{font-size:1.45rem;font-weight:800;margin:44px 0 6px}
+.sub{font-family:var(--f-display);color:var(--muted);margin:0 0 16px;font-size:.95rem;max-width:70ch}
+nav.jump{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+nav.jump a{font-family:var(--f-display);font-size:.86rem;border:1px solid var(--line);border-radius:999px;padding:5px 12px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.weights{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.weights div{border:1px solid var(--line);border-radius:10px;padding:12px;font-family:var(--f-display);font-size:.86rem;background:var(--surface)}
+.weights b{display:block;font-size:1.9rem;line-height:1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:12px 0 0;border:1px solid var(--line)}
+.bar i{display:block;height:100%}
+.scroll{overflow-x:auto}
+table.m{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.88rem;background:var(--surface);border-radius:10px;overflow:hidden}
+table.m th,table.m td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:middle}
+table.m thead th{background:var(--sunk);font-weight:700}
+table.m td.c,table.m th.c{text-align:center;width:52px;font-variant-numeric:tabular-nums}
+table.m th.c span{color:var(--cc);font-family:var(--f-mono);font-size:.78rem}
+.tick{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:color-mix(in srgb,var(--cc) 18%,transparent);color:var(--cc);font-weight:800}
+.clos{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.clos div{font-family:var(--f-display);font-size:.84rem;border-top:3px solid var(--cc);padding-top:8px}
+.clos b{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--cc);display:block;margin-bottom:2px}
+.grid{display:grid;grid-template-columns:150px repeat(15,minmax(30px,1fr));gap:3px;font-family:var(--f-display);font-size:.78rem;min-width:620px}
+.grid .h{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);text-align:center;padding:4px 0}
+.grid .rl{font-weight:700;color:var(--cc);padding:6px 4px;display:flex;align-items:center;gap:6px}
+.grid .rl small{font-weight:400;color:var(--muted);font-family:var(--f-mono);font-size:.68rem}
+.cell{height:30px;border-radius:5px;background:var(--sunk);display:grid;place-items:center;font-family:var(--f-mono);font-size:.66rem;font-weight:600}
+.cell.L{background:var(--cc);color:var(--bg)}
+.cell.B{background:color-mix(in srgb,var(--cc) 28%,transparent);color:var(--ink);border:1.5px solid var(--cc)}
+.cell.LB{background:var(--cc);color:var(--bg);box-shadow:inset 0 0 0 2px var(--bg)}
+.legend2{display:flex;flex-wrap:wrap;gap:14px;font-family:var(--f-display);font-size:.82rem;color:var(--muted);margin-top:10px}
+.legend2 span{display:inline-flex;align-items:center;gap:6px}
+.legend2 i{width:16px;height:16px;border-radius:4px;display:inline-block}
+.as{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:18px 20px;margin-bottom:14px;display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 20px}
+.as .when{font-family:var(--f-mono);font-size:.74rem;color:var(--muted);letter-spacing:.04em}
+.as .when b{display:block;font-family:var(--f-display);font-size:1.1rem;color:var(--ink);letter-spacing:0;margin-bottom:4px}
+.as h3{font-size:1.15rem;font-weight:800;margin-bottom:6px}
+.as p{margin:0 0 10px;max-width:68ch}
+.as ul{margin:0 0 10px;padding-left:1.1em}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip2{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--line);border-radius:999px;padding:3px 9px;background:var(--bg)}
+.chip2.clo{border-color:var(--cc);color:var(--cc)}
+.chip2.w{border-color:var(--wk);color:var(--wk);font-weight:600}
+.quote{border-left:3px solid var(--line);padding-left:12px;color:var(--muted);font-style:italic}
+.links a{font-family:var(--f-display);font-weight:700;margin-right:14px}
+.ms{display:grid;gap:6px;margin:6px 0 12px}
+.ms div{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;font-family:var(--f-display);font-size:.9rem}
+.ms div span:first-child{font-family:var(--f-mono);font-size:.76rem;color:var(--muted);padding-top:2px}
+.foot{margin-top:30px;font-family:var(--f-display);font-size:.84rem;color:var(--muted)}
+@media (max-width:760px){.weights{grid-template-columns:repeat(2,minmax(0,1fr))}.clos{grid-template-columns:repeat(2,minmax(0,1fr))}.as{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:420px){.clos{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">← <b>GED 106</b> · Course map</a><button type="button" class="pill" id="theme">◐ Theme</button></div>
+
+  <h1>Assessments</h1>
+  <p class="lede">How your GED 106 grade is made: the weight of each assessment, which Course Learning Outcomes (CLOs) it tests, and what to prepare for each one. Exact dates are announced on Moodle.</p>
+  <nav class="jump" aria-label="On this page"><a href="#weights">Grade weights</a><a href="#clo-map">CLO map</a><a href="#weeks">CLOs by week</a><a href="#quizzes">Quizzes</a><a href="#labs">Lab work</a><a href="#midterm">Midterm</a><a href="#project">Final project</a></nav>
+
+  <h2 class="sec" id="weights">Grade weights</h2>
+  <p class="sub">From Section 8 of the syllabus. The course is split 50:50 between lecture-based and lab-based assessment.</p>
+  <div class="weights">
+    <div><b>30%</b>Coursework: Quiz 1, Quiz 2</div>
+    <div><b>30%</b>Lab Work: Excel Lab Assignment, Weekly Lab Work</div>
+    <div><b>20%</b>Midterm Examination</div>
+    <div><b>20%</b>Final Project: Project (Report), Project (Presentation)</div>
+  </div>
+  <div class="bar" role="img" aria-label="Grade split: coursework 30%, lab work 30%, midterm 20%, final project 20%"><i style="width:30%;background:var(--c1)"></i><i style="width:30%;background:var(--c4)"></i><i style="width:20%;background:var(--c2)"></i><i style="width:20%;background:var(--c5)"></i></div>
+
+  <h2 class="sec" id="clo-map">Which CLOs each assessment tests</h2>
+  <p class="sub">As in the syllabus assessment table. Use it to decide what to revise for each assessment.</p>
+  <div class="clos">
+    <div style="--cc:var(--c1)"><b>CLO-1</b>Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors</div>
+    <div style="--cc:var(--c2)"><b>CLO-2</b>Interpret basic data and visualizations using appropriate terms and everyday examples.</div>
+    <div style="--cc:var(--c3)"><b>CLO-3</b>Apply descriptive and diagnostic analytics to solve interdisciplinary problems.</div>
+    <div style="--cc:var(--c4)"><b>CLO-4</b>Use data tools (e.g., Microsoft Excel, Forms) to clean, organize, and present simple datasets.</div>
+    <div style="--cc:var(--c5)"><b>CLO-5</b>Design an interactive data visualization dashboard.</div>
+  </div>
+  <div class="scroll"><table class="m" id="matrix"></table></div>
+
+  <h2 class="sec" id="weeks">CLOs week by week</h2>
+  <p class="sub">Where each CLO is taught across the 15 weeks, from the lecture and lab schedules. Darker squares are lectures; outlined squares are labs.</p>
+  <div class="scroll"><div class="grid" id="grid"></div></div>
+  <div class="legend2"><span><i style="background:var(--muted)"></i>Lecture (L)</span><span><i style="border:1.5px solid var(--muted);background:var(--sunk)"></i>Lab (B)</span><span><i style="background:var(--muted);box-shadow:inset 0 0 0 2px var(--bg)"></i>Both</span></div>
+
+  <h2 class="sec" id="quizzes">Quizzes · 30%</h2>
+  <div class="as">
+    <div class="when"><b>Quiz 1</b>Week 5 · in class</div>
+    <div>
+      <div class="chips"><span class="chip2 w">Part of 30% coursework</span><span class="chip2 clo" style="--cc:var(--c1)">CLO-1</span><span class="chip2 clo" style="--cc:var(--c2)">CLO-2</span><span class="chip2 clo" style="--cc:var(--c3)">CLO-3</span></div>
+      <p class="quote">“Two quizzes … assess foundational understanding of data literacy principles, ethics, governance, and analytical reasoning using Excel and Forms. They are designed to evaluate CLO1, CLO2, and CLO3.”</p>
+      <p><b>Covers:</b> Weeks 1–4: the world of data, the four pillars, data collection and surveys, the four levels of analytics.</p>
+      <p><b>Last year's format:</b> 15 marks in 45 minutes, closed book: 5 MCQs, survey practice, and an industry scenario with a data table.</p>
+      <div class="links"><a href="practice-quiz1.html">Practice Quiz 1 →</a><a href="week-05.html#s6">Week 5 warm-up →</a></div>
+    </div>
+  </div>
+  <div class="as">
+    <div class="when"><b>Quiz 2</b>Week 12 · in class</div>
+    <div>
+      <div class="chips"><span class="chip2 w">Part of 30% coursework</span><span class="chip2 clo" style="--cc:var(--c1)">CLO-1</span><span class="chip2 clo" style="--cc:var(--c2)">CLO-2</span><span class="chip2 clo" style="--cc:var(--c3)">CLO-3</span></div>
+      <p><b>Covers:</b> the weeks after the midterm: Data-Informed Decision-Making (Ask; Acquire; Analyse; Integrate; Iterate), Charts and Graphics, Data Visualization and Storytelling (The Three Components of a Data Story), and Begin Your Data &amp; Analytics Journey.</p>
+      <p><b>How to prepare:</b> be able to choose the right chart for a question, read a chart critically (axis, scale, source), and explain the steps of a data-informed decision with an example.</p>
+    </div>
+  </div>
+
+  <h2 class="sec" id="labs">Lab work · 30%</h2>
+  <p class="sub">Excel Lab Assignment plus Weekly Lab Work. The syllabus lists three graded lab assignments, spread across the semester, together with in-class lab exercises.</p>
+  <div class="as">
+    <div class="when"><b>Lab assignment</b>Week 6</div>
+    <div>
+      <div class="chips"><span class="chip2">Data Cleaning &amp; Preparation</span><span class="chip2 clo" style="--cc:var(--c2)">CLO-2</span><span class="chip2 clo" style="--cc:var(--c4)">CLO-4</span></div>
+      <p><b>Task:</b> Identify and address inconsistencies, missing values, and outliers to ensure data quality.</p>
+      <ul><li>Keep the raw data; clean in a new sheet called <b>Clean</b>.</li><li>Record every change in a sheet called <b>Log</b>.</li><li>Flag doubtful values; never invent missing answers.</li></ul>
+      <div class="links"><a href="week-06.html#s6">Lab 6 practice →</a></div>
+    </div>
+  </div>
+  <div class="as">
+    <div class="when"><b>Lab assignment</b>Week 9</div>
+    <div>
+      <div class="chips"><span class="chip2">Analytical Functions &amp; Visualization</span><span class="chip2 clo" style="--cc:var(--c3)">CLO-3</span><span class="chip2 clo" style="--cc:var(--c4)">CLO-4</span></div>
+      <p><b>Task:</b> use Excel formulas (AVERAGE, COUNTIF, IF, VLOOKUP) on your cleaned dataset, then present the results in clear charts.</p>
+      <ul><li>Each formula should answer a question about your data, with a one-sentence interpretation.</li><li>Charts need a title, labelled axes with units, and an honest scale.</li><li>Remove any column that could identify a respondent before sharing.</li></ul>
+      <div class="links"><a href="week-07.html#s8">Lab 7 function practice →</a></div>
+    </div>
+  </div>
+  <div class="as">
+    <div class="when"><b>Lab assignment</b>Week 12</div>
+    <div>
+      <div class="chips"><span class="chip2">Project Draft &amp; Feedback Integration</span><span class="chip2 clo" style="--cc:var(--c3)">CLO-3</span><span class="chip2 clo" style="--cc:var(--c4)">CLO-4</span></div>
+      <p><b>Task:</b> Implement peer or instructor feedback to enhance report quality, structure, and clarity.</p>
+      <ul><li>Submit your draft with a short list: feedback received → change made.</li><li>This is the first full version of your final project, so it counts twice: once here and again in Weeks 14–15.</li></ul>
+    </div>
+  </div>
+  <div class="as">
+    <div class="when"><b>Weekly lab work</b>Every week</div>
+    <div>
+      <div class="chips"><span class="chip2">In-class lab exercises</span><span class="chip2 clo" style="--cc:var(--c2)">CLO-2</span><span class="chip2 clo" style="--cc:var(--c3)">CLO-3</span><span class="chip2 clo" style="--cc:var(--c4)">CLO-4</span></div>
+      <p>Each lecture page ends with that week's lab. Weeks 9–12 are marked as <b>In-class lab exercise</b> in the syllabus: Project Scoping and Dataset Selection, Data Visualization Techniques, Drafting Project Reports, and Iterative Feedback and Refinement. Week 13 includes the <b>Project draft submission</b>.</p>
+      <p>Keep all lab files in your OneDrive <b>GED106 / Labs</b> folder, named <b>LabNN_YourName</b>.</p>
+    </div>
+  </div>
+
+  <h2 class="sec" id="midterm">Midterm examination · 20%</h2>
+  <div class="as">
+    <div class="when"><b>Midterm</b>Week 8 or 9 · confirm on Moodle</div>
+    <div>
+      <div class="chips"><span class="chip2 w">20%</span><span class="chip2 clo" style="--cc:var(--c2)">CLO-2</span><span class="chip2 clo" style="--cc:var(--c3)">CLO-3</span></div>
+      <p class="quote">“The midterm tests students' ability to interpret data, apply descriptive/diagnostic analytics, and demonstrate literacy with Microsoft-based tools.”</p>
+      <p><b>Covers:</b> Weeks 1–8, including data ethics.</p>
+      <p><b>Last year's format:</b> 20 marks in 90 minutes, closed book: ethics and governance (6), reading and interpreting charts and a table (7), descriptive and diagnostic analytics on a case (7).</p>
+      <div class="links"><a href="practice-midterm.html">Practice Midterm →</a><a href="review.html">Midterm review →</a></div>
+    </div>
+  </div>
+
+  <h2 class="sec" id="project">Final project · 20%</h2>
+  <div class="as">
+    <div class="when"><b>Final project</b>Report + presentation · Weeks 14–15</div>
+    <div>
+      <div class="chips"><span class="chip2 w">20%</span><span class="chip2">Group project</span><span class="chip2 clo" style="--cc:var(--c4)">CLO-4</span><span class="chip2 clo" style="--cc:var(--c5)">CLO-5</span></div>
+      <p class="quote">“Students design and present a complete interactive data dashboard using Microsoft 365 and Power BI. The report and presentation (Weeks 14–15) evaluate CLO4 and CLO5, demonstrating the student's ability to communicate actionable insights using real-world data tools.”</p>
+      <p>The project also includes an <b>ethical reflection on your data decisions</b>. Your Week 8 ethics check is its first draft.</p>
+      <p><b>Milestones</b></p>
+      <div class="ms">
+        <div><span>Week 9</span><span>Project Scoping and Dataset Selection: select a real-world dataset aligned with personal or academic interests. Define research questions and key variables.</span></div>
+        <div><span>Week 10</span><span>Data Visualization Techniques: create meaningful data visuals (bar charts, pie charts, line graphs).</span></div>
+        <div><span>Week 11</span><span>Drafting Project Reports: begin constructing a project report with data narratives, insights, and visual evidence.</span></div>
+        <div><span>Week 12</span><span>Iterative Feedback and Refinement (graded lab assignment).</span></div>
+        <div><span>Week 13</span><span>Presentation Skills Development · <b>Project draft submission</b>.</span></div>
+        <div><span>Week 14</span><span>Final Project Presentation: a polished presentation with a data dashboard and insights summary.</span></div>
+        <div><span>Week 15</span><span>Final Presentations and Feedback · <b>Projects Submission</b> · Group project presentation.</span></div>
+      </div>
+      <p><b>Tools:</b> Excel or Power BI for the dashboard (the rubric accepts either). Power BI Desktop is a free download for Windows; Excel works on any computer with your CUD Microsoft 365 account.</p>
+      <p><b>Grading rubric</b> (5 criteria × 4 marks = 20 marks)</p>
+      <div class="scroll"><table class="m"><thead><tr><th>Criteria</th><th>Excellent (A) 90–100%</th><th>Good (B) 80–89%</th><th>Satisfactory (C) 70–79%</th><th>Needs Improvement (D/F) Below 70%</th></tr></thead><tbody>
+        <tr><td><b>Data Preparation &amp; Integration</b> (4 Marks)</td><td>Data is clean, well-structured, and relevant; sources are well-documented.</td><td>Minor data inconsistencies; mostly appropriate sources.</td><td>Some issues exist in the structure, or there is missing documentation.</td><td>The data is poorly prepared or has unclear source integration.</td></tr>
+        <tr><td><b>Dashboard Functionality &amp; Design</b> (Power BI / Excel dashboard) (4 Marks)</td><td>Fully interactive dashboard, logical layout, and excellent user navigation.</td><td>Mostly functional; minor layout issues.</td><td>Limited interactivity or clarity.</td><td>Poor layout; non-functional or hard to navigate.</td></tr>
+        <tr><td><b>Data Visualization &amp; Communication</b> (4 Marks)</td><td>Visuals enhance storytelling, and the appropriate use of type and format.</td><td>Visuals are mostly relevant; minor mismatches in types used.</td><td>Visuals present but lack clarity or are inconsistent.</td><td>Poor or missing visuals; ineffective storytelling.</td></tr>
+        <tr><td><b>Insight Generation &amp; Interpretation</b> (4 Marks)</td><td>Insightful, well-reasoned analysis is supported by visuals and context.</td><td>Good observations; some reasoning lacks depth.</td><td>Basic insights with limited context.</td><td>Unclear or unsupported conclusions.</td></tr>
+        <tr><td><b>Presentation &amp; Delivery</b> (4 Marks)</td><td>Clear, confident delivery; visually engaging; questions well-handled.</td><td>Mostly clear; minor timing or confidence issues.</td><td>The presentation is understandable but lacks engagement.</td><td>Disorganized or unprepared; unclear communication.</td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+
+  <p class="foot">Source: GED 106 course syllabus, Sections 4, 8, 9 and 12. Academic integrity: the maximum permissible similarity index is 20% for assignments submitted through Turnitin. If any date here differs from Moodle, Moodle is correct.</p>
+</div>
+
+<script src="assets/course.js"></script>
+<script>
+document.getElementById('theme').addEventListener('click',()=>GED102Theme.toggle());
+/* Assessment × CLO table, as in syllabus Section 8 */
+const A=[['Coursework','Quiz 1, Quiz 2',30,[1,2,3]],['Lab Work','Excel Lab Assignment, Weekly Lab Work',30,[2,3,4]],['Midterm Examination','',20,[2,3]],['Final Project','Project (Report), Project (Presentation)',20,[4,5]]];
+const tick=c=>`<span class="tick" style="--cc:var(--c${c})">✓</span>`;
+const count=c=>A.filter(r=>r[3].includes(c)).length;
+document.getElementById('matrix').innerHTML=`<thead><tr><th>Assessment</th><th class="c">%</th>${[1,2,3,4,5].map(c=>`<th class="c" style="--cc:var(--c${c})"><span>CLO-${c}</span></th>`).join('')}</tr></thead><tbody>${A.map(([t,s,w,cl])=>`<tr><td><b>${t}</b>${s?`<br><span style="color:var(--muted);font-size:.84rem">${s}</span>`:''}</td><td class="c"><b>${w}</b></td>${[1,2,3,4,5].map(c=>`<td class="c">${cl.includes(c)?tick(c):''}</td>`).join('')}</tr>`).join('')}
+ <tr><td style="color:var(--muted)">Assessed in</td><td class="c">100</td>${[1,2,3,4,5].map(c=>`<td class="c" style="color:var(--muted);font-size:.78rem">${count(c)} of 4</td>`).join('')}</tr></tbody>`;
+/* CLO by week: L = lecture schedule (4.1), B = lab schedule (4.2) */
+const LEC={1:[1],2:[1],3:[3],4:[1],5:[1],6:[1],7:[1],8:[1],9:[5],10:[2],11:[2,4],12:[1,5],13:[4],14:[4],15:[]};
+const LAB={1:[4],2:[4],3:[3],4:[3,4],5:[4],6:[4,2],7:[4,3],8:[],9:[4,3],10:[4],11:[4,3],12:[4,5],13:[5],14:[5],15:[5]};
+let g='<span></span>'+Array.from({length:15},(_,i)=>`<span class="h">W${i+1}</span>`).join('');
+[1,2,3,4,5].forEach(c=>{ let n=0; let row=''; for(let w=1;w<=15;w++){ const l=LEC[w].includes(c), b=LAB[w].includes(c); if(l||b) n++; const k=l&&b?'LB':l?'L':b?'B':''; row+=`<span class="cell ${k}" style="--cc:var(--c${c})" title="Week ${w}">${k==='LB'?'L+B':k}</span>`; }
+  g+=`<span class="rl" style="--cc:var(--c${c})">CLO-${c} <small>${n} weeks</small></span>`+row; });
+document.getElementById('grid').innerHTML=g;
+</script>
+</body>
+</html>
