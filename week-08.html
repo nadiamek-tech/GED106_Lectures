@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 8 · Data Ethics 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#A3333D;--wk-soft:rgba(163,51,61,.10);--wk-d:#F2939B;--wk-soft-d:rgba(242,147,155,.14)}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.cmp div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);font-family:var(--f-display);font-size:.84rem}
+.cmp b{display:block;font-size:1.6rem;line-height:1.1}
+.claim{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:6px 0}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- proxy variable demo (constructed; mechanism as in Obermeyer et al., 2019) ---------- */
+function proxyData(){ let s=99; const r=()=>{ s=(s*1103515245+12345)>>>0; return s/4294967296; };
+  const P=[]; for(let i=0;i<1000;i++){ const g=i<500?'A':'B'; const need=Math.round(20+r()*60+ (r()<.15?20:0)); const access=g==='A'?1:0.7; const cost=Math.round(need*access*100*(0.85+r()*0.3)); P.push({g,need,cost}); } return P; }
+const PX=proxyData();
+function proxy(el){
+  el.innerHTML=`<p class="ui" style="margin:0 0 6px">A care programme has places for the top <b>20%</b> of 1,000 patients. Groups A and B are equally sick on average, but group B has less access to care, so less money is spent on them.</p>
+   <div class="seg2"><button type="button" data-m="cost" aria-pressed="true">Rank by past cost (the proxy)</button><button type="button" data-m="need" aria-pressed="false">Rank by actual health need</button></div>
+   <div class="cmp"><div><span class="mono">GROUP A SELECTED</span><b id="pa"></b></div><div><span class="mono">GROUP B SELECTED</span><b id="pb"></b></div></div>
+   <div class="feedback" id="pf" style="margin-top:8px"></div><p class="mono" style="color:var(--muted)">Constructed data generated in the page. It copies the mechanism reported by Obermeyer et al. (2019), not their numbers.</p>`;
+  const run=m=>{ el.querySelectorAll('.seg2 button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));
+    const top=[...PX].sort((a,b)=>b[m]-a[m]).slice(0,200); const a=top.filter(p=>p.g==='A').length, b=200-a;
+    el.querySelector('#pa').textContent=a; el.querySelector('#pb').textContent=b;
+    const sickB=PX.filter(p=>p.g==='B'&&p.need>=60).length, sickA=PX.filter(p=>p.g==='A'&&p.need>=60).length;
+    el.querySelector('#pf').innerHTML= m==='cost'?`Group B gets <b>${b}</b> of 200 places, although it has about as many very sick patients (${sickB}) as group A (${sickA}). Nobody used “group” in the model: <b>cost</b> carried the unfairness in.`:`Ranking by real need gives a roughly fair split. The problem was the <b>choice of target</b>, not the maths.`; };
+  el.querySelectorAll('.seg2 button').forEach(b=>b.addEventListener('click',()=>run(b.dataset.m))); run('cost');
+}
+
+/* ---------- cherry-picking tool (fictional monthly data) ---------- */
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const VIS=[410,432,455,440,470,402,365,380,498,520,505,515,530,548,560,541,575,492,455,470,600,628,612,640];
+function cherry(el){
+  el.innerHTML=`<div class="ui stack"><div class="claim" id="cc"></div>
+   <label for="cs">Start month: <b id="csv"></b></label><input type="range" id="cs" min="0" max="22" value="13">
+   <label for="ce">End month: <b id="cev"></b></label><input type="range" id="ce" min="1" max="23" value="18">
+   <div id="cch"></div><div class="feedback" id="cf"></div><p class="mono" style="color:var(--muted);margin:0">Fictional monthly visitors to a campus gym over two years.</p></div>`;
+  const lab=i=>MON[i%12]+' Y'+(1+Math.floor(i/12));
+  const draw=()=>{ let s=+el.querySelector('#cs').value, e=+el.querySelector('#ce').value; if(e<=s){ e=s+1; el.querySelector('#ce').value=e; }
+    el.querySelector('#csv').textContent=lab(s); el.querySelector('#cev').textContent=lab(e);
+    const ch=(VIS[e]-VIS[s])/VIS[s]*100, all=(VIS[23]-VIS[0])/VIS[0]*100;
+    el.querySelector('#cc').textContent=`“Gym visits ${ch<0?'FELL':'ROSE'} ${Math.abs(ch).toFixed(0)}%!”`;
+    const X=i=>30+i*22.6, Y=v=>150-(v-340)/(660-340)*130;
+    el.querySelector('#cch').innerHTML=`<svg viewBox="0 0 560 175" role="img" aria-label="Line chart of 24 months of gym visits with the selected window highlighted"><rect x="${X(s)}" y="12" width="${X(e)-X(s)}" height="140" fill="var(--wk-soft)"/>
+      <polyline points="${VIS.map((v,i)=>`${X(i)},${Y(v)}`).join(' ')}" fill="none" stroke="var(--muted)" stroke-width="2"/>
+      <polyline points="${VIS.slice(s,e+1).map((v,i)=>`${X(s+i)},${Y(v)}`).join(' ')}" fill="none" stroke="var(--wk)" stroke-width="3.5"/>
+      <text x="${X(0)}" y="170" font-size="10" class="t-muted t-mono">Jan Y1</text><text x="${X(23)}" y="170" font-size="10" text-anchor="end" class="t-muted t-mono">Dec Y2</text></svg>`;
+    el.querySelector('#cf').innerHTML=`Over the <b>full two years</b>, visits rose ${all.toFixed(0)}%. Every month shown is real (fictional) data, but choosing the window changes the story. Try making a “falling” headline.`; };
+  el.querySelector('#cs').addEventListener('input',draw); el.querySelector('#ce').addEventListener('input',draw); draw();
+}
+
+Lecture.mount({
+  id:'g106-w8', course:'GED 106', week:8, clo:1, short:'Week 8 · Data Ethics 2',
+  title:'Data Ethics -2',
+  meta:'Be Data Literate, Chapter 4 · Midterm week · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'How does data harm people when nobody means to?', minutes:4,
+    narration:[
+     `Last week we learned the five principles. This week we look at the problems that appear again and again in real data projects, often without anyone intending harm.`,
+     `This week's syllabus topic: <strong>Common Ethical Problems in Data</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The syllabus schedules the <strong>Midterm</strong> this week.`,
+     B.plain(`<b>Key idea:</b> five problems cause most data harm: <b>biased data</b>, <b>proxy variables</b>, <b>misleading presentation</b>, <b>privacy and security failures</b>, and <b>over-collection</b>. Each one has a check you can run.`)],
+    src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4.`,
+    notes:[`The agenda assumes the midterm runs in the second hour. Adjust if you scheduled it differently.`],
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,4,'l'],[`Hook`,4,'a'],[`Biased data`,8,'l'],[`Proxy variables`,10,'a'],[`Misleading presentation`,10,'a'],[`Privacy and security`,6,'l'],[`Ethics check for your project`,8,'a'],[`Exam takeaways`,5,'l'],[`Exit check`,5,'c'],[`Midterm examination`,60,'c']])} },
+
+  { nav:'Hook', title:'Activity · Can a computer be biased?', kind:'activity', minutes:4,
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`A computer follows the data exactly. Can its decisions still be unfair?`,opts:[`No, computers are neutral`,`Yes, if the data is unfair`,`Only if someone programs it to be`,`Not sure`],reveal:i=>(i===1?`<b>Yes.</b> `:``)+`A system that learns from the past learns the past's unfairness too. And a fair-looking variable can carry unfairness in, as the next two scenes show.`})} },
+
+  { nav:'Biased data', title:'Problem 1 · Biased data', minutes:8,
+    video:{id:'UG_X_7g63rY',title:`How I'm fighting bias in algorithms`,by:'Joy Buolamwini · TED',why:'A researcher finds that face-analysis software failed to detect her face until she wore a white mask. Listen for where the bias came from.'},
+    narration:[
+     B.plain(`<b>Biased data</b> = data that does not fairly represent the people or situations it will be used for, often because it reflects past unfairness or leaves groups out.`),
+     B.ex(`In 2018, Reuters reported that Amazon had stopped using an experimental recruiting tool. It had learned from ten years of CVs, mostly from men, and it marked down CVs that included the word “women's”, as in “women's chess club captain”.`),
+     B.plain(`<b>Check:</b> who is in the data, who is missing, and does the past we are learning from contain unfairness we do not want to repeat?`),
+     B.exam(`Biased data example: <b>Amazon recruiting tool (Reuters, 2018)</b>. Cause: training data from a male-dominated past.`)],
+    src:`Dastin, J. (2018, October 10). Amazon scraps secret AI recruiting tool that showed bias against women. <em>Reuters</em>.`,
+    notes:[`Connect to Week 3: biased data is often a sampling problem.`] },
+
+  { nav:'Proxy variables', title:'Problem 2 · Proxy variables', kind:'activity', minutes:10, wide:true,
+    narration:[
+     B.plain(`<b>Proxy variable</b> = a variable used in place of the thing you really care about, or a “neutral” variable that stands in for a sensitive one. If the proxy differs between groups, it can carry unfairness into the result.`),
+     B.ex(`Obermeyer and colleagues (2019, <em>Science</em>) studied a widely used US health algorithm. It used past healthcare <b>cost</b> as a proxy for health <b>need</b>. Because less money had been spent on Black patients with the same level of illness, the algorithm judged them healthier than they were, and fewer were referred for extra care.`),
+     `Try the constructed version on the right. Switch from “past cost” to “actual need”.`,
+     B.exam(`Proxy problem = measuring the wrong thing. Example: <b>cost used for health need</b> (Obermeyer et al., 2019). Removing a sensitive column does not remove bias if a proxy remains.`)],
+    think:`In a university, what could be a proxy for family wealth? (Hint: postcode, school attended, phone model.)`,
+    src:`Obermeyer, Z., Powers, B., Vogeli, C., &amp; Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science</em>, 366(6464), 447–453.`,
+    notes:[`Emphasise: the model did not use race. The proxy (cost) carried the inequality.`],
+    fig:{label:`Who gets the care places? · constructed data`, build:proxy} },
+
+  { nav:'Misleading', title:'Problem 3 · Misleading presentation', kind:'activity', minutes:10, wide:true,
+    narration:[
+     B.plain(`<b>Misleading presentation</b> = true data shown in a way that creates a false impression: cutting the axis (Week 5), choosing only the time period that supports your story (<b>cherry-picking</b>), or leaving out the comparison.`),
+     `Use the sliders to pick a start and end month. Can you write a headline saying gym visits fell, using real numbers from a period when they rose overall?`,
+     B.ex(`Misinformation online often uses real numbers in a misleading frame. Checking the full time range and the source is part of detecting it.`),
+     B.exam(`Cherry-picking: every number is true, but the selection misleads. Fix: <b>show the full range</b> and say why you chose your period.`)],
+    think:`Who benefits from the “falling” headline? Who benefits from the “rising” one?`,
+    notes:[`Expected: falling windows include May–Jul Y1 and Feb–Jul Y2 (the default), against a two-year rise of about 56%.`],
+    fig:{label:`Pick a window, write a headline · fictional data`, build:cherry} },
+
+  { nav:'Privacy + security', title:'Problems 4 and 5 · Privacy, security and over-collection', minutes:6,
+    video:{id:'_2u_eHHzRto',title:'The era of blind faith in big data must end',by:`Cathy O'Neil · TED`,why:'A mathematician explains why algorithms built on data can harm people at scale, and why we must audit them.'},
+    narration:[
+     B.plain(`<b>Privacy and security failures:</b> data leaks, weak passwords, files shared too widely, or “anonymous” data that can be re-identified (Week 7). <b>Over-collection:</b> collecting more than you need, “just in case”, so there is more to leak or misuse.`),
+     B.ex(`A student club keeps a shared spreadsheet with members' phone numbers and ID numbers, open to “anyone with the link”. One forwarded link exposes everyone.`),
+     B.exam(`Collect less, protect what you keep, share only with the right people, delete when done.`)],
+    src:`Video: Cathy O'Neil, TED. See also O'Neil, C. (2016). <em>Weapons of Math Destruction</em>. Crown (syllabus supplemental reading).`,
+    notes:[`Ask students to check their own OneDrive sharing settings for the GED106 folder.`] },
+
+  { nav:'Ethics check', title:'Activity · Ethics check for your project', kind:'activity', minutes:8,
+    narration:[
+     `Your group will build a dashboard from real data later this semester. Run this ethics check on your survey now, while it is easy to change.`,
+     B.exam(`For the project report you will need a short ethical reflection. This worksheet is its first draft.`)],
+    notes:[`Collect one worksheet per group; it feeds the ethical reflection in the final project.`],
+    fig:{label:`Five checks · one per problem`, build:el=>W.worksheet(el,{id:'g106-w8-ethics',title:'GED 106 · Week 8 · Project ethics check',fields:[
+      {l:'1 · Biased data: who is missing from our sample?',rows:2},
+      {l:'2 · Proxy: are we measuring what we really care about?',rows:2},
+      {l:'3 · Presentation: what full range or comparison will we show?',rows:2},
+      {l:'4 · Privacy and security: which columns could identify someone, and who can open our file?',rows:2},
+      {l:'5 · Over-collection: which question could we delete?',rows:2}]})} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 8', kind:'exam', minutes:5,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Biased data</b> repeats past unfairness (Amazon recruiting tool, 2018).</li><li><b>Proxy variables</b> measure the wrong thing (cost for need: Obermeyer et al., 2019).</li><li><b>Removing a sensitive column</b> does not remove bias if a proxy remains.</li><li><b>Misleading presentation:</b> cut axes, cherry-picked periods, missing comparisons.</li><li><b>Privacy and security:</b> protect, limit sharing, delete when done.</li><li><b>Over-collection:</b> collect only what you need.</li></ul>`),
+     `Practice questions on the right. For the full midterm revision, open the <a href="review.html">midterm review page</a>.`],
+    fig:{mindmap:{center:'Data ethics 2',branches:[{t:'Biased data',items:['Repeats past unfairness','Amazon recruiting tool 2018']},{t:'Proxy variables',items:['Measure the wrong thing','Cost for need (2019)','Sensitive info sneaks back']},{t:'Misleading',items:['Cut axes','Cherry-picked periods','Missing comparisons']},{t:'Privacy, security',items:['Re-identification','Links open to anyone']},{t:'Over-collection',items:['Collect only what you need','Less to leak or misuse']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Explain biased data with a real example.`,hint:`Data that misrepresents people or repeats past unfairness; Amazon tool trained on mostly male CVs, penalised “women's”.`},
+      {q:`What is a proxy variable, and why can it cause unfair results?`,hint:`Stand-in for the real target or a sensitive feature; cost for need (Obermeyer 2019); differs between groups.`},
+      {q:`How can true numbers mislead? Give two techniques.`,hint:`Cherry-picking the time window; cut axis; missing comparison; fix by showing full range and context.`},
+      {q:`Give three ethics checks you would run on a student survey project.`,hint:`Who is missing; identifying columns and sharing settings; delete unneeded questions; fair charts.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:5,
+    narration:[`Four quick questions before the midterm.`,`<strong>After the midterm:</strong> read <em>Be Data Literate</em>, Chapter 9, for Week 9 (Data-Informed Decision-Making).`],
+    fig:{label:`Four questions`, build:el=>W.quiz(el,[
+      {q:`An algorithm uses past spending to decide who needs care. This is a problem of…`,o:[`a proxy variable`,`too little data`,`a pie chart`,`over-collection`],a:0,why:`Cost stood in for need.`},
+      {q:`Showing only the two months when sales fell, from a year of growth, is…`,o:[`cherry-picking`,`data cleaning`,`a data dictionary`,`prescriptive analytics`],a:0,why:`True numbers, misleading selection.`},
+      {q:`The Amazon recruiting tool learned bias mainly from…`,o:[`its programmers' instructions`,`historical CVs mostly from men`,`a cut axis`,`missing values`],a:1,why:`The training data reflected the past.`},
+      {q:`The best response to over-collection is to…`,o:[`collect only what you need`,`encrypt everything and keep it forever`,`publish it`,`add more questions`],a:0,why:`Less data means less risk.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

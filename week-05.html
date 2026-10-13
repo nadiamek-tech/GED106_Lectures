@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 5 · Reading and Speaking the Language of Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#9C3D6E;--wk-soft:rgba(156,61,110,.10);--wk-d:#EE9CC4;--wk-soft-d:rgba(238,156,196,.14)}
+.scroll{overflow-x:auto}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.dd{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem}
+.dd th,.dd td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+.dd th{background:var(--sunk)}
+.hdr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.hdr button{font-family:var(--f-mono);font-size:.76rem;border:1px solid var(--line);background:var(--sunk);border-radius:4px;padding:5px 8px;cursor:pointer}
+.hdr button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.xl{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem}
+.xl th,.xl td{border:1px solid var(--line);padding:4px 7px;text-align:left}
+.xl th{background:var(--sunk);white-space:nowrap}
+.xl th button{border:0;background:none;cursor:pointer;font:inherit;font-weight:700;padding:0}
+.xl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.xl td.low{background:color-mix(in srgb,var(--bad) 18%,transparent)}
+.xl td.high{background:color-mix(in srgb,var(--good) 18%,transparent)}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:8px;font-family:var(--f-display);font-size:.86rem}
+select{font:inherit;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- truncated axis hook (fictional numbers) ---------- */
+function axis(el){
+  el.innerHTML=`<div class="seg2"><button type="button" data-z="70" aria-pressed="true">Axis starts at 70%</button><button type="button" data-z="0" aria-pressed="false">Axis starts at 0%</button></div><div class="ch"></div><div class="feedback" id="af"></div>`;
+  const ch=el.querySelector('.ch'), bs=el.querySelectorAll('.seg2 button');
+  const draw=z=>{ bs.forEach(b=>b.setAttribute('aria-pressed',+b.dataset.z===z)); const H=200, y=v=>230-(v-z)/(80-z)*H;
+    ch.innerHTML=`<svg viewBox="0 0 420 260" role="img" aria-label="Bar chart comparing satisfaction for two cafeterias"><line x1="50" y1="230" x2="400" y2="230" stroke="var(--muted)"/>
+    ${[z,(z+80)/2,80].map(v=>`<text x="44" y="${y(v)+4}" text-anchor="end" font-size="11" class="t-muted t-mono">${Math.round(v)}%</text><line x1="50" x2="400" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-dasharray="2 4"/>`).join('')}
+    <rect x="100" y="${y(72)}" width="90" height="${230-y(72)}" fill="var(--muted)"/><rect x="250" y="${y(75)}" width="90" height="${230-y(75)}" fill="var(--wk)"/>
+    <text x="145" y="${y(72)-6}" text-anchor="middle" font-size="12" font-weight="700">72%</text><text x="295" y="${y(75)-6}" text-anchor="middle" font-size="12" font-weight="700">75%</text>
+    <text x="145" y="250" text-anchor="middle" font-size="11">Cafeteria A</text><text x="295" y="250" text-anchor="middle" font-size="11">Cafeteria B</text>
+    <text x="225" y="18" text-anchor="middle" font-size="11" class="t-muted t-mono">STUDENTS SATISFIED · FICTIONAL</text></svg>`;
+    el.querySelector('#af').innerHTML= z===70?`B looks about <b>2.5 times</b> better than A. Read the axis: it starts at 70%.`:`Same numbers. A 3-point difference now looks like what it is: small.`; };
+  bs.forEach(b=>b.addEventListener('click',()=>draw(+b.dataset.z))); draw(70);
+}
+
+/* ---------- mean vs median tool (illustrative salaries) ---------- */
+const SAL=[9,10,11,12,12,13,14,15];
+function mm(el){
+  el.innerHTML=`<div class="ui stack"><label for="ot">Ninth graduate's monthly salary: <b id="ov"></b></label><input type="range" id="ot" min="12" max="120" value="14"><div id="mmc"></div><div class="feedback" id="mmf"></div><p class="mono" style="color:var(--muted);margin:0">Illustrative salaries in thousand AED per month, not real survey data.</p></div>`;
+  const draw=()=>{ const o=+el.querySelector('#ot').value, d=[...SAL,o].sort((a,b)=>a-b), mean=d.reduce((a,b)=>a+b,0)/d.length, med=d[4];
+    el.querySelector('#ov').textContent=o+'k AED';
+    const X=v=>30+(v-5)/(120-5)*520;
+    el.querySelector('#mmc').innerHTML=`<svg viewBox="0 0 580 130" role="img" aria-label="Dot plot of nine salaries with mean and median markers"><line x1="30" y1="80" x2="550" y2="80" stroke="var(--muted)"/>
+     ${[10,40,70,100].map(v=>`<text x="${X(v)}" y="100" text-anchor="middle" font-size="10" class="t-muted t-mono">${v}k</text>`).join('')}
+     ${d.map((v,i)=>`<circle cx="${X(v)}" cy="${72-(d.slice(0,i).filter(x=>Math.abs(x-v)<1.5).length*12)}" r="6" fill="var(--muted)"/>`).join('')}
+     <line x1="${X(med)}" x2="${X(med)}" y1="20" y2="80" stroke="var(--good)" stroke-width="3"/><text x="${X(med)}" y="14" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--good)">median ${med}k</text>
+     <line x1="${X(mean)}" x2="${X(mean)}" y1="30" y2="80" stroke="var(--wk)" stroke-width="3" stroke-dasharray="5 3"/><text x="${X(mean)}" y="122" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--wk)">mean ${mean.toFixed(1)}k</text></svg>`;
+    el.querySelector('#mmf').innerHTML= o>40?`One very high salary pulled the <b>mean</b> up to ${mean.toFixed(1)}k, above what 8 of the 9 people earn. The <b>median</b> stayed at ${med}k. With outliers, the median describes a “typical” person better.`:`With no extreme values, mean (${mean.toFixed(1)}k) and median (${med}k) are close. Drag the slider right.`; };
+  el.querySelector('#ot').addEventListener('input',draw); draw();
+}
+
+/* ---------- data dictionary ---------- */
+const DICT={
+ 'Major':['Text (categorical)','—','Business, Design, Engineering, Computing, Media, Other','Student\'s declared major, chosen from a list in the survey','Q1'],
+ 'Hours_studied':['Whole number','hours per week','0 to 80','Self-reported hours of study last week; values above 80 are checked','Q2'],
+ 'Rating':['Whole number (ordinal)','scale 1–5','1, 2, 3, 4, 5','“The library hours meet my needs.” 1 = strongly disagree, 5 = strongly agree','Q3'],
+ 'Completion_time':['Date and time','—','Semester dates only','When the response was submitted, added automatically by Forms','auto']};
+function dict(el){
+  el.innerHTML=`<p class="ui" style="margin:0 0 6px">Click a column header from the Lab 4 survey file.</p><div class="hdr">${Object.keys(DICT).map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div><div class="scroll"><table class="dd"><tbody id="ddb"></tbody></table></div><div id="ws" style="margin-top:16px"></div>`;
+  const bs=el.querySelectorAll('.hdr button');
+  const show=k=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k)); const [t,u,v,d,s]=DICT[k];
+    el.querySelector('#ddb').innerHTML=`<tr><th>Field name</th><td><b>${k}</b></td></tr><tr><th>Data type</th><td>${t}</td></tr><tr><th>Unit</th><td>${u}</td></tr><tr><th>Allowed values</th><td>${v}</td></tr><tr><th>Description</th><td>${d}</td></tr><tr><th>Source</th><td>Survey ${s==='auto'?'(automatic)':'question '+s}</td></tr>`; };
+  bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.k))); show('Major');
+  W.worksheet(el.querySelector('#ws'),{id:'g106-w5-dict',title:'GED 106 · Week 5 · Data dictionary for our survey',fields:[
+    {l:'Field 1: name · type · unit · allowed values · description',rows:2},
+    {l:'Field 2: name · type · unit · allowed values · description',rows:2},
+    {l:'Field 3: name · type · unit · allowed values · description',rows:2}]});
+}
+
+/* ---------- lab 5: sort, filter, conditional format (fictional) ---------- */
+const STU=[['Aisha','Business',2,6,78],['Omar','Design',1,10,85],['Lina','Computing',3,4,52],['Yousef','Business',1,12,91],['Mariam','Media',2,7,66],['Khalid','Computing',2,3,48],['Sara','Design',3,9,88],['Hamdan','Business',4,5,59],['Noor','Media',1,11,81],['Rami','Engineering',2,8,73],['Fatima','Engineering',3,6,69],['Zayed','Design',2,2,41]];
+const COLS=['Name','Major','Year','Hours','Quiz'];
+function lab5(el){
+  el.innerHTML=`<div class="ctrls"><label>Filter Major: <select id="fm"><option value="">(All)</option>${[...new Set(STU.map(s=>s[1]))].sort().map(m=>`<option>${m}</option>`).join('')}</select></label>
+   <label>Highlight Quiz below <b id="thv"></b><input type="range" id="th" min="40" max="90" value="60" style="width:140px;vertical-align:middle"></label>
+   <label><input type="checkbox" id="hi"> and green for 85+</label></div>
+   <div class="scroll"><table class="xl"><thead><tr>${COLS.map((c,i)=>`<th><button type="button" data-c="${i}">${c} ↕</button></th>`).join('')}</tr></thead><tbody id="xb"></tbody></table></div>
+   <div class="feedback" id="xf" style="margin-top:8px"></div><p class="mono" style="color:var(--muted)">Fictional class data. Click a header to sort; click again to reverse.</p>`;
+  let sc=-1, dir=1;
+  const draw=()=>{ const m=el.querySelector('#fm').value, th=+el.querySelector('#th').value, hi=el.querySelector('#hi').checked; el.querySelector('#thv').textContent=th;
+    let rows=STU.filter(r=>!m||r[1]===m); if(sc>=0) rows=[...rows].sort((a,b)=>(a[sc]>b[sc]?1:a[sc]<b[sc]?-1:0)*dir);
+    el.querySelector('#xb').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td class="${i>=2?'num':''} ${i===4&&v<th?'low':''} ${i===4&&hi&&v>=85?'high':''}">${v}</td>`).join('')}</tr>`).join('');
+    const low=rows.filter(r=>r[4]<th).length;
+    el.querySelector('#xf').innerHTML=`Showing <b>${rows.length}</b> of ${STU.length} students${m?` (filter: ${m})`:''}${sc>=0?`, sorted by ${COLS[sc]} ${dir>0?'A→Z / low→high':'Z→A / high→low'}`:''}. <b>${low}</b> highlighted below ${th}.`; };
+  el.querySelectorAll('th button').forEach(b=>b.addEventListener('click',()=>{ const c=+b.dataset.c; dir=(sc===c)?-dir:1; sc=c; draw(); }));
+  el.querySelector('#fm').addEventListener('change',draw); el.querySelector('#th').addEventListener('input',draw); el.querySelector('#hi').addEventListener('change',draw); draw();
+}
+
+const VOCAB=[['Variable','A characteristic that can change: age, major, rating (a column)'],['Observation','One record: one person or event (a row)'],['Categorical','Values are groups or labels: major, city'],['Numerical','Values are numbers you can calculate with: hours, price'],['Mean','Add all values and divide by how many'],['Median','The middle value when sorted'],['Mode','The most common value'],['Range','Largest minus smallest'],['Outlier','A value far from the others'],['Percentage points','The difference between two percentages: 40% → 50% is +10 points (+25%)'],['Correlation','Two variables move together'],['Causation','One variable actually changes the other']];
+
+Lecture.mount({
+  id:'g106-w5', course:'GED 106', week:5, clo:1, short:'Week 5 · The Language of Data',
+  title:'Reading and Speaking the Language of Data',
+  meta:'Be Data Literate, Chapter 5 · In-class quiz · Lab 5 · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'Can you read a chart as carefully as a sentence?', minutes:5,
+    narration:[
+     `You learned to read words at school. Few people were taught to read data. This week you learn to read data carefully and to talk about it with the right words.`,
+     `This week's syllabus topics: <strong>Defining Reading data, Data fluency, The data dictionary</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The syllabus schedules an <strong>In class Quiz</strong> this week.`,
+     B.plain(`<b>Key idea:</b> reading data means checking the title, labels, units, scale and source before you believe the message. Data fluency means you can explain what you see in correct, simple words.`)],
+    think:`When did a chart or statistic last change your mind about something? Did you check where it came from?`,
+    src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 5. Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.`,
+    notes:[`Run the in-class quiz at the time you planned (Moodle or paper). The agenda reserves 15 minutes.`],
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the 2.5× chart`,8,'a'],[`Reading data`,10,'l'],[`Data fluency: key words`,8,'l'],[`Mean or median?`,10,'a'],[`The data dictionary`,10,'a'],[`In-class quiz`,15,'c'],[`Break`,5,'b'],[`Lab 5: sort and filter`,30,'a'],[`Exam takeaways`,7,'l'],[`Exit check`,12,'c']])} },
+
+  { nav:'Hook', title:'Activity · Is Cafeteria B really 2.5 times better?', kind:'activity', minutes:8,
+    video:{id:'E91bGT9BjYk',title:'How to spot a misleading graph',by:'Lea Gaslowitz · TED-Ed',why:'A short animated guide to the tricks used in charts, including the cut-off axis you just saw.'},
+    narration:[
+     `Look at the chart. Which cafeteria do students prefer, and by how much? Answer first, then switch the axis.`,
+     B.exam(`Always read the <b>axis</b> first. A y-axis that does not start at zero can make small differences look huge in a bar chart.`)],
+    notes:[`Most students say “B, by a lot”. After switching: B by 3 percentage points. Introduce the phrase “percentage points”.`],
+    fig:{label:`Same data, two axes · fictional`, build:axis} },
+
+  { nav:'Reading data', title:'Defining reading data', minutes:10,
+    video:{id:'Zwwanld4T1w',title:'3 ways to spot a bad statistic',by:'Mona Chalabi · TED',why:'A data journalist\'s three questions to ask before trusting a number. Compare them with the five checks on the right.'},
+    narration:[
+     B.plain(`<b>Reading data</b> = understanding what a table, number or chart actually says, including what it does <b>not</b> say. It is the first pillar of data literacy (Week 2).`),
+     B.ex(`A headline says “Screen time up 50%”. Reading the data means asking: up from what? Over what period? For which people? Measured how? 2 hours to 3 hours is up 50%, and so is 10 minutes to 15 minutes.`),
+     B.plain(`<b>Risks and ethics:</b> people who skip these checks are easy to mislead, and they can mislead others when they share the chart.`),
+     B.exam(`Five checks for reading any chart: <b>title → axes and units → scale → source → main message and limits</b>.`)],
+    think:`Find one chart on your phone today and run the five checks. Which check did it fail?`,
+    notes:[`Press Play on the flow and apply each check to the cafeteria chart.`],
+    fig:{label:`Five checks before you believe a chart`, flow:[
+      {t:'Title',s:'what is it about?',d:'What exactly is measured, where and when?'},
+      {t:'Axes and units',s:'what is counted?',d:'Percent or number? Per person or in total? Thousands or millions?'},
+      {t:'Scale',s:'start and steps',d:'Does the axis start at zero? Are the steps even?'},
+      {t:'Source',s:'who says so?',d:'Who collected the data, how, and from how many people?'},
+      {t:'Message and limits',s:'what follows?',d:'State the main message in one sentence, then one thing the chart cannot tell you.'}]} },
+
+  { nav:'Data fluency', title:'Data fluency · speaking the language of data', minutes:8, wide:true,
+    narration:[
+     B.plain(`<b>Data fluency</b> = being able to talk about data confidently and correctly: using the right words, asking good questions, and explaining findings to others. Reading is understanding; fluency is speaking.`),
+     B.ex(`Not fluent: “The numbers went up a lot.” Fluent: “The median study time rose from 6 to 8 hours a week, an increase of 2 hours, based on 120 survey responses.”`),
+     B.plain(`<b>Common mix-ups:</b> percentage vs percentage points; mean vs median; correlation vs causation.`),
+     B.exam(`Learn the 12 terms on the right. Switch on <b>Self-test</b> and keep going until you know them all.`)],
+    notes:[`Quick drill: say a term, students give the meaning; then reverse.`],
+    fig:{label:`12 words of data fluency`, build:el=>W.flashcards(el,VOCAB)} },
+
+  { nav:'Mean or median?', title:'Activity · Mean or median?', kind:'activity', minutes:10, wide:true,
+    narration:[
+     `Nine graduates report their monthly salary. Move the slider to change only the ninth person's salary, and watch the mean and the median.`,
+     B.plain(`The <b>mean</b> uses every value, so one extreme value can pull it a long way. The <b>median</b> is the middle value, so it hardly moves.`),
+     B.exam(`For skewed data such as salaries, house prices or followers, the <b>median</b> usually describes the typical case better. Fluent speakers say which one they used.`)],
+    think:`A company says its “average salary is 40,000 AED a month”. What would you ask next?`,
+    notes:[`Expected: Mean or median? Including the CEO? How many employees? Which roles?`],
+    fig:{label:`Nine salaries · illustrative`, build:mm} },
+
+  { nav:'Data dictionary', title:'The data dictionary', kind:'activity', minutes:10, wide:true,
+    narration:[
+     `A spreadsheet column called “Rating” could mean many things. A data dictionary removes the guessing.`,
+     B.plain(`<b>Data dictionary</b> = a document that describes each field (column) in a dataset: its name, data type, unit, allowed values, meaning and source. It is the dataset's instruction manual.`),
+     B.ex(`Without a dictionary, someone might read Rating = 5 as “very bad” on a scale where 1 is best. The dictionary says 5 = strongly agree.`),
+     B.plain(`<b>Risks and ethics:</b> a missing or wrong dictionary leads to wrong conclusions and makes errors hard to check. It also shows which fields are personal data.`),
+     B.exam(`A data dictionary entry has: <b>name, type, unit, allowed values, description, source</b>. Write one for your project dataset.`)],
+    notes:[`Students complete three entries for their own survey; it goes into the final project report.`],
+    fig:{label:`Data dictionary · Lab 4 survey file`, build:dict} },
+
+  { nav:'In-class quiz', title:'In-class quiz', kind:'check', minutes:15,
+    narration:[
+     `The syllabus schedules an <strong>in-class quiz</strong> this week. Your instructor will tell you whether it runs on Moodle or on paper.`,
+     `It covers the Exam takeaways from Weeks 1 to 4. Below is a short warm-up, not the graded quiz.`],
+    notes:[`Use the warm-up for 3 minutes, then open the graded quiz.`],
+    fig:{label:`Warm-up · four questions`, build:el=>W.quiz(el,[
+      {q:`Data → information → knowledge → …`,o:[`decision`,`database`,`chart`,`code`],a:0,why:`Week 1.`},
+      {q:`Which is NOT one of the four pillars?`,o:[`Reading data`,`Working with data`,`Selling data`,`Communicating with data`],a:2,why:`Week 2.`},
+      {q:`A bigger biased sample…`,o:[`removes bias`,`is still biased`,`is random`,`is always better`],a:1,why:`Week 3: Literary Digest.`},
+      {q:`“What should we do?” is which level of analytics?`,o:[`Descriptive`,`Diagnostic`,`Predictive`,`Prescriptive`],a:3,why:`Week 4.`}])} },
+
+  { nav:'Lab 5 · Sort and filter', title:'Lab 5 · Sorting and Filtering Data', kind:'activity', minutes:30, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Apply Excel's sorting, filtering, and conditional formatting tools to explore and manage datasets.</strong> (CLO4)`,
+     `Practise on the table on the right first: sort by Quiz, filter one major, then change the highlight threshold. Then do the same in Excel on your Lab 4 file.`,
+     `<ul><li><b>Sort:</b> click in the table → <b>Data → Sort</b>, or use the header arrow. Sort by more than one level (Major, then Quiz).</li><li><b>Filter:</b> header arrow → tick the values to show. Filtering hides rows; it does not delete them.</li><li><b>Conditional formatting:</b> select a column → <b>Home → Conditional Formatting → Highlight Cells Rules → Less Than</b>.</li><li>Write three sentences about what you found, using correct data words.</li></ul>`,
+     B.exam(`Know the difference: <b>sort</b> changes the order, <b>filter</b> hides rows that do not match, <b>conditional formatting</b> changes how cells look based on a rule.`)],
+    src:`Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.`,
+    notes:[`Common error: sorting one column only, which breaks the rows. Always sort the whole table.`],
+    fig:{label:`Practise · sort, filter, highlight`, build:lab5} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 5', kind:'exam', minutes:7,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Reading data:</b> understand what data says and does not say.</li><li><b>Five checks:</b> title, axes and units, scale, source, message and limits.</li><li><b>Data fluency:</b> talking about data with the right words.</li><li><b>Mean vs median:</b> outliers pull the mean; the median is the middle.</li><li><b>Percentage points ≠ percent.</b> <b>Correlation ≠ causation.</b></li><li><b>Data dictionary:</b> name, type, unit, allowed values, description, source.</li></ul>`),
+     `Try the likely exam questions on the right.`],
+    fig:{mindmap:{center:'Language of data',branches:[{t:'Reading data',items:['What it says and does not say','Title, axes, scale','Source, message, limits']},{t:'Data fluency',items:['Right words, simple sentences','Say which average you used']},{t:'Key terms',items:['Variable and observation','Categorical vs numerical','Mean, median, mode, range']},{t:'Mix-ups',items:['Percent vs percentage points','Correlation vs causation','Cut-off axes']},{t:'Data dictionary',items:['Name, type, unit','Allowed values','Description, source']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Define reading data and data fluency. How are they different?`,hint:`Reading = understanding what data says and does not; fluency = speaking and explaining it correctly.`},
+      {q:`A bar chart's axis starts at 70%. Why can this mislead?`,hint:`Small differences look large; read the scale; percentage-point difference is small.`},
+      {q:`When is the median better than the mean? Give an example.`,hint:`Skewed data with outliers, e.g. salaries; one high value pulls the mean.`},
+      {q:`What is a data dictionary? Write one entry for a field called “Hours_studied”.`,hint:`Name, type (whole number), unit (hours/week), allowed values (0–80), description, source (survey Q2).`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
+    narration:[`Six questions.`,`<strong>Before Week 6:</strong> read <em>Be Data Literate</em>, Chapter 8. Bring your Lab 4 Excel file: next week we clean it.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Support rose from 40% to 50%. That is…`,o:[`a 10% increase`,`a 10 percentage-point increase`,`a 50% increase`,`no change`],a:1,why:`It is +10 points, which is a 25% relative increase.`},
+      {q:`One billionaire joins a group of nine people. Which measure barely changes?`,o:[`Mean`,`Median`,`Total`,`Range`],a:1,why:`The middle value hardly moves.`},
+      {q:`The first thing to check on a bar chart is…`,o:[`the colours`,`the axis and its starting point`,`the font`,`the legend position`],a:1,why:`Scale can exaggerate differences.`},
+      {q:`“Major” with values Business, Design, Media is…`,o:[`numerical`,`categorical`,`an outlier`,`a mean`],a:1,why:`Labels for groups.`},
+      {q:`Which is NOT usually part of a data dictionary entry?`,o:[`Data type`,`Allowed values`,`The analyst's favourite chart`,`Description`],a:2,why:`Dictionaries describe fields, not preferences.`},
+      {q:`In Excel, a filter…`,o:[`deletes rows`,`hides rows that do not match`,`sorts rows`,`changes cell colours`],a:1,why:`Rows come back when you clear the filter.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

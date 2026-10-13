@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 6 · The Three Cs of Data Literacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#5F7A1E;--wk-soft:rgba(95,122,30,.11);--wk-d:#B8D67A;--wk-soft-d:rgba(184,214,122,.14)}
+.scroll{overflow-x:auto}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.cl{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.74rem}
+.cl th,.cl td{border:1px solid var(--line);padding:4px 6px;text-align:left;white-space:nowrap}
+.cl th{background:var(--sunk)}
+.cl td.bad{background:color-mix(in srgb,var(--bad) 16%,transparent)}
+.cl td.ok{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.cl td.flag{background:color-mix(in srgb,var(--warn) 18%,transparent)}
+.cl tr.gone td{text-decoration:line-through;opacity:.45}
+.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:10px 0}
+.tools button{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;cursor:pointer;font-family:var(--f-display);font-size:.84rem}
+.tools button small{display:block;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.tools button:disabled{border-color:var(--good);background:color-mix(in srgb,var(--good) 10%,transparent);cursor:default}
+.meter{height:12px;background:var(--sunk);border-radius:6px;overflow:hidden;margin:6px 0}
+.meter i{display:block;height:100%;background:var(--good);transition:width .3s}
+.log{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);margin:6px 0 0;padding-left:1.1em}
+@media (max-width:560px){.tools{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- same data, four views (fictional) ---------- */
+const MODES=[['Car (driven by me)',38],['Metro',22],['Bus / shuttle',18],['Taxi or ride-hail',14],['Walk or bike',8]];
+function views(el){
+  const V=['Table','Bar chart','Pie chart','Icon array'];
+  el.innerHTML=`<div class="seg2">${V.map(v=>`<button type="button" data-v="${v}">${v}</button>`).join('')}</div><div class="vv"></div><div class="feedback" id="vf"></div><p class="mono" style="color:var(--muted)">How 100 students reach campus · fictional.</p>`;
+  const vv=el.querySelector('.vv'), bs=el.querySelectorAll('.seg2 button');
+  const notes={'Table':'Exact numbers, but you must read every row to see the pattern.','Bar chart':'Easiest to compare: you see at once that car is the biggest group.','Pie chart':'Shows parts of a whole. Hard to compare similar slices (bus vs taxi).','Icon array':'Makes “38 out of 100 people” feel human. Good for a general audience.'};
+  const show=v=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+    if(v==='Table') vv.innerHTML=`<table class="tbl"><thead><tr><th>Mode</th><th>Students</th></tr></thead><tbody>${MODES.map(m=>`<tr><td>${m[0]}</td><td>${m[1]}</td></tr>`).join('')}</tbody></table>`;
+    if(v==='Bar chart') vv.innerHTML=`<svg viewBox="0 0 520 200" role="img" aria-label="Horizontal bar chart of travel modes">${MODES.map((m,i)=>`<text x="150" y="${30+i*36}" text-anchor="end" font-size="12">${m[0]}</text><rect x="158" y="${17+i*36}" width="${m[1]*8.5}" height="20" rx="3" fill="var(--wk)"/><text x="${164+m[1]*8.5}" y="${32+i*36}" font-size="12" font-weight="700">${m[1]}</text>`).join('')}</svg>`;
+    if(v==='Pie chart'){ let a=-Math.PI/2; const op=[1,.8,.6,.42,.26]; let s=`<svg viewBox="0 0 520 220" role="img" aria-label="Pie chart of travel modes">`;
+      MODES.forEach((m,i)=>{ const b=a+m[1]/100*2*Math.PI, x1=110+90*Math.cos(a), y1=110+90*Math.sin(a), x2=110+90*Math.cos(b), y2=110+90*Math.sin(b); s+=`<path d="M110 110 L${x1} ${y1} A90 90 0 ${b-a>Math.PI?1:0} 1 ${x2} ${y2}Z" fill="var(--wk)" fill-opacity="${op[i]}" stroke="var(--surface)" stroke-width="2"/><rect x="240" y="${30+i*32}" width="14" height="14" fill="var(--wk)" fill-opacity="${op[i]}"/><text x="262" y="${42+i*32}" font-size="12">${m[0]} · ${m[1]}</text>`; a=b; });
+      vv.innerHTML=s+'</svg>'; }
+    if(v==='Icon array'){ let s=`<svg viewBox="0 0 520 230" role="img" aria-label="100 dots coloured by travel mode">`; let k=0; const op=[1,.8,.6,.42,.26];
+      MODES.forEach((m,i)=>{ for(let j=0;j<m[1];j++){ const c=k%20, r=Math.floor(k/20); s+=`<circle cx="${18+c*17}" cy="${18+r*19}" r="7" fill="var(--wk)" fill-opacity="${op[i]}"/>`; k++; } });
+      MODES.forEach((m,i)=>{ s+=`<circle cx="${380}" cy="${22+i*24}" r="7" fill="var(--wk)" fill-opacity="${op[i]}"/><text x="394" y="${26+i*24}" font-size="11">${m[0].split(' (')[0]}</text>`; });
+      vv.innerHTML=s+`<text x="10" y="128" font-size="11" class="t-muted t-mono">each dot = 1 student</text></svg>`; }
+    el.querySelector('#vf').textContent=notes[v]; };
+  bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.v))); show('Table');
+}
+
+/* ---------- Lab 6 cleaning game (fictional responses) ---------- */
+const RAW=[
+ {id:1,city:'Dubai',age:'19',major:'Business',hrs:'6'},
+ {id:2,city:'dubai ',age:'20',major:'Design',hrs:'10'},
+ {id:3,city:'DXB',age:'21',major:'bus.',hrs:'ten'},
+ {id:4,city:'Sharjah',age:'230',major:'Computing',hrs:'4'},
+ {id:5,city:'Dubai',age:'19',major:'Business',hrs:''},
+ {id:6,city:'SHARJAH',age:'22',major:'Media',hrs:'7'},
+ {id:7,city:'Ajman',age:'20',major:'Design',hrs:'9'},
+ {id:8,city:'dubai ',age:'20',major:'Design',hrs:'10'},
+ {id:9,city:'Abu Dhabi',age:'23',major:'Business',hrs:'60'},
+ {id:10,city:'Dubai',age:'18',major:'Computing',hrs:'5'}];
+const ACTIONS=[
+ {k:'trim',t:'Fix spaces and capitals in City',x:'=PROPER(TRIM(B2))',f:d=>{d.forEach(r=>{r.city=r.city.trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()); if(r.city==='Dxb') r.city='DXB';}); return 'City: trimmed spaces and used Proper Case.';}},
+ {k:'code',t:'Replace the code DXB with Dubai',x:'Find & Replace (Ctrl+H)',f:d=>{d.forEach(r=>{ if(/^dxb$/i.test(r.city)) r.city='Dubai';}); return 'City: replaced DXB with Dubai.';}},
+ {k:'major',t:'Make Major labels consistent',x:'Find & Replace, or a drop-down list',f:d=>{d.forEach(r=>{ if(r.major==='bus.') r.major='Business';}); return 'Major: “bus.” → Business.';}},
+ {k:'num',t:'Turn text numbers into numbers',x:'Edit cell · VALUE()',f:d=>{d.forEach(r=>{ if(r.hrs==='ten') r.hrs='10';}); return 'Hours: “ten” → 10.';}},
+ {k:'dup',t:'Remove the exact duplicate row',x:'Data → Remove Duplicates',f:d=>{d.forEach(r=>{ if(r.id===8) r.gone=true;}); return 'Removed row 8 (same as row 2 in every field).';}},
+ {k:'miss',t:'Flag the missing value',x:'Filter (Blanks) · COUNTBLANK()',f:d=>{d.forEach(r=>{ if(r.hrs==='') r.flagHrs=true;}); return 'Hours: row 5 is blank. Flagged, not invented.';}},
+ {k:'out',t:'Flag impossible or extreme values',x:'Conditional Formatting · Sort',f:d=>{d.forEach(r=>{ if(+r.age>100) r.flagAge=true; if(+r.hrs>50) r.flagHrsHi=true;}); return 'Flagged age 230 (impossible) and 60 hours (possible but extreme: check with the respondent).';}}];
+function cleaner(el){
+  let D=JSON.parse(JSON.stringify(RAW)); const done=new Set(); const log=[];
+  const issues=r=>{ const c={}; c.city=/\s$|^[a-z]|^[A-Z]{2,}$/.test(r.city)&&r.city!=='DXB'?1:(r.city==='DXB'||r.city==='Dxb'?1:0); c.major=r.major==='bus.'?1:0; c.hrs=(r.hrs==='ten'||(r.hrs===''&&!r.flagHrs)||(+r.hrs>50&&!r.flagHrsHi))?1:0; c.age=(+r.age>100&&!r.flagAge)?1:0; return c; };
+  const total=()=>D.filter(r=>!r.gone).reduce((s,r)=>{const c=issues(r); return s+c.city+c.major+c.hrs+c.age;},0)+(D.find(r=>r.id===8&&!r.gone)?1:0);
+  const start=total();
+  el.innerHTML=`<div class="scroll"><table class="cl"><thead><tr><th>ID</th><th>City</th><th>Age</th><th>Major</th><th>Hours</th></tr></thead><tbody id="cb"></tbody></table></div>
+   <div class="ui"><span class="mono" id="cq"></span><div class="meter"><i id="cm"></i></div></div>
+   <div class="tools">${ACTIONS.map(a=>`<button type="button" data-k="${a.k}">${a.t}<small>Excel: ${a.x}</small></button>`).join('')}</div>
+   <button type="button" class="btn ghost" id="reset">Start again</button>
+   <ol class="log" id="cl"></ol><p class="mono" style="color:var(--muted)">Fictional survey responses. Red = problem · amber = flagged for a human decision · green = fixed.</p>`;
+  const draw=()=>{ el.querySelector('#cb').innerHTML=D.map(r=>{ const c=issues(r), raw=RAW.find(x=>x.id===r.id);
+      const cls=(f,bad,flag)=>flag?'flag':bad?'bad':(r[f]!==raw[f]?'ok':'');
+      const dupBad=r.id===8&&!done.has('dup');
+      return `<tr class="${r.gone?'gone':''}"><td class="${dupBad?'bad':''}">${r.id}</td><td class="${cls('city',c.city)}">${r.city.replace(/ $/,'␣')}</td><td class="${cls('age',c.age,r.flagAge)}">${r.age}</td><td class="${cls('major',c.major)}">${r.major}</td><td class="${cls('hrs',c.hrs,r.flagHrs||r.flagHrsHi)}">${r.hrs===''?'(blank)':r.hrs}</td></tr>`; }).join('');
+    const left=total(), pct=Math.round((1-left/start)*100);
+    el.querySelector('#cq').textContent=`Data quality: ${pct}% · ${left} problem${left===1?'':'s'} left`+(left===0?' · ready for analysis':'');
+    el.querySelector('#cm').style.width=pct+'%';
+    el.querySelector('#cl').innerHTML=log.map(l=>`<li>${l}</li>`).join('');
+    el.querySelectorAll('.tools button').forEach(b=>b.disabled=done.has(b.dataset.k)); };
+  el.querySelectorAll('.tools button').forEach(b=>b.addEventListener('click',()=>{ const a=ACTIONS.find(x=>x.k===b.dataset.k); log.push(a.f(D)); done.add(a.k); draw(); }));
+  el.querySelector('#reset').addEventListener('click',()=>{ D=JSON.parse(JSON.stringify(RAW)); done.clear(); log.length=0; draw(); });
+  draw();
+}
+
+Lecture.mount({
+  id:'g106-w6', course:'GED 106', week:6, clo:1, short:'Week 6 · The Three Cs',
+  title:'The Three Cs of Data Literacy',
+  meta:'Be Data Literate, Chapter 8 · Lab 6 · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'What kind of thinker does good data need?', minutes:5,
+    narration:[
+     `Tools and formulas are only half of data literacy. The other half is a way of thinking. This week names three habits of mind that every good data user has.`,
+     `This week's syllabus topics: <strong>Curiosity, Creativity, and Critical thinking</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
+     B.plain(`<b>Key idea:</b> <b>curiosity</b> asks the question, <b>creativity</b> finds new ways to answer and show it, and <b>critical thinking</b> checks whether the answer is true.`)],
+    think:`Think of someone you know who is very good at “figuring things out”. Which of the three Cs do they have most?`,
+    src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 8. Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.`,
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the front-row claim`,8,'a'],[`Curiosity`,10,'l'],[`Creativity`,10,'a'],[`Critical thinking`,10,'l'],[`Claim checker`,12,'a'],[`Break`,5,'b'],[`Lab 6: data cleaning`,40,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+
+  { nav:'Hook', title:'Activity · “Sit in the front row, get better grades”', kind:'activity', minutes:8,
+    narration:[`A blog post says: “Students who sit in the front row get higher grades. So move to the front!” What is your first reaction?`],
+    notes:[`There is no wrong answer here; the point is to show all three Cs in one discussion.`],
+    fig:{label:`Your first reaction`, build:el=>W.poll(el,{q:`“Front-row students get higher grades, so move to the front.”`,opts:[`Great, I'll move`,`Interesting, I wonder why`,`Could we show this a better way?`,`Is it the seat, or the kind of student who chooses it?`],reveal:i=>[`Acting on a claim without checking it. Many people do this with headlines.`,`That is <b>curiosity</b>: wanting to know more.`,`That is <b>creativity</b>: thinking about new ways to look at the data.`,`That is <b>critical thinking</b>: motivated students may choose the front row and also study more. The seat may not be the cause.`][i]+` Good data users use all three.`})} },
+
+  { nav:'Curiosity', title:'Curiosity', minutes:10,
+    video:{id:'Z8t4k0Q8e8Y',title:'Hans Rosling: 200 years in 4 minutes',by:'BBC News',why:'Rosling\'s curiosity about health and wealth turned 120,000 numbers into one moving chart. Notice the questions he asks the data.'},
+    narration:[
+     B.plain(`<b>Curiosity</b> = the habit of asking questions about data: what, why, how, who is missing, what if? Curious people do not stop at the first number.`),
+     B.ex(`In London in 1854, the physician John Snow mapped deaths from a cholera outbreak in Soho. The cases clustered around one water pump on Broad Street. His question, “why here?”, supported the idea that cholera spread through water, and the pump handle was removed.`),
+     B.plain(`<b>Risks and ethics:</b> curiosity about people's data needs limits. Asking “what else can we find out about this person?” can become surveillance.`),
+     B.exam(`Curiosity = asking good questions. Example: <b>John Snow's 1854 cholera map</b>.`)],
+    think:`Look at your Lab 4 survey file. Write one “why” question and one “who is missing?” question about it.`,
+    notes:[`Keep the Snow story brief; the point is the question “why here?”.`],
+    fig:{label:`How a curious mind works`, flow:[
+      {t:'Notice',s:'something odd',d:'Many deaths in one small area.'},
+      {t:'Ask',s:'why here?',d:'What do these households have in common?'},
+      {t:'Look',s:'map the data',d:'Plot each case on a street map.'},
+      {t:'Pattern',s:'one pump',d:'Cases cluster around the Broad Street pump.'},
+      {t:'Act',s:'remove handle',d:'Stop people using the pump, and keep watching the numbers.'}]} },
+
+  { nav:'Creativity', title:'Creativity', kind:'activity', minutes:10, wide:true,
+    narration:[
+     B.plain(`<b>Creativity</b> = finding new ways to explore, combine and present data, so that others can see what you see.`),
+     B.ex(`Florence Nightingale used a new kind of diagram, published in 1858, to show that most British soldiers in the Crimean War died from preventable diseases rather than battle wounds. The picture helped persuade leaders to improve hospital sanitation.`),
+     `Try it on the right: the same fictional data, four ways. Which view would you use for a manager, for a poster, and for an exam answer?`,
+     B.plain(`<b>Risks and ethics:</b> creative is not the same as decorative. A beautiful chart that hides the truth fails.`),
+     B.exam(`Creativity = new ways to explore and show data. Example: <b>Nightingale's 1858 diagram</b>. Match the view to the audience.`)],
+    notes:[`Expected: bar chart for a manager (comparison), icon array for a poster (human scale), table for exact values.`],
+    fig:{label:`Same data, four views · fictional`, build:views} },
+
+  { nav:'Critical thinking', title:'Critical thinking', minutes:10,
+    narration:[
+     B.plain(`<b>Critical thinking</b> = checking whether a claim from data is true and fair before you accept it or share it.`),
+     `<table class="tbl"><thead><tr><th>Ask</th><th>Why</th></tr></thead><tbody><tr><td>Who collected it, and why?</td><td>Motive can shape the data</td></tr><tr><td>How many, and who?</td><td>Small or biased samples (Week 3)</td></tr><tr><td>Compared with what?</td><td>A number alone means little</td></tr><tr><td>Correlation or cause?</td><td>Two things can move together for another reason</td></tr><tr><td>What is missing?</td><td>Hidden groups, years or variables</td></tr></tbody></table>`,
+     B.ex(`“Students who use the gym have higher grades.” Critical question: do organised, motivated students both go to the gym and study more? A third factor can explain both.`),
+     B.exam(`Critical thinking = five questions: <b>who, how many, compared with what, cause or correlation, what is missing</b>.`)],
+    think:`Which of the five questions do you forget most often when you see a headline?`,
+    notes:[`Name the “third factor” idea: a confounding variable. Students do not need the term for the exam, but it helps.`] },
+
+  { nav:'Claim checker', title:'Activity · Claim checker', kind:'activity', minutes:12,
+    narration:[`Each claim is constructed for practice. Decide what to do with it: accept it, question it, or reject it. Then compare with the suggested answers.`],
+    notes:[`Groups of three: one person plays curious, one creative, one critical for each claim.`],
+    fig:{label:`Accept, question or reject?`, build:el=>W.sort(el,{buckets:['Accept','Question it','Reject'],items:[
+      {t:`“9 out of 10 users love our app” (survey of 10 people who left 5-star reviews)`,a:2,why:`Tiny, hand-picked sample. It says nothing about all users.`},
+      {t:`“Ice cream sales and sunburn rise together, so ice cream causes sunburn.”`,a:2,why:`A third factor, hot sunny weather, causes both.`},
+      {t:`“Average rent rose 12%” from a national statistics office, with method notes`,a:0,why:`Official source with a published method. Still check: average or median? Which areas?`},
+      {t:`“Crime doubled!” (from 2 incidents to 4 on one campus)`,a:1,why:`True but misleading. Ask: compared with what, and how small are the numbers?`},
+      {t:`“Students who sleep 8 hours score higher” (one class, no other information)`,a:1,why:`Interesting. Ask: how many students, and what else differs between them?`},
+      {t:`A chart with no title, no units and no source`,a:2,why:`You cannot read it, so you cannot trust it.`}]})} },
+
+  { nav:'Lab 6 · Cleaning', title:'Lab 6 · Data Cleaning and Preparation', kind:'activity', minutes:40, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Identify and address inconsistencies, missing values, and outliers to ensure data quality.</strong> (CLO4, CLO2)`,
+     `First clean the fictional responses on the right. Each button shows the Excel tool that does the same job. Then clean your own Lab 4 file in Excel, using the same steps.`,
+     `<ul><li>Work on a <b>copy</b>: keep the raw sheet untouched and clean in a new sheet called Clean.</li><li>Add a sheet called <b>Log</b> and write one line for every change.</li><li><b>Flag</b> values you are not sure about. Do not invent missing answers.</li></ul>`,
+     B.plain(`<b>The three Cs in cleaning:</b> curiosity (why is this age 230?), creativity (how can the form prevent this next time?), critical thinking (is 60 hours wrong, or just unusual?).`),
+     B.exam(`Five cleaning problems and their Excel tools: inconsistent text (TRIM, PROPER, Find &amp; Replace), wrong format (VALUE), duplicates (Remove Duplicates), missing values (filter blanks), outliers (sort, conditional formatting).`)],
+    src:`Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.`,
+    notes:[`The syllabus methodology lists a graded lab on data cleaning in Week 6. Collect the Clean sheet plus the Log sheet.`,`Discuss the 60-hour case: flag and check, not delete.`],
+    fig:{label:`Clean the data · fictional responses`, build:cleaner} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 6', kind:'exam', minutes:8,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Curiosity:</b> ask what, why, who is missing (John Snow, 1854).</li><li><b>Creativity:</b> new ways to explore and show data (Nightingale, 1858).</li><li><b>Critical thinking:</b> who, how many, compared with what, cause or correlation, what is missing.</li><li><b>Correlation ≠ causation:</b> look for a third factor.</li><li><b>Cleaning:</b> work on a copy, log every change, flag rather than invent.</li><li><b>Excel tools:</b> TRIM, PROPER, Find &amp; Replace, Remove Duplicates, filters, conditional formatting.</li></ul>`),
+     `Try the likely exam questions on the right.`],
+    fig:{mindmap:{center:'Three Cs',branches:[{t:'Curiosity',items:['Ask what, why, who is missing','John Snow 1854 cholera map']},{t:'Creativity',items:['New ways to explore and show','Nightingale 1858 diagram','Match view to audience']},{t:'Critical thinking',items:['Who and how many?','Compared with what?','Cause or correlation?']},{t:'Data cleaning',items:['Inconsistent text, formats','Duplicates, missing values','Outliers: flag and check']},{t:'Good habits',items:['Work on a copy','Log every change','Never invent data']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Name the three Cs of data literacy and give an example of each.`,hint:`Curiosity (Snow's “why here?”), creativity (Nightingale's diagram), critical thinking (checking a claim).`},
+      {q:`“Ice cream sales cause sunburn.” Use critical thinking to respond.`,hint:`Correlation not causation; third factor (hot weather) causes both.`},
+      {q:`List four data-cleaning problems and the Excel tool for each.`,hint:`Spaces/case → TRIM/PROPER; duplicates → Remove Duplicates; missing → filter blanks; outliers → sort/conditional formatting.`},
+      {q:`Why should you flag a missing value instead of filling it in?`,hint:`Inventing data is dishonest and biases results; record and decide openly.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
+    narration:[`Six questions.`,`<strong>Before Week 7:</strong> read <em>Be Data Literate</em>, Chapter 4, and Cote (2021), <em>5 principles of data ethics for business professionals</em> (Harvard Business School Online).`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Asking “who is missing from this data?” shows…`,o:[`curiosity`,`decoration`,`sorting`,`prescriptive analytics`],a:0,why:`It is a question that pushes beyond the first number.`},
+      {q:`John Snow's 1854 map is a classic example of…`,o:[`curiosity leading to discovery`,`a misleading chart`,`data cleaning`,`predictive AI`],a:0,why:`“Why here?” led to the Broad Street pump.`},
+      {q:`Two things rise together because a third factor drives both. This means…`,o:[`one causes the other`,`correlation without causation`,`the data is fake`,`the sample is too big`],a:1,why:`Look for the third factor.`},
+      {q:`Which Excel tool removes extra spaces at the start and end of text?`,o:[`SUM`,`TRIM`,`VLOOKUP`,`COUNTIF`],a:1,why:`TRIM removes leading and trailing spaces.`},
+      {q:`A respondent left “Hours” blank. Best practice is to…`,o:[`type the average`,`delete the whole survey`,`flag it and decide openly`,`type zero`],a:2,why:`Do not invent data; record and decide.`},
+      {q:`Before cleaning, you should…`,o:[`delete the raw data`,`work on a copy and keep a log`,`send it to everyone`,`make a pie chart`],a:1,why:`So every change can be checked or undone.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

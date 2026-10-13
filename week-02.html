@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 2 · The Four Pillars of Data Literacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#2E7D5B;--wk-soft:rgba(46,125,91,.10);--wk-d:#7FD3AA;--wk-soft-d:rgba(127,211,170,.14)}
+.scroll{overflow-x:auto}
+.lens{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.lens button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+.lens button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.cafe{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.86rem}
+.cafe th,.cafe td{border:1px solid var(--line);padding:5px 7px;text-align:right}
+.cafe th:first-child,.cafe td:first-child{text-align:left}
+.cafe th{background:var(--sunk);font-weight:600}
+.cafe td.hl{background:var(--wk-soft);outline:2px solid var(--wk);outline-offset:-2px;font-weight:700}
+.cafe tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+.bars{display:grid;gap:5px;margin-top:8px;font-family:var(--f-display);font-size:.84rem}
+.bars div{display:grid;grid-template-columns:44px minmax(0,1fr) 36px;gap:8px;align-items:center}
+.bars i{display:block;height:14px;background:var(--wk);border-radius:3px}
+.bars i.lo{background:var(--muted)}
+.msg{margin-top:10px;font-family:var(--f-display);font-weight:700;border-left:4px solid var(--wk);padding:6px 10px;background:var(--wk-soft);border-radius:0 8px 8px 0}
+.grid{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.74rem}
+.grid td,.grid th{border:1px solid var(--line);padding:4px 6px;text-align:left;white-space:nowrap}
+.grid th{background:var(--sunk);font-weight:600}
+.grid .bad{background:color-mix(in srgb,var(--bad) 16%,transparent)}
+.grid .rh{color:var(--muted);background:var(--sunk);text-align:center}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- one dataset, four pillars (fictional campus café) ---------- */
+const DAYS=['Mon','Tue','Wed','Thu','Fri'];
+const ITEMS={'Karak tea':[64,58,31,60,72],'Iced coffee':[40,44,22,41,55],'Sandwich':[35,38,19,36,30]};
+function pillars(el){
+  const P={
+   'Reading':{q:'What does the table say?',do:'Find one fact: the café sold <b>72 karak teas on Friday</b>, the highest of any item on any day.',hl:[['Karak tea',4]]},
+   'Working with':{q:'Organise it so it is useful.',do:'Add a <b>daily total</b> row. Now each day can be compared in one number.',tot:true},
+   'Analysing':{q:'What pattern, and why?',do:'<b>Wednesday is low for every item</b> (72 items sold, against 137–157 on the other days). Possible reason to check: a campus event, a holiday, or the café closing early.',hl:[['Karak tea',2],['Iced coffee',2],['Sandwich',2]],tot:true},
+   'Communicating':{q:'Tell someone what matters.',do:'Show the daily totals as a simple chart, with one clear message for the café manager.',chart:true}};
+  el.innerHTML=`<div class="lens">${Object.keys(P).map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div><div class="out"></div>`;
+  const out=el.querySelector('.out'), bs=el.querySelectorAll('.lens button');
+  const tot=DAYS.map((_,d)=>Object.values(ITEMS).reduce((a,v)=>a+v[d],0));
+  const show=k=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k)); const p=P[k];
+    const isHl=(it,d)=>(p.hl||[]).some(([a,b])=>a===it&&b===d);
+    let html=`<p class="ui" style="margin:0 0 8px"><span class="tag">${k}</span> <b>${p.q}</b> ${p.do}</p>`;
+    if(p.chart){ const mx=Math.max(...tot); html+=`<div class="bars">${DAYS.map((d,i)=>`<div><span>${d}</span><i class="${tot[i]<100?'lo':''}" style="width:${tot[i]/mx*100}%"></i><span class="mono">${tot[i]}</span></div>`).join('')}</div><div class="msg">Wednesday sales were about half of other days. Check why before ordering stock for next week.</div>`; }
+    else html+=`<div class="scroll"><table class="cafe"><thead><tr><th>Item</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${Object.entries(ITEMS).map(([it,v])=>`<tr><td>${it}</td>${v.map((x,d)=>`<td class="${isHl(it,d)?'hl':''}">${x}</td>`).join('')}</tr>`).join('')}${p.tot?`<tr class="tot"><td>Daily total</td>${tot.map(t=>`<td>${t}</td>`).join('')}</tr>`:''}</tbody></table></div>`;
+    out.innerHTML=html+`<p class="mono" style="color:var(--muted);margin:8px 0 0">Fictional data for teaching.</p>`; };
+  bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.k))); show('Reading');
+}
+
+/* ---------- lab: messy vs tidy table ---------- */
+const MESSY=`<div class="scroll"><table class="grid"><tr><th class="rh"></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td class="rh">1</td><td colspan="4" class="bad">CLUB MEMBERS SPRING (merged)</td></tr>
+<tr><td class="rh">2</td><td>Name</td><td>Major</td><td>Fee</td><td>Events</td></tr>
+<tr><td class="rh">3</td><td>Aisha</td><td>Business</td><td class="bad">50 AED</td><td class="bad">Hike, Quiz night</td></tr>
+<tr><td class="rh">4</td><td class="bad"></td><td class="bad"></td><td class="bad"></td><td class="bad"></td></tr>
+<tr><td class="rh">5</td><td>Omar</td><td class="bad">bus.</td><td>50</td><td>Quiz night</td></tr>
+<tr><td class="rh">6</td><td class="bad">TOTAL</td><td></td><td class="bad">100</td><td></td></tr>
+<tr><td class="rh">7</td><td>Lina</td><td>Design</td><td>free?</td><td>Hike</td></tr></table></div>`;
+const TIDY=`<div class="scroll"><table class="grid"><tr><th class="rh"></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td class="rh">1</td><td>MemberName</td><td>Major</td><td>Fee_AED</td><td>EventCount</td></tr>
+<tr><td class="rh">2</td><td>Aisha</td><td>Business</td><td>50</td><td>2</td></tr>
+<tr><td class="rh">3</td><td>Omar</td><td>Business</td><td>50</td><td>1</td></tr>
+<tr><td class="rh">4</td><td>Lina</td><td>Design</td><td>0</td><td>1</td></tr></table></div>`;
+function tidy(el){
+  el.innerHTML=`<div class="lens"><button type="button" data-v="m" aria-pressed="true">Messy sheet</button><button type="button" data-v="t" aria-pressed="false">Tidy sheet</button></div><div class="tv"></div><div id="rules" style="margin-top:12px"></div>`;
+  const tv=el.querySelector('.tv'); const bs=el.querySelectorAll('.lens button');
+  const set=v=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v)); tv.innerHTML=v==='m'?MESSY+'<p class="mono" style="color:var(--bad);margin:6px 0 0">Red cells break a tidy-table rule.</p>':TIDY+'<p class="mono" style="color:var(--good);margin:6px 0 0">One header row · one row per member · one value per cell · numbers only in number columns.</p>'; };
+  bs.forEach(b=>b.addEventListener('click',()=>set(b.dataset.v))); set('m');
+  W.accordion(el.querySelector('#rules'),[
+   {t:'Rule 1 · One header row, no merged cells',d:'Put the title in the file name, not in a merged cell above the table. Excel sorting and filtering break on merged cells.'},
+   {t:'Rule 2 · One row = one record',d:'Each member, order or survey response gets exactly one row. No blank rows in the middle.'},
+   {t:'Rule 3 · One column = one variable',d:'“Events” held two values in one cell. Store a count, or one row per member per event.'},
+   {t:'Rule 4 · Numbers stay numbers',d:'“50 AED” is text to Excel, so it cannot be added. Put the unit in the header: Fee_AED.'},
+   {t:'Rule 5 · Same spelling every time',d:'“Business” and “bus.” look like two majors to Excel. Choose one label.'},
+   {t:'Rule 6 · No totals inside the data',d:'A TOTAL row in the middle will be counted as a member. Calculate totals below or on another sheet.'}]);
+}
+
+Lecture.mount({
+  id:'g106-w2', course:'GED 106', week:2, clo:1, short:'Week 2 · The Four Pillars',
+  title:'The Four Pillars of Data Literacy',
+  meta:'Be Data Literate, Chapter 3 · Lab 2 · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'What exactly does a data-literate person do?', minutes:5,
+    narration:[
+     `Last week we saw that data is everywhere. This week we ask what skills you need to deal with it. The answer comes in four parts, called the four pillars.`,
+     `This week's syllabus topics: <strong>Explaining the 4 Characteristic of Data literacy, reading data, working with data, analysing data , Communicating with data</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
+     B.plain(`<b>Key idea:</b> data literacy is not one skill. It is four: <b>reading</b> data, <b>working with</b> data, <b>analysing</b> data, and <b>communicating with</b> data. You need all four, but not at expert level.`)],
+    think:`Which of the four do you think you are best at already? Which one scares you most?`,
+    src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 3. Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
+    notes:[`Hands up for each pillar: “I am confident at…”. Most students say reading; few say analysing. That is normal.`],
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which pillar?`,8,'a'],[`The four pillars`,10,'l'],[`One dataset, four pillars`,12,'a'],[`Communicating with data`,12,'l'],[`Sort the tasks`,10,'a'],[`Break`,5,'b'],[`Lab 2: Forms and Excel`,38,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+
+  { nav:'Hook', title:'Activity · Who is doing what?', kind:'activity', minutes:8,
+    narration:[
+     `Four students look at the same grades spreadsheet. Each one does something different. Before we name the pillars, guess what each student is doing.`],
+    notes:[`Use the poll as a warm-up. Every answer is “correct” in the sense that each describes one pillar; reveal the name.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Sara reads the sheet and says “My lowest mark is in statistics.” Which pillar is that?`,opts:[`Reading data`,`Working with data`,`Analysing data`,`Communicating with data`],reveal:i=>[`Yes. She understood what the numbers say. That is <b>reading data</b>.`,`Not quite. Working with data means organising it: sorting, cleaning, adding a column.`,`Not quite. Analysing would ask <em>why</em> statistics is lowest, or find a pattern.`,`Not quite. Communicating would be telling her advisor, perhaps with a chart.`][i]+` Now imagine Khalid sorts the sheet by mark (working with), Mariam finds that quiz marks predict final marks (analysing), and Yousef makes a chart for the class (communicating).`})} },
+
+  { nav:'Four pillars', title:'The four pillars of data literacy', minutes:10,
+    narration:[
+     `The four pillars build on each other, from understanding data to sharing what it means.`,
+     B.plain(`<ul><li><b>Reading data:</b> understand what data, tables and charts say.</li><li><b>Working with data:</b> collect, organise, clean and manage data.</li><li><b>Analysing data:</b> ask questions, find patterns, compare and explain.</li><li><b>Communicating with data:</b> share findings so others can understand and act.</li></ul>`),
+     B.ex(`A health app shows your average sleep is 6 hours (reading). You export a month of nights into Excel (working with). You notice you sleep less before exams (analysing). You show a chart to your study group to argue for earlier study sessions (communicating).`),
+     B.plain(`<b>Risks and ethics:</b> each pillar can go wrong. Misread a chart, delete the wrong rows, see a pattern that is not there, or present data in a misleading way. Data literacy means checking yourself at each step.`),
+     B.exam(`Name and define the <b>four pillars</b>: reading, working with, analysing, communicating with data. Give one example of each from the same situation.`)],
+    think:`Which pillar do you use when you check a restaurant's star ratings before ordering?`,
+    notes:[`Answer: mainly reading, and some analysing if you compare the number of reviews or read the bad ones.`],
+    fig:{label:`The four pillars in order`, flow:[
+      {t:'Reading',s:'understand',d:'What does this table or chart say? What do the labels and units mean?'},
+      {t:'Working with',s:'organise',d:'Collect, sort, filter, clean and store the data so it can be used.'},
+      {t:'Analysing',s:'find meaning',d:'Find patterns, compare groups, and ask why something happened.'},
+      {t:'Communicating',s:'share',d:'Tell others what matters, with a clear message and a fair chart.'}]} },
+
+  { nav:'One dataset', title:'Activity · One dataset, four pillars', kind:'activity', minutes:12, wide:true,
+    narration:[
+     `Here is one week of sales from a campus café. The data is fictional. Click each pillar and watch how the same table is used in a different way.`,
+     `Notice that analysing produced a question, not an answer: <em>why</em> was Wednesday low? Good analysis often ends with a better question.`,
+     B.exam(`The pillars are not separate jobs: one small task like this uses all four, one after another.`)],
+    think:`What extra data would you need to explain the Wednesday dip?`,
+    notes:[`Expected answers: campus calendar, weather, opening hours, staff rota, a public holiday.`],
+    fig:{label:`Campus café · one week · fictional`, build:pillars} },
+
+  { nav:'Communicating', title:'Communicating with data', minutes:12,
+    video:{id:'5Zg-C8AAIGg',title:'The beauty of data visualization',by:'David McCandless · TED',why:'Watch how the same numbers become clear, or surprising, once they are drawn well. Note one design choice you would copy in your final project.'},
+    narration:[
+     `The fourth pillar is where data meets people. A correct analysis that nobody understands changes nothing.`,
+     B.plain(`<b>Communicating with data</b> means choosing a clear message, the right chart, and plain words for your audience. Start with the point, then show the evidence.`),
+     B.ex(`Weak: “Here is the sales table.” Strong: “Wednesday sales were about half of other days. Check why before ordering stock for next week.” Same data, but the second one leads to action.`),
+     B.plain(`<b>Risks and ethics:</b> you can mislead without lying: cut the axis, hide a bad month, or choose a scary colour. Fair communication shows the whole picture.`),
+     B.exam(`Good data communication = <b>one clear message + the right visual + the right audience</b>. Charts and storytelling return in Weeks 10 and 11.`)],
+    think:`Think of a chart you saw on social media this month. Was its message clear? Was it fair?`,
+    src:`Video: David McCandless, TED.`,
+    notes:[`Show 4–5 minutes of the video in class if time allows; otherwise set as homework.`] },
+
+  { nav:'Sort the tasks', title:'Activity · Which pillar is it?', kind:'activity', minutes:10,
+    narration:[`Sort each task into one pillar. Some could fit two; choose the main one, then compare with the suggested answers.`],
+    notes:[`Pairs. Discuss the ones where students disagree; that is where learning happens.`],
+    fig:{label:`Sort the tasks`, build:el=>W.sort(el,{buckets:['Reading','Working with','Analysing','Communicating'],items:[
+      {t:`Checking what the units are on a chart's y-axis`,a:0,why:`Understanding what the chart shows.`},
+      {t:`Removing duplicate survey responses`,a:1,why:`Cleaning and organising data.`},
+      {t:`Comparing average marks of morning and evening sections`,a:2,why:`Comparing groups to find a pattern.`},
+      {t:`Writing a one-line headline for a chart in your report`,a:3,why:`Sharing the message with a reader.`},
+      {t:`Exporting Forms responses to Excel`,a:1,why:`Collecting and managing data.`},
+      {t:`Asking why sales fell in March`,a:2,why:`Explaining a pattern: diagnostic thinking (Week 4).`},
+      {t:`Presenting a dashboard to a manager`,a:3,why:`Communicating for a decision.`},
+      {t:`Reading a weather app's chance-of-rain percentage`,a:0,why:`Interpreting a number correctly.`}]})} },
+
+  { nav:'Lab 2 · Forms and Excel', title:'Lab 2 · Fundamentals of Microsoft Forms and Excel', kind:'activity', minutes:38, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Explore interface features and core functionalities in Microsoft Forms (survey design) and Excel (data structures).</strong> (CLO4)`,
+     `<table class="tbl"><thead><tr><th></th><th>Microsoft Forms</th><th>Microsoft Excel</th></tr></thead><tbody><tr><td>Main job</td><td>Collect answers</td><td>Organise and analyse</td></tr><tr><td>Unit</td><td>One question</td><td>One cell (row × column)</td></tr><tr><td>Key features</td><td>Question types, required, branching, settings</td><td>Rows, columns, sheets, formulas, Table</td></tr><tr><td>Output</td><td>Responses → “Open results in Excel”</td><td>Charts, summaries, reports</td></tr></tbody></table>`,
+     B.plain(`<b>Excel data structure:</b> a <b>row</b> is one record (one person, one order). A <b>column</b> is one variable (name, age, fee). A <b>cell</b> holds one value. A tidy table follows the six rules on the right.`),
+     `<b>Your tasks:</b> (1) In Forms, open your test form and try four question types: Choice, Text, Rating and Date. Turn on “Required” for one. (2) In Excel, copy the messy table on the right into a sheet, then fix it so it follows all six rules. Save as Lab02_YourName in your Labs folder.`,
+     B.exam(`Be able to explain <b>row = record, column = variable, cell = one value</b>, and to spot why a table is not tidy.`)],
+    src:`Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
+    notes:[`Check the tidy versions: Fee as numbers, one header row, Major spelled consistently, no blank or TOTAL rows.`,`Lina's fee “free?” is a judgement call: some students will put 0, others leave it blank and flag it. Discuss: blank means unknown, 0 means free.`],
+    fig:{label:`Messy vs tidy · six rules`, build:tidy} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 2', kind:'exam', minutes:8,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Data literacy</b> has four pillars.</li><li><b>Reading:</b> understand what data and charts say.</li><li><b>Working with:</b> collect, organise, clean, manage.</li><li><b>Analysing:</b> find patterns and ask why.</li><li><b>Communicating:</b> one clear message, the right visual, the right audience.</li><li><b>Tidy table:</b> row = record, column = variable, one value per cell.</li></ul>`),
+     `Try the likely exam questions on the right.`],
+    notes:[`Quick recall: give a task, students shout the pillar.`],
+    fig:{mindmap:{center:'Four pillars',branches:[{t:'Reading',items:['Understand tables and charts','Check labels and units']},{t:'Working with',items:['Collect and organise','Clean and manage','Tidy tables']},{t:'Analysing',items:['Find patterns','Compare groups','Ask why']},{t:'Communicating',items:['One clear message','Right visual, right audience','Be fair, not misleading']},{t:'Excel structure',items:['Row = one record','Column = one variable','Cell = one value']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Name and define the four pillars of data literacy.`,hint:`Reading, working with, analysing, communicating with data; one line each.`},
+      {q:`Using one situation (e.g. café sales), give an example of each pillar.`,hint:`Read a value; add totals; find the Wednesday dip and ask why; chart plus a one-line message.`},
+      {q:`Why is communicating with data as important as analysing it?`,hint:`Findings only matter if people understand and act; clear message, right visual; risk of misleading charts.`},
+      {q:`List three rules of a tidy Excel table and explain why each matters.`,hint:`One header row (sorting works), one value per cell (counting works), numbers without units (sums work).`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
+    narration:[`Six questions.`,`<strong>Before Week 3:</strong> read Questback, <em>A beginner's guide to successful online surveys</em>. Think of a topic you would like to survey your classmates about.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Cleaning duplicate rows belongs to which pillar?`,o:[`Reading`,`Working with`,`Analysing`,`Communicating`],a:1,why:`Organising and cleaning data is working with it.`},
+      {q:`“Why did sales fall in March?” is mainly…`,o:[`reading`,`working with`,`analysing`,`communicating`],a:2,why:`Explaining a pattern is analysis.`},
+      {q:`Which is the strongest way to communicate a finding?`,o:[`Send the full table`,`One clear message plus a simple chart`,`Use as many colours as possible`,`Hide the numbers`],a:1,why:`Lead with the point, show the evidence.`},
+      {q:`In a tidy Excel table, one row is…`,o:[`one variable`,`one record`,`one sheet`,`one chart`],a:1,why:`Each row is one person, order or response.`},
+      {q:`Why is “50 AED” in a Fee column a problem?`,o:[`It is too long`,`Excel treats it as text, so it cannot be summed`,`AED is not allowed`,`It is not a problem`],a:1,why:`Put the unit in the header and keep the cell a number.`},
+      {q:`Microsoft Forms is mainly used to…`,o:[`collect responses`,`build dashboards`,`store files`,`write reports`],a:0,why:`Forms collects; Excel organises and analyses.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

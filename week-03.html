@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 3 · Data Collection &amp; Surveys</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#B4562F;--wk-soft:rgba(180,86,47,.10);--wk-d:#F2A07E;--wk-soft-d:rgba(242,160,126,.14)}
+.scroll{overflow-x:auto}
+.seg2{display:flex;flex-wrap:wrap;gap:6px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.res div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);font-family:var(--f-display);font-size:.84rem}
+.res b{display:block;font-size:1.6rem;line-height:1.1}
+.clean{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.76rem}
+.clean td,.clean th{border:1px solid var(--line);padding:4px 6px;text-align:left}
+.clean th{background:var(--sunk)}
+.clean td.fx{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.clean td.bd{background:color-mix(in srgb,var(--bad) 14%,transparent)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- 1936-style sampling bias simulation (constructed model) ---------- */
+/* Model: 30% of voters are on phone-book / club lists and 40% of them support Roosevelt;
+   70% are not on the lists and 70% of them support Roosevelt. Population support = 61%. */
+function rng(seed){ let s=seed>>>0; return ()=>{ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+function poll(el){
+  el.innerHTML=`<div class="ui stack">
+   <div><span class="mono" style="color:var(--muted)">HOW THE SAMPLE IS CHOSEN</span><div class="seg2" id="mode"><button type="button" data-m="list" aria-pressed="true">From phone books and club lists</button><button type="button" data-m="rand" aria-pressed="false">Random from all voters</button></div></div>
+   <label for="n">Sample size: <b id="nv"></b></label><input type="range" id="n" min="0" max="5" step="1" value="2">
+   <button type="button" class="btn" id="go">Run the poll again</button>
+   <div class="res"><div><span class="mono">POLL SAYS ROOSEVELT</span><b id="p"></b></div><div><span class="mono">TRUE RESULT</span><b>61%</b></div></div>
+   <div class="feedback" id="fb"></div>
+   <p class="mono" style="color:var(--muted);margin:0">Constructed model based on the 1936 case: 30% of voters on the lists (40% for Roosevelt), 70% not on the lists (70% for Roosevelt).</p></div>`;
+  const NS=[100,500,2000,10000,50000,200000]; let mode='list', seed=7;
+  const run=()=>{ const n=NS[+el.querySelector('#n').value]; el.querySelector('#nv').textContent=n.toLocaleString('en');
+    const r=rng(seed); let yes=0;
+    for(let i=0;i<n;i++){ const onList = mode==='list' ? (r()<0.85) : (r()<0.30); const p=onList?0.40:0.70; if(r()<p) yes++; }
+    const pct=yes/n*100; el.querySelector('#p').textContent=pct.toFixed(1)+'%';
+    const err=Math.abs(pct-61);
+    el.querySelector('#fb').innerHTML= mode==='list'
+      ? `<b>Off by ${err.toFixed(1)} points.</b> ${n>=10000?'A huge sample, and still wrong. More of the wrong people does not fix bias.':'Try a bigger sample. Does the error go away?'}`
+      : `<b>Off by ${err.toFixed(1)} points.</b> ${n<=500?'Small random samples wobble, but they are not pushed in one direction.':'A random sample of this size lands close to the truth.'}`; };
+  el.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>{ mode=b.dataset.m; el.querySelectorAll('#mode button').forEach(x=>x.setAttribute('aria-pressed',x===b)); run(); }));
+  el.querySelector('#n').addEventListener('input',run);
+  el.querySelector('#go').addEventListener('click',()=>{ seed=(seed*31+17)>>>0; run(); });
+  run();
+}
+
+/* ---------- data cleaning preview ---------- */
+const RAW=[['Dubai','19','Business'],['dubai ','nineteen','business'],['DXB','20',''],['Sharjah','230','Design'],['Dubai','19','Business']];
+const FIX=[['Dubai','19','Business',''],['Dubai','19','Business','same as row 1? check'],['Dubai','20','(missing)','follow up or leave blank'],['Sharjah','?','Design','230 is impossible: check'],['—','—','—','exact duplicate: remove']];
+function cleanDemo(el){
+  el.innerHTML=`<div class="seg2" style="margin-bottom:10px"><button type="button" data-v="r" aria-pressed="true">Raw responses</button><button type="button" data-v="c" aria-pressed="false">After cleaning</button></div><div class="cv scroll"></div>`;
+  const cv=el.querySelector('.cv'), bs=el.querySelectorAll('.seg2 button');
+  const set=v=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+    cv.innerHTML= v==='r'
+     ? `<table class="clean"><tr><th>#</th><th>City</th><th>Age</th><th>Major</th></tr>${RAW.map((r,i)=>`<tr><td>${i+1}</td>${r.map((c,j)=>`<td class="${(i===1)||(i===2&&(j===0||j===2))||(i===3&&j===1)||(i===4)?'bd':''}">${c===''?'&nbsp;':c.replace(/ $/,'␣')}</td>`).join('')}</tr>`).join('')}</table><p class="mono" style="color:var(--muted)">␣ = an invisible extra space. Red = a problem.</p>`
+     : `<table class="clean"><tr><th>#</th><th>City</th><th>Age</th><th>Major</th><th>Action</th></tr>${FIX.map((r,i)=>`<tr><td>${i+1}</td>${r.map((c,j)=>`<td class="${j<3&&RAW[i][j]!==c?'fx':''}">${c}</td>`).join('')}</tr>`).join('')}</table><p class="mono" style="color:var(--muted)">Green = changed. Some problems need a human decision, not a formula.</p>`; };
+  bs.forEach(b=>b.addEventListener('click',()=>set(b.dataset.v))); set('r');
+}
+
+Lecture.mount({
+  id:'g106-w3', course:'GED 106', week:3, clo:3, short:'Week 3 · Data Collection & Surveys',
+  title:'Data Collection & Surveys',
+  meta:'Questback guide · Lab 3 · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'How do you collect data you can trust?', minutes:5,
+    narration:[
+     `Most bad conclusions start long before the analysis. They start with who was asked, and how the question was worded.`,
+     `This week's syllabus topics: <strong>Survey design, Choosing the right Questions for a A Survey; Data Cleaning Concept</strong>. The week builds <strong>CLO-3</strong>: Apply descriptive and diagnostic analytics to solve interdisciplinary problems.`,
+     B.plain(`<b>Key idea:</b> good data comes from a clear objective, the right people, and fair questions. A huge survey of the wrong people is worse than a small survey of the right ones.`)],
+    think:`Have you ever answered a survey question you could not answer honestly? What was wrong with it?`,
+    src:`Reading: Questback. (n.d.). <em>A beginner's guide to successful online surveys.</em> Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").`,
+    notes:[`Collect two or three stories for the Think question; they are good material for the Question doctor activity.`],
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the famous wrong poll`,8,'a'],[`Survey design`,12,'l'],[`Sampling bias simulator`,12,'a'],[`Choosing the right questions`,10,'l'],[`Question doctor`,10,'a'],[`Data cleaning concept`,8,'l'],[`Break`,5,'b'],[`Lab 3: survey in Forms`,30,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+
+  { nav:'Hook', title:'Activity · The poll of 2.4 million people', kind:'activity', minutes:8,
+    narration:[
+     `In 1936, the American magazine <em>Literary Digest</em> ran one of the biggest polls in history before the US presidential election. It mailed about 10 million ballots and got about 2.4 million back.`,
+     `Make a prediction before you find out what happened.`],
+    src:`Case facts: DS100 course notes, <em>Sampling</em> (UC Berkeley); widely documented in statistics textbooks.`,
+    notes:[`Let students vote, then reveal. Keep the explanation short; the simulator in Scene 3 does the teaching.`],
+    fig:{label:`Predict`, build:el=>W.poll(el,{q:`With 2.4 million answers, how accurate was the Literary Digest poll?`,opts:[`Almost perfect`,`A little off, by 1–2 points`,`It predicted the wrong winner`,`It was cancelled`],reveal:i=>(i===2?`<b>Correct.</b> `:`<b>Not quite.</b> `)+`The poll predicted that Alf Landon would win, with only about 43% for Franklin D. Roosevelt. Roosevelt won with about 61% of the vote. The ballots went mainly to people in phone books and club lists, who were wealthier than average, and only about a quarter of people replied. George Gallup's much smaller poll of about 50,000 people came closer.`})} },
+
+  { nav:'Survey design', title:'Survey design', minutes:12,
+    narration:[
+     `A survey is a tool for collecting data by asking people questions. Designing it well means making five decisions in order.`,
+     B.plain(`<b>Survey design</b> = planning <b>why</b> you ask (objective), <b>who</b> you ask (population and sample), <b>what</b> you ask (questions), and <b>how</b> you test it before sending.<ul><li><b>Population:</b> everyone you want to learn about (all CUD students).</li><li><b>Sample:</b> the people you actually ask.</li><li><b>Representative sample:</b> looks like the population in the ways that matter.</li></ul>`),
+     B.ex(`Objective: “Do CUD students want longer library hours?” If you only survey students who are in the library at 9 pm, your sample is not representative: they are the people who already use late hours.`),
+     B.plain(`<b>Risks and ethics:</b> tell people why you collect data, ask only what you need, keep answers anonymous where possible, and never pressure anyone to respond.`),
+     B.exam(`Five steps: <b>objective → population and sample → questions → pilot test → collect</b>. Know population vs sample, with an example.`)],
+    think:`If you post your survey link only in your major's WhatsApp group, who is missing from your sample?`,
+    notes:[`Press Play on the flow. Emphasise the pilot test: ask 3 friends to try it before sending.`],
+    fig:{label:`Five steps of survey design`, flow:[
+      {t:'Objective',s:'why?',d:'Write one sentence: what decision will this survey help with?'},
+      {t:'Who',s:'population · sample',d:'Define the population. Plan how to reach a sample that represents it.'},
+      {t:'Questions',s:'what?',d:'Ask only what serves the objective. Choose question types on purpose.'},
+      {t:'Pilot',s:'test it',d:'Ask three people to take it and tell you what was confusing. Fix it.'},
+      {t:'Collect',s:'send',d:'Share the link, explain the purpose, give a deadline, and protect privacy.'}]} },
+
+  { nav:'Sampling bias', title:'Activity · Sampling bias simulator', kind:'activity', minutes:12, wide:true,
+    video:{id:'Rf-fIpB4D50',title:'Sampling Methods and Bias with Surveys: Crash Course Statistics #10',by:'CrashCourse',why:'A clear explanation of random sampling and the most common kinds of survey bias. Listen for “non-response bias”.'},
+    narration:[
+     `Recreate the 1936 mistake. First keep the sample “from phone books and club lists” and make it bigger and bigger. Then switch to a random sample.`,
+     B.plain(`<b>Sampling bias</b> = some groups are more likely to be in your sample than others, so the result is pushed in one direction. <b>Non-response bias</b> = the people who reply differ from those who do not.`),
+     B.exam(`<b>A bigger sample does not fix a biased sample.</b> Random sampling fixes direction; sample size only reduces random wobble.`)],
+    think:`Online surveys are only answered by people who are online and willing. When could that bias your results?`,
+    notes:[`The model is constructed to reproduce the published numbers (61% true, about 43–45% predicted); it is not the real ballot data.`,`Ask: what is the error with 200,000 biased answers? With 2,000 random ones?`],
+    fig:{label:`Biased list vs random sample · constructed model`, build:poll} },
+
+  { nav:'Right questions', title:'Choosing the right questions for a survey', minutes:10,
+    narration:[
+     `The wording of a question can change the answer. Good questions are clear, neutral, ask one thing, and can be answered by everyone.`,
+     B.plain(`<b>Question types:</b> <b>closed</b> (choose from options: easy to analyse), <b>open</b> (free text: rich but slow to analyse), <b>rating or Likert scale</b> (e.g. 1 = strongly disagree to 5 = strongly agree).<br><b>Common faults:</b> <b>leading</b> (pushes an answer), <b>double-barrelled</b> (two questions in one), <b>loaded</b> (assumes something), <b>vague</b> (unclear words or time frame).`),
+     B.ex(`Leading: “Don't you agree the cafeteria is too expensive?” Neutral: “How would you rate cafeteria prices? (1 very cheap – 5 very expensive)”.`),
+     B.plain(`<b>Risks and ethics:</b> sensitive questions (health, income, religion) need a clear reason, an anonymous option and “Prefer not to say”.`),
+     B.exam(`Name four question faults and fix one example of each. Match the question type to the analysis you want: closed for counting, open for reasons.`)],
+    notes:[`Students often confuse leading and loaded. Leading pushes towards an answer; loaded assumes a fact that may not be true (“How often do you skip class?” assumes you do).`] ,
+    fig:{label:`Question types · when to use them`, html:`<table class="tbl"><thead><tr><th>Type</th><th>Example</th><th>Good for</th></tr></thead><tbody><tr><td>Closed (choice)</td><td>Which campus do you study at?</td><td>Counting, percentages</td></tr><tr><td>Rating / Likert</td><td>“The library hours meet my needs.” 1–5</td><td>Opinions you can average and compare</td></tr><tr><td>Numeric</td><td>How many hours did you study last week?</td><td>Averages, ranges</td></tr><tr><td>Open text</td><td>What one change would improve the library?</td><td>Reasons and new ideas</td></tr></tbody></table>`} },
+
+  { nav:'Question doctor', title:'Activity · Question doctor', kind:'activity', minutes:10,
+    narration:[`Diagnose each survey question. Then reveal the suggested answers: each one includes a better version.`],
+    notes:[`Pairs. Ask each pair to rewrite one question and read it out.`],
+    fig:{label:`Diagnose each question`, build:el=>W.sort(el,{buckets:['Leading','Double-barrelled','Loaded','Vague','Good'],items:[
+      {t:`“Don't you think online classes are less effective?”`,a:0,why:`Pushes towards “yes”. Better: “How effective are online classes for you? (1–5)”.`},
+      {t:`“How satisfied are you with the gym's equipment and opening hours?”`,a:1,why:`Two questions in one. Ask about equipment and hours separately.`},
+      {t:`“How often do you use AI to write your assignments?”`,a:2,why:`Assumes you do. Better: first ask “Have you used AI for an assignment this semester?”, then ask how often.`},
+      {t:`“Do you exercise regularly?”`,a:3,why:`“Regularly” means different things. Better: “How many days did you exercise last week? (0–7)”.`},
+      {t:`“Which campus building do you spend the most time in? (list)”`,a:4,why:`Clear, neutral, one thing, and easy to analyse.`},
+      {t:`“Most students love the new app. Do you?”`,a:0,why:`Social pressure. Better: “How would you rate the new app? (1–5)”.`},
+      {t:`“How many hours did you sleep last night?”`,a:4,why:`Clear and specific, with a time frame.`}]})} },
+
+  { nav:'Data cleaning concept', title:'The data cleaning concept', minutes:8,
+    narration:[
+     `Even a well-designed survey produces messy data. People type “dubai ” with a space, write “nineteen” instead of 19, skip questions, or submit twice.`,
+     B.plain(`<b>Data cleaning</b> = finding and fixing errors, inconsistencies, missing values, duplicates and impossible values <b>before</b> analysis, and recording what you changed.`),
+     B.ex(`Excel would count “Dubai”, “dubai ” and “DXB” as three different cities, and the city chart would be wrong. Cleaning makes them one category.`),
+     B.plain(`<b>Risks and ethics:</b> cleaning involves judgement. Never delete answers just because you dislike them, and keep a note of every change so others can check your work.`),
+     B.exam(`Five common problems: <b>inconsistent labels, wrong format, missing values, duplicates, outliers or impossible values</b>. Good survey design (drop-down lists, number fields) prevents many of them. Full cleaning lab in Week 6.`)],
+    think:`Which question settings in Forms could stop “nineteen” from ever being typed?`,
+    notes:[`Answer: use a Number restriction on Text questions, or a Choice question for age bands.`],
+    fig:{label:`Five responses · before and after`, build:cleanDemo} },
+
+  { nav:'Lab 3 · Survey in Forms', title:'Lab 3 · Survey Design Using Microsoft Forms', kind:'activity', minutes:30, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Construct a basic survey instrument targeting specific data collection objectives.</strong> (CLO3)`,
+     `Work in your project group. Plan first in the worksheet, then build it in Forms. Next week you will collect and export the responses.`,
+     `<ul><li>6 to 10 questions, all linked to your objective.</li><li>At least one Choice, one Rating or Likert, one Number, and one Text question.</li><li>Use “Required” on key questions and number restrictions where possible.</li><li>An introduction line: who you are, why you ask, that answers are anonymous.</li><li>Pilot it with one other group and fix one problem they find.</li></ul>`,
+     B.exam(`Lab work is graded. Keep your form: it becomes the dataset for Labs 4–7.`)],
+    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").`,
+    notes:[`Suggest safe topics: study habits, campus food, transport to campus, sleep before exams. Avoid sensitive topics unless anonymous and justified.`,`Check every group's objective sentence before they open Forms.`],
+    fig:{label:`Build it in Forms`, flow:[
+      {t:'New form',s:'Forms',d:'Create a new form in your CUD account. Give it a clear title and a one-line description.'},
+      {t:'Add questions',s:'+ Add new',d:'Choose the type for each question: Choice, Text, Rating, Date, Likert.'},
+      {t:'Settings',s:'… menu',d:'For Text questions use Restrictions → Number. Mark key questions Required. Decide who can respond.'},
+      {t:'Preview',s:'test it',d:'Use Preview on computer and mobile. Read every question as a stranger would.'},
+      {t:'Pilot',s:'swap groups',d:'Send the link to another group. Fix one thing they found confusing.'}],
+      build:el=>W.worksheet(el,{id:'g106-w3-lab',title:'GED 106 · Lab 3 · Survey plan',fields:[
+        {l:'Objective: what decision will this survey support?',rows:2},
+        {l:'Population and how we will reach a fair sample',rows:2},
+        {l:'Our questions (number them and note the type)',rows:6},
+        {l:'Pilot feedback and the change we made',rows:2}]})} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 3', kind:'exam', minutes:8,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Survey design:</b> objective → who → questions → pilot → collect.</li><li><b>Population</b> = everyone you care about; <b>sample</b> = who you ask.</li><li><b>Sampling bias:</b> a bigger biased sample is still biased (Literary Digest, 1936).</li><li><b>Question faults:</b> leading, double-barrelled, loaded, vague.</li><li><b>Question types:</b> closed, rating/Likert, numeric, open.</li><li><b>Data cleaning:</b> fix labels, formats, missing values, duplicates, outliers, and record changes.</li></ul>`),
+     `Try the likely exam questions on the right.`],
+    fig:{mindmap:{center:'Surveys',branches:[{t:'Design steps',items:['Objective','Population and sample','Questions → pilot → collect']},{t:'Sampling bias',items:['Literary Digest 1936','2.4 million answers, wrong winner','Size does not fix bias']},{t:'Question faults',items:['Leading','Double-barrelled','Loaded','Vague']},{t:'Question types',items:['Closed and rating: count','Open: reasons','Numeric: averages']},{t:'Cleaning concept',items:['Labels, formats, blanks','Duplicates, outliers','Record every change']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Explain the difference between a population and a sample, with an example.`,hint:`Population = all CUD students; sample = the 120 who answered; sample should represent the population.`},
+      {q:`What went wrong with the 1936 Literary Digest poll?`,hint:`Biased sampling frame (phone books, clubs: wealthier), low response; 2.4 million answers still wrong; Gallup's smaller sample closer.`},
+      {q:`Rewrite this question: “Don't you agree that parking on campus is terrible and expensive?”`,hint:`Leading and double-barrelled; split into two neutral rating questions on availability and cost.`},
+      {q:`What is data cleaning, and why is it an ethical as well as a technical task?`,hint:`Fix errors before analysis; judgement involved; never delete inconvenient answers; document changes.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
+    narration:[`Six questions.`,`<strong>Before Week 4:</strong> read <em>Be Data Literate</em>, Chapter 2. Make sure your group's survey is ready to send.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`A survey sent only to students in the library at 9 pm has…`,o:[`no bias`,`sampling bias`,`a leading question`,`too many questions`],a:1,why:`Late-night library users are not representative of all students.`},
+      {q:`Increasing a biased sample from 10,000 to 1,000,000…`,o:[`removes the bias`,`does not remove the bias`,`always doubles accuracy`,`makes it random`],a:1,why:`More of the wrong people still gives the wrong answer.`},
+      {q:`“How satisfied are you with the food and the prices?” is…`,o:[`leading`,`double-barrelled`,`vague`,`a good question`],a:1,why:`It asks two things at once.`},
+      {q:`Which question type is easiest to count and chart?`,o:[`Open text`,`Closed / multiple choice`,`Voice note`,`Essay`],a:1,why:`Fixed options turn directly into counts and percentages.`},
+      {q:`“dubai ”, “Dubai” and “DXB” in one column is a problem of…`,o:[`duplicates`,`inconsistent labels`,`outliers`,`sampling bias`],a:1,why:`Same meaning, different text: Excel sees three categories.`},
+      {q:`The first step of survey design is…`,o:[`choosing colours`,`writing a clear objective`,`sending the link`,`making a chart`],a:1,why:`Everything else depends on why you are asking.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

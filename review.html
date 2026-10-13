@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Midterm Review · GED 106</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#2F55C8;--wk-soft:rgba(47,85,200,.10);--wk-d:#8AA6FF;--wk-soft-d:rgba(138,166,255,.14)}
+.scroll{overflow-x:auto}
+.formula{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--f-display);font-weight:700}
+.formula span{border:1px solid var(--wk);background:var(--wk-soft);border-radius:999px;padding:6px 12px}
+.formula i{font-style:normal;color:var(--muted)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+const FORMULA=`<div class="formula"><span>Define</span><i>→</i><span>Example</span><i>→</i><span>Benefit</span><i>→</i><span>Risk</span><i>→</i><span>Human check</span></div>`;
+const T14=`<div class="scroll"><table class="tbl"><thead><tr><th></th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th></tr></thead><tbody>
+<tr><td>Question</td><td>What is data?</td><td>What skills do I need?</td><td>How do I collect it well?</td><td>What can it tell us?</td></tr>
+<tr><td>Key idea</td><td>Data → decision</td><td>Four pillars</td><td>Fair sample, fair questions</td><td>Four levels of analytics</td></tr>
+<tr><td>Key terms</td><td>Structured, digital economy, skills gap</td><td>Reading, working with, analysing, communicating</td><td>Population, sample, sampling bias, leading question</td><td>Descriptive, diagnostic, predictive, prescriptive</td></tr>
+<tr><td>Key example</td><td>WEF Future of Jobs 2025</td><td>Café sales, four ways</td><td>Literary Digest 1936</td><td>Google Flu Trends</td></tr>
+<tr><td>Lab skill</td><td>Microsoft 365 set-up</td><td>Tidy Excel table</td><td>Survey in Forms</td><td>Export to Excel</td></tr></tbody></table></div>`;
+const T58=`<div class="scroll"><table class="tbl"><thead><tr><th></th><th>Week 5</th><th>Week 6</th><th>Week 7</th><th>Week 8</th></tr></thead><tbody>
+<tr><td>Question</td><td>Can I read and speak data?</td><td>How should I think?</td><td>What is right?</td><td>What goes wrong?</td></tr>
+<tr><td>Key idea</td><td>Five checks; data dictionary</td><td>Curiosity, creativity, critical thinking</td><td>Five ethics principles</td><td>Five common problems</td></tr>
+<tr><td>Key terms</td><td>Mean, median, percentage points</td><td>Correlation vs causation</td><td>Consent, re-identification</td><td>Biased data, proxy, cherry-picking</td></tr>
+<tr><td>Key example</td><td>Cut-off axis</td><td>Snow 1854, Nightingale 1858</td><td>Cambridge Analytica, Sweeney</td><td>Amazon tool, Obermeyer 2019</td></tr>
+<tr><td>Lab skill</td><td>Sort, filter, conditional formatting</td><td>Data cleaning</td><td>AVERAGE, COUNTIF, IF, VLOOKUP</td><td>Ethics check</td></tr></tbody></table></div>`;
+const CARDS=[
+ ['Data','Recorded facts or observations'],['Structured / unstructured','Fits rows and columns / does not (photos, free text)'],['Digital economy','Economic activity built on digital technology and data'],['Data skills gap','Jobs need data skills that many workers lack'],['Four pillars','Reading, working with, analysing, communicating with data'],['Tidy table','Row = record, column = variable, one value per cell'],['Population / sample','Everyone you care about / the people you actually ask'],['Sampling bias','Some groups more likely to be included, so results are pushed one way'],['Leading question','Pushes the respondent towards an answer'],['Double-barrelled','Two questions in one'],['Data cleaning','Fixing errors, duplicates, missing and impossible values before analysis'],['Descriptive analytics','What happened?'],['Diagnostic analytics','Why did it happen?'],['Predictive analytics','What will happen?'],['Prescriptive analytics','What should we do?'],['Reading data','Understanding what data says and does not say'],['Data fluency','Talking about data confidently and correctly'],['Data dictionary','Name, type, unit, allowed values, description, source for each field'],['Mean / median','Sum ÷ count / the middle value'],['Percentage points','Difference between two percentages'],['Correlation ≠ causation','Moving together does not prove one causes the other'],['Three Cs','Curiosity, creativity, critical thinking'],['Five ethics principles','Ownership, transparency, privacy, intention, outcomes'],['Re-identification','Finding people in “anonymous” data by combining facts'],['UAE PDPL','Federal Decree-Law No. 45 of 2021; consent by default'],['Proxy variable','A stand-in variable that can carry hidden unfairness'],['Cherry-picking','Choosing only the data that supports your story'],['COUNTIF / IF / VLOOKUP','Count by condition / choose by test / find a value in a table']];
+
+Lecture.mount({
+  id:'g106-rev', course:'GED 106', week:'1–8', clo:'1–4', short:'Midterm review · Weeks 1–8',
+  title:'Midterm Review',
+  meta:'Weeks 1–8 · Midterm Examination 20%',
+  scenes:[
+  { nav:'How to revise', title:'How to revise for the midterm', kind:'review',
+    narration:[
+     `The midterm is worth <strong>20%</strong> of your grade. The syllabus places it in Week 8 in the teaching schedule and in Week 9 in the assessment section, so confirm the date with your instructor. This page covers Weeks 1 to 8.`,
+     `The syllabus says the midterm tests your ability to <strong>interpret data, apply descriptive/diagnostic analytics, and demonstrate literacy with Microsoft-based tools</strong>.`,
+     B.exam(`<b>The answer formula</b> for most questions: define the term, give a real example, name a benefit, name a risk, and finish with how a person checks it.`),
+     `<ul><li><b>Revise</b> each week's Exam takeaways scene and the two tables here.</li><li><b>Self-test</b> with the flashcards.</li><li><b>Practise</b> the questions aloud with a partner, then check the hints.</li><li><b>Redo</b> the lab skills in Excel: sort, filter, clean, AVERAGE, COUNTIF, IF, VLOOKUP.</li></ul>`],
+    notes:[`Confirm the midterm date and format with the class (schedule says Week 8; methodology says Week 9).`],
+    fig:{label:`The answer formula`, html:FORMULA+`<p class="ui" style="margin:14px 0 0;color:var(--muted)">Example: “What is sampling bias?” Define (some groups more likely to be asked) → example (Literary Digest 1936) → why it matters (wrong winner) → risk (decisions based on the wrong people) → check (random sampling, compare sample with population).</p>`} },
+
+  { nav:'Weeks 1–4', title:'Weeks 1–4 in one table', kind:'review', wide:true,
+    narration:[`Cover a column and test yourself. If you can rebuild the table from memory, you are ready for these weeks.`],
+    fig:{label:`Foundations of data literacy`, html:T14} },
+
+  { nav:'Weeks 5–8', title:'Weeks 5–8 in one table', kind:'review', wide:true,
+    narration:[`The second half: reading, thinking and ethics. Practise saying one row across all four weeks.`],
+    fig:{label:`Reading, thinking, ethics`, html:T58} },
+
+  { nav:'Repeating themes', title:'Four themes that repeat in every week', kind:'review',
+    narration:[B.exam(`For any discussion question, use at least two of these themes. They link every week of the course.`)],
+    fig:{label:`Click each theme`, build:el=>W.picker(el,{'Themes':[
+      [`1 · Ask good questions`,`Who collected it, from whom, compared with what? (Weeks 3, 5, 6)`],
+      [`2 · Check quality`,`Biased samples, messy data and missing values give wrong answers (Weeks 3, 6, 8).`],
+      [`3 · Show it fairly`,`Clear message, honest axis, full time range (Weeks 2, 5, 8).`],
+      [`4 · Respect people`,`Consent, privacy, fair outcomes, UAE law (Weeks 7, 8).`]]})} },
+
+  { nav:'Flashcards', title:'Cheat sheet: key terms to memorise', kind:'review', wide:true,
+    narration:[`Read the cards first. Then switch on <strong>Self-test</strong>: tap a card to reveal the meaning, and tap again to mark it as known.`],
+    fig:{label:`${CARDS.length} key terms · Weeks 1–8`, build:el=>W.flashcards(el,CARDS)} },
+
+  { nav:'Practice: Weeks 1–4', title:'Practice questions · Weeks 1–4', kind:'review',
+    narration:[`Try each question without notes, then open the hint.`],
+    fig:{label:`Seven questions`, build:el=>W.practice(el,[
+      {type:'short',q:`Define data and explain the chain from data to decision.`,hint:`Recorded facts; data → information → knowledge → decision, with an example.`},
+      {type:'short',q:`What is the data skills gap? Give one piece of evidence.`,hint:`Required vs actual skills; WEF 2025: analytical thinking top core skill, AI and big data fastest growing.`},
+      {type:'short',q:`Name the four pillars of data literacy with an example of each.`,hint:`Reading, working with, analysing, communicating; same situation for all four.`},
+      {type:'short',q:`Explain sampling bias using the 1936 Literary Digest poll.`,hint:`Phone books and clubs (wealthier), low response; 2.4 million answers, wrong winner; size does not fix bias.`},
+      {type:'apply',q:`Rewrite: “Don't you agree the library is too noisy and too small?”`,hint:`Leading and double-barrelled; two neutral 1–5 rating questions.`},
+      {type:'apply',q:`For a campus café, give one question at each level of analytics.`,hint:`How many sold? Why did Wednesday fall? How many tomorrow? How many to prepare?`},
+      {type:'discuss',q:`Why are predictions risky? Use Google Flu Trends.`,hint:`Patterns can change; about 2× overestimate in 2012–13; check and update; human oversight.`}])} },
+
+  { nav:'Practice: Weeks 5–8', title:'Practice questions · Weeks 5–8', kind:'review',
+    narration:[`Same method. For discuss questions, use the answer formula.`],
+    fig:{label:`Seven questions`, build:el=>W.practice(el,[
+      {type:'short',q:`List the five checks for reading a chart.`,hint:`Title, axes and units, scale, source, message and limits.`},
+      {type:'short',q:`When is the median better than the mean?`,hint:`Skewed data with outliers, e.g. salaries.`},
+      {type:'apply',q:`Write a data dictionary entry for “Rating”.`,hint:`Whole number (ordinal), scale 1–5, allowed 1–5, meaning of 1 and 5, source question.`},
+      {type:'apply',q:`Name three cleaning problems and the Excel tool for each.`,hint:`TRIM/PROPER, Remove Duplicates, filter blanks, conditional formatting for outliers.`},
+      {type:'short',q:`List the five principles of data ethics.`,hint:`Ownership, transparency, privacy, intention, outcomes.`},
+      {type:'discuss',q:`“We removed names, so the data is anonymous.” Respond.`,hint:`Re-identification; Sweeney 87%; use bands, remove fields, limit sharing.`},
+      {type:'discuss',q:`How can data be unfair even when nobody intends harm?`,hint:`Biased data (Amazon), proxy variables (Obermeyer 2019), misleading presentation; check outcomes.`}])} },
+
+  { nav:'Excel skills', title:'Excel skills to practise', kind:'review',
+    narration:[
+     `The midterm also checks literacy with Microsoft tools. Make sure you can explain each of these, and do them on a small dataset.`,
+     `<table class="tbl"><thead><tr><th>Task</th><th>Excel tool</th></tr></thead><tbody><tr><td>Organise a table</td><td>Format as Table, Freeze Top Row</td></tr><tr><td>Change order</td><td>Sort (whole table, multi-level)</td></tr><tr><td>Show some rows</td><td>Filter</td></tr><tr><td>Highlight by rule</td><td>Conditional Formatting</td></tr><tr><td>Clean text</td><td>TRIM, PROPER, Find &amp; Replace</td></tr><tr><td>Remove repeats</td><td>Remove Duplicates</td></tr><tr><td>Mean</td><td>=AVERAGE(C2:C9)</td></tr><tr><td>Count by condition</td><td>=COUNTIF(B2:B9,"Business")</td></tr><tr><td>Label by test</td><td>=IF(C2&gt;=60,"Pass","Fail")</td></tr><tr><td>Look up a value</td><td>=VLOOKUP(B2,$F$2:$G$5,2,FALSE)</td></tr></tbody></table>`],
+    fig:{label:`Read each formula aloud`, build:el=>W.practice(el,[
+      {q:`=COUNTIF(C2:C40,">=70")`,hint:`Count the cells in C2 to C40 with a value of 70 or more.`},
+      {q:`=IF(D2="","Missing","OK")`,hint:`If D2 is empty, show “Missing”, otherwise “OK”: a cleaning check.`},
+      {q:`=VLOOKUP(A2,Majors!A:B,2,FALSE)`,hint:`Find A2 exactly in column A of the Majors sheet and return the value from column B.`}],{label:'Show meaning',prefix:'',numbered:false})} },
+
+  { nav:'Mixed quiz', title:'Mixed quiz · Weeks 1–8', kind:'check',
+    narration:[`Ten questions across all eight weeks. Revisit the week of any question you miss.`],
+    fig:{label:`Ten questions`, build:el=>W.quiz(el,[
+      {q:`A voice note is…`,o:[`structured data`,`unstructured data`,`not data`,`a variable`],a:1,why:`Week 1.`},
+      {q:`Organising and cleaning data is which pillar?`,o:[`Reading`,`Working with`,`Analysing`,`Communicating`],a:1,why:`Week 2.`},
+      {q:`The Literary Digest poll was wrong mainly because of…`,o:[`a small sample`,`a biased sample`,`bad maths`,`late printing`],a:1,why:`Week 3.`},
+      {q:`“Why did sales fall?” is…`,o:[`descriptive`,`diagnostic`,`predictive`,`prescriptive`],a:1,why:`Week 4.`},
+      {q:`From 40% to 50% is…`,o:[`+10%`,`+10 percentage points`,`+50%`,`+40 points`],a:1,why:`Week 5.`},
+      {q:`A third factor causing two things to rise together shows…`,o:[`causation`,`correlation without causation`,`a duplicate`,`a proxy`],a:1,why:`Week 6.`},
+      {q:`Which Excel tool removes extra spaces?`,o:[`TRIM`,`IF`,`SUM`,`VLOOKUP`],a:0,why:`Week 6 lab.`},
+      {q:`A pre-ticked consent box breaks…`,o:[`ownership`,`outcomes`,`creativity`,`fluency`],a:0,why:`Week 7.`},
+      {q:`The UAE federal data protection law is…`,o:[`Decree-Law No. 45 of 2021`,`GDPR`,`Law No. 26 of 2015`,`none`],a:0,why:`Week 7.`},
+      {q:`Using past healthcare cost to rank health need is an example of…`,o:[`a proxy variable`,`cherry-picking`,`a leading question`,`a data dictionary`],a:0,why:`Week 8: Obermeyer et al. (2019).`}])} },
+
+  { nav:'Before the midterm', title:'Before the midterm', kind:'review',
+    narration:[
+     `<ul><li><b>Revise:</b> each week's Exam takeaways and the two tables.</li><li><b>Practise:</b> the 14 questions aloud with a partner.</li><li><b>Excel:</b> redo Labs 5–7 on your own file.</li><li><b>Remember the formula:</b> define → example → benefit → risk → human check.</li><li><b>Weight:</b> the midterm is 20% of the course grade.</li></ul>`,
+     `Questions? Bring them to office hours before the exam.`],
+    notes:[`Office hours are TBE in the syllabus; announce them on Moodle.`] }
+  ]
+});
+</script>
+</body>
+</html>

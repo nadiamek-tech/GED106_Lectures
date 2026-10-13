@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 1 · The World of Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#1F6F8B;--wk-soft:rgba(31,111,139,.10);--wk-d:#7CC4DE;--wk-soft-d:rgba(124,196,222,.14)}
+.day{display:grid;gap:6px}
+.day button{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;cursor:pointer;font-family:var(--f-display);font-size:.9rem}
+.day button .tm{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.day button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.day button.seen .tm::after{content:" ✓";color:var(--wk)}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tiles div{border:1px solid var(--line);border-top:4px solid var(--wk);border-radius:10px;padding:12px;background:var(--bg);font-family:var(--f-display);font-size:.86rem}
+.tiles b{display:block;font-size:1.9rem;line-height:1.05;margin-bottom:4px;color:var(--wk)}
+.counter{font-family:var(--f-display);font-weight:700;margin-top:10px}
+@media (max-width:560px){.tiles{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- a day of data (illustrative) ---------- */
+const DAY=[
+ ['07:10','Phone alarm and screen unlock','Your phone logs when you wake up and how long you use each app.','Structured: time stamps and minutes per app.','You and your phone maker'],
+ ['07:45','Tap your metro card','The gate records the station, the time and the card number.','Structured: one row per tap.','The transport operator'],
+ ['08:30','Swipe your student ID at the campus gate','Entry time and gate are recorded.','Structured: student ID, gate, time.','The university'],
+ ['10:15','Like a post and watch a short video','The app records what you watched, for how long, and what you skipped.','Mixed: numbers plus video and text.','The social media company'],
+ ['13:00','Order lunch on a delivery app','Your order, address, payment method, rating and delivery time are stored.','Structured: order records. Unstructured: your written review.','The app and the restaurant'],
+ ['15:40','Submit an assignment on Moodle','Submission time, file and grade are stored.','Structured: time and grade. Unstructured: your document.','The university'],
+ ['18:20','Buy groceries with a loyalty card','Every item, price and time is linked to your loyalty number.','Structured: a basket of rows.','The supermarket'],
+ ['21:30','Ask a chatbot for help','Your question and the answer may be stored, depending on the settings.','Unstructured: free text.','The AI company']];
+function dayTrail(el){
+  el.innerHTML=`<div class="day">${DAY.map((d,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><span class="tm">${d[0]}</span><span>${d[1]}</span></button>`).join('')}</div><div class="pick-detail">Select a moment of the day.</div><div class="counter"></div>`;
+  const bs=[...el.querySelectorAll('.day button')], d=el.querySelector('.pick-detail'), c=el.querySelector('.counter'); const seen=new Set();
+  bs.forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; seen.add(i); b.classList.add('seen'); bs.forEach(x=>x.setAttribute('aria-pressed',x===b)); const [t,a,what,type,who]=DAY[i];
+    d.innerHTML=`<b>${t} · ${a}</b><p>${what}</p><p><span class="tag">Type</span> ${type}</p><p><span class="tag">Who holds it</span> ${who}</p>`;
+    c.textContent=`Data trails opened: ${seen.size} of ${DAY.length}`+(seen.size===DAY.length?' · and this was an ordinary day.':''); }));
+  bs[0].click();
+}
+
+const TILES=`<div class="tiles">
+ <div><b>70%</b>of employers in the WEF survey call <em>analytical thinking</em> an essential core skill, the top skill on the list.</div>
+ <div><b>#1</b><em>AI and big data</em> is the fastest-growing skill employers expect to need by 2030.</div>
+ <div><b>39%</b>of workers' core skills are expected to change by 2030.</div></div>`;
+
+Lecture.mount({
+  id:'g106-w1', course:'GED 106', week:1, clo:1, short:'Week 1 · The World of Data',
+  title:'The World of Data',
+  meta:'Be Data Literate, Chapter 1 · Lab 1 · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'Why does everyone need to understand data now?', minutes:5,
+    narration:[
+     `Welcome to GED 106. This course is for every student, whatever your major. You do not need to be good at maths. You need curiosity, and the habit of asking “how do we know?”`,
+     `This week's syllabus topics: <strong>Introduction, Understanding the Digital Economy, Data Skills Gap</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
+     B.plain(`<b>Key idea:</b> you create data all day, and organisations use it to make decisions about you. Data literacy is the skill to read, question and use that data yourself.`),
+     B.plain(`Every topic follows four steps: <b>what is it</b>, a <b>simple example</b>, the <b>risks</b>, and <b>what to remember for the exam</b>. Purple boxes explain in plain words. Blue boxes give everyday examples. Amber boxes are for the exam.`)],
+    think:`Before we start: how many times do you think you created data today, before this class?`,
+    src:`Reading: Morrow, J. (2024). <em>Be data literate: The data literacy skills everyone needs to succeed</em> (2nd ed.). Kogan Page. Chapter 1. Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").`,
+    notes:[`Collect students' guesses for the Think question; return to them in the “My data day” activity.`,`Explain the colour code once. It is the same in every week and on the midterm review page.`],
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: is this data?`,8,'a'],[`What is data?`,10,'l'],[`The digital economy`,12,'l'],[`My data day`,10,'a'],[`The data skills gap`,10,'l'],[`Break`,5,'b'],[`Lab 1: course tools`,40,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+
+  { nav:'Is this data?', title:'Activity · Is this data?', kind:'activity', minutes:8,
+    narration:[
+     `Use your instinct first. For each item, decide: is it data, or not data?`,
+     `Then reveal the suggested answers. Most people are surprised how much counts as data.`],
+    notes:[`Pairs, 5 minutes. Then ask: what do all the “data” items have in common? Expected: they record a fact, an observation or a measurement that can be stored and analysed.`],
+    fig:{label:`Sort the items`, build:el=>W.sort(el,{buckets:['Data','Not data'],items:[
+      {t:`Your marks in last semester's courses`,a:0,why:`Numbers that record a result. Classic structured data.`},
+      {t:`A photo you posted online`,a:0,why:`Images are data too: unstructured data. Apps can detect faces, places and objects in them.`},
+      {t:`A voice note to a friend`,a:0,why:`Audio is unstructured data. It can be turned into text and analysed.`},
+      {t:`The temperature in Dubai at noon`,a:0,why:`A measurement. Weather services record it every hour.`},
+      {t:`Your feeling of being tired right now, never written down`,a:1,why:`It becomes data only when someone records it, for example in a survey or a sleep app.`},
+      {t:`Your steps counted by your phone`,a:0,why:`Sensor data, recorded automatically all day.`},
+      {t:`A product review with five stars and a comment`,a:0,why:`Both: the stars are structured, the comment is unstructured text.`}]})} },
+
+  { nav:'What is data?', title:'Introduction · What is data?', minutes:10,
+    narration:[
+     `Data is not only numbers in a spreadsheet. It is any recorded fact or observation: numbers, words, images, sounds, clicks and locations.`,
+     B.plain(`<b>Data</b> = recorded facts or observations. On its own, data does not tell you what to do. It becomes useful when we organise it into <b>information</b>, understand it as <b>knowledge</b>, and use it to make a <b>decision</b>.<ul><li><b>Structured data</b> fits in rows and columns (marks, prices, dates).</li><li><b>Unstructured data</b> does not (photos, voice notes, free text).</li></ul>`),
+     B.ex(`Data: “38, 41, 43”. Information: “the noon temperature rose three days in a row”. Knowledge: “a heatwave is coming”. Decision: “move the outdoor event to the evening”.`),
+     B.plain(`<b>Risks and ethics:</b> data about people is never neutral. It can be wrong, incomplete or collected without people knowing. We return to this in Weeks 7 and 8.`),
+     B.exam(`<b>Data → information → knowledge → decision.</b> Know the difference between <b>structured</b> and <b>unstructured</b> data, with one example of each.`)],
+    think:`Is a WhatsApp group chat structured or unstructured data? What parts of it are structured?`,
+    notes:[`Answer to Think: the messages are unstructured text, but each message has structured metadata: sender, time, group.`,`Press Play on the flow to walk through the temperature example.`],
+    fig:{label:`From data to decision`, flow:[
+      {t:'Data',s:'38 · 41 · 43',d:'Raw recorded values. On their own they say very little.'},
+      {t:'Information',s:'organised',d:'The noon temperature rose three days in a row. Data with context and order.'},
+      {t:'Knowledge',s:'understood',d:'Rising temperature plus the season tells us a heatwave is likely.'},
+      {t:'Decision',s:'action',d:'Move the outdoor event to the evening. This is why we collect data at all.'}]} },
+
+  { nav:'Digital economy', title:'Understanding the digital economy', minutes:12,
+    video:{id:'hVimVzgtD6w',title:`The best stats you've ever seen`,by:'Hans Rosling · TED',why:`A famous talk that shows how good data, shown well, can overturn what people “know” about the world. Watch how he turns a spreadsheet into a story.`},
+    narration:[
+     `In the digital economy, many of the services you use every day are built on data. Delivery apps, maps, banks, streaming and social media all collect data, analyse it, and use it to improve their product or to sell advertising.`,
+     B.plain(`<b>The digital economy</b> is economic activity that runs on digital technology and data: online shopping, digital payments, apps, platforms and online services. In this economy, data is a resource, like oil or electricity: it is collected, processed and turned into value.`),
+     B.ex(`A food delivery app learns which restaurants you order from and at what time. It uses this to show you offers at lunchtime, to estimate delivery times, and to decide where to send its riders.`),
+     B.plain(`<b>Risks and ethics:</b> when a service is free, the data you create is often part of how it makes money. Ask: who owns this data, who can see it, and what is it used for?`),
+     B.exam(`Define the digital economy and explain the cycle: <b>collect → store → analyse → act → create value</b>, with one everyday example.`)],
+    think:`Name one free app on your phone. How do you think it makes money from your data?`,
+    src:`Video: Hans Rosling, TED.`,
+    notes:[`Keep the Think question quick; a few answers from the room. Expected: advertising, selling insights, improving the product so you stay.`,`If time is short, set the video as homework.`],
+    fig:{label:`How data creates value`, flow:[
+      {t:'Collect',s:'you use the app',d:'Every order, click and location is recorded.'},
+      {t:'Store',s:'in the cloud',d:'Data is kept in large databases, often for years.'},
+      {t:'Analyse',s:'find patterns',d:'Which dishes sell at lunchtime? Which riders are fastest?'},
+      {t:'Act',s:'change something',d:'Show a lunch offer, move riders, change prices.'},
+      {t:'Value',s:'money and service',d:'More orders, lower costs, a better service, and data to sell to advertisers.'}]} },
+
+  { nav:'My data day', title:'Activity · My data day', kind:'activity', minutes:10,
+    narration:[
+     `Open each moment of a typical student day on the right. For each one, notice three things: <b>what</b> is recorded, what <b>type</b> of data it is, and <b>who holds it</b>.`,
+     `Then fill in the worksheet with your own day. Be honest: most people find at least ten data trails before lunch.`],
+    notes:[`The day on the right is illustrative, not a real person's data.`,`Ask two or three students to share their count; compare with their guesses from Start here.`],
+    wide:true,
+    fig:{label:`A student's day of data · illustrative`, build:el=>{ el.innerHTML='<div id="d1"></div><div id="d2" style="margin-top:18px"></div>'; dayTrail(el.querySelector('#d1')); W.worksheet(el.querySelector('#d2'),{id:'g106-w1-day',title:'GED 106 · Week 1 · My data day',fields:[
+      {l:'Five moments today when I created data',hint:'Time and action',rows:4},
+      {l:'Which of these were structured, and which unstructured?',rows:2},
+      {l:'Which organisation holds the most data about me, and why?',rows:2}]}); }} },
+
+  { nav:'Data skills gap', title:'The data skills gap', minutes:10,
+    narration:[
+     `Employers need people who can work with data, and there are not enough of them. This difference between the skills employers need and the skills people have is called a <b>skills gap</b>.`,
+     B.plain(`<b>The data skills gap</b> = the difference between the data skills jobs now require and the skills workers actually have. It affects every sector, not only technology: health, marketing, education, government and design all use data every day.`),
+     B.ex(`The World Economic Forum's <em>Future of Jobs Report 2025</em> surveyed employers worldwide. Analytical thinking was the top core skill, and “AI and big data” was the fastest-growing skill to 2030 (figure on the right).`),
+     B.plain(`<b>Risks and ethics:</b> people who cannot read data are easier to mislead, by a chart, a headline or an app. A skills gap is also a fairness gap.`),
+     B.exam(`Define the data skills gap and give one piece of evidence, for example: analytical thinking is the top core skill in the WEF Future of Jobs Report 2025.`)],
+    think:`Which data skill would help you most in the job you want after graduation?`,
+    src:`World Economic Forum (2025). <em>The Future of Jobs Report 2025</em>, Chapter 3: Skills outlook.`,
+    notes:[`Link to the course: every lab builds a skill employers list (Excel, Forms, cleaning, charts, dashboards).`],
+    fig:{label:`What employers say · WEF Future of Jobs Report 2025`, html:TILES, caption:`Source: World Economic Forum, Future of Jobs Report 2025, Skills outlook. Survey of employers worldwide.`} },
+
+  { nav:'Lab 1 · Tools', title:'Lab 1 · Introduction to Course Tools and Platforms', kind:'activity', minutes:40, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Set up Microsoft 365 environment. Navigate and familiarize with Microsoft Excel, Forms, and OneDrive.</strong> (CLO4)`,
+     B.plain(`<b>Three tools, three jobs.</b> <b>Forms</b> collects data (surveys). <b>Excel</b> organises and analyses it. <b>OneDrive</b> stores your files in the cloud so you can open them from any device and share them with your group.`),
+     `Follow the five steps on the right. Press Play, or click each step. Tick each item in the checklist as you go.`,
+     B.exam(`For the lab work grade, you must be able to find, save and share your files in OneDrive. Every later lab builds on this folder.`)],
+    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").`,
+    notes:[`Walk around and check that every student can sign in. Common problem: students signed into a personal Microsoft account instead of the CUD one.`,`Students keep the same GED106 folder for the whole semester.`],
+    fig:{label:`Five set-up steps · then the checklist`, flow:[
+      {t:'Sign in',s:'CUD account',d:'Go to microsoft365.com and sign in with your CUD email, not a personal account.'},
+      {t:'OneDrive',s:'make a folder',d:'Open OneDrive and create a folder called GED106. Inside it, make a folder called Labs.'},
+      {t:'Excel',s:'new workbook',d:'Create a blank Excel workbook in the Labs folder. Name it Lab01_YourName. Find the Home, Insert and Data tabs.'},
+      {t:'Forms',s:'new form',d:'Open Forms and create a blank form titled “Test form”. Add one Choice question. You will design a real survey in Week 3.'},
+      {t:'Share',s:'link to the group',d:'In OneDrive, share the GED106 folder with your group partner. Choose “can view” or “can edit” on purpose.'}],
+      build:el=>W.worksheet(el,{id:'g106-w1-lab',title:'GED 106 · Lab 1 · Set-up checklist',fields:[
+        {l:'1. Signed in with my CUD account (write the account you used)',rows:1},
+        {l:'2. Folder path of my Labs folder in OneDrive',ph:'e.g. My files / GED106 / Labs',rows:1},
+        {l:'3. Three things I found on the Excel ribbon',rows:2},
+        {l:'4. The question type I added in Forms',rows:1},
+        {l:'5. Who I shared the folder with, and with which permission',rows:1}]})} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 1', kind:'exam', minutes:8,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Data</b> = recorded facts or observations: numbers, text, images, sound, clicks.</li><li><b>Structured</b> (rows and columns) vs <b>unstructured</b> (photos, free text).</li><li><b>Data → information → knowledge → decision.</b></li><li><b>Digital economy:</b> data is collected, stored, analysed and acted on to create value.</li><li><b>Data skills gap:</b> jobs need data skills that many workers lack (WEF 2025: analytical thinking is the top core skill).</li><li><b>Tools:</b> Forms collects, Excel analyses, OneDrive stores and shares.</li></ul>`),
+     `Try the likely exam questions on the right. Answer aloud or on paper first, then open the hint.`],
+    notes:[`Quick recall: ask students to explain the data-to-decision chain with their own example.`],
+    fig:{mindmap:{center:'The world of data',branches:[{t:'What is data?',items:['Recorded facts or observations','Numbers, text, images, sound']},{t:'Two kinds',items:['Structured: rows and columns','Unstructured: photos, free text']},{t:'Data to decision',items:['Data → information','→ knowledge → decision']},{t:'Digital economy',items:['Collect → store → analyse','→ act → value','Free apps run on your data']},{t:'Skills gap',items:['Jobs need data skills','WEF 2025: analytical thinking #1','AI and big data growing fastest']},{t:'Course tools',items:['Forms collects','Excel analyses','OneDrive stores and shares']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Define data and give one example of structured and one of unstructured data.`,hint:`Recorded facts or observations; structured = marks table; unstructured = a photo or a written review.`},
+      {q:`Explain the chain from data to decision with an everyday example.`,hint:`Data (raw values) → information (organised) → knowledge (understood) → decision (action); e.g. temperatures → heatwave → move the event.`},
+      {q:`What is the digital economy? How does a free app create value from data?`,hint:`Economy running on digital technology and data; collect → store → analyse → act → value (ads, better service).`},
+      {q:`What is the data skills gap, and why does it matter for students from every major?`,hint:`Difference between required and actual data skills; evidence from WEF 2025; every sector uses data; people without skills are easier to mislead.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
+    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 2:</strong> read <em>Be Data Literate</em>, Chapter 3. Make sure your GED106 folder is in OneDrive and shared with your partner.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Which of these is unstructured data?`,o:[`A table of exam marks`,`A voice note`,`A list of prices`,`Dates of birth in a spreadsheet`],a:1,why:`Audio does not fit naturally into rows and columns.`},
+      {q:`“The noon temperature rose three days in a row” is an example of…`,o:[`raw data`,`information`,`a decision`,`unstructured data`],a:1,why:`It is data organised with context.`},
+      {q:`In the digital economy, data is best described as…`,o:[`a by-product with no value`,`a resource that is collected and turned into value`,`only used by governments`,`the same as money`],a:1,why:`Organisations collect, analyse and act on data to create value.`},
+      {q:`The data skills gap means…`,o:[`computers lack data`,`jobs need data skills that many workers do not have`,`data is missing from spreadsheets`,`students study too much statistics`],a:1,why:`It is a gap between required and actual skills.`},
+      {q:`In the WEF Future of Jobs Report 2025, the top core skill for employers was…`,o:[`coding`,`analytical thinking`,`public speaking`,`foreign languages`],a:1,why:`About 7 in 10 employers consider it essential.`},
+      {q:`Which tool in this course is mainly for collecting survey responses?`,o:[`Excel`,`OneDrive`,`Forms`,`PowerPoint`],a:2,why:`Forms collects; Excel analyses; OneDrive stores.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 7 · Data Ethics 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#7A4FB8;--wk-soft:rgba(122,79,184,.10);--wk-d:#C3A6F2;--wk-soft-d:rgba(195,166,242,.14)}
+.scroll{overflow-x:auto}
+.chk{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chk label{display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-family:var(--f-display);font-size:.86rem;cursor:pointer;background:var(--bg)}
+.chk label:has(input:checked){border-color:var(--wk);background:var(--wk-soft)}
+.big{font-family:var(--f-display);font-weight:800;font-size:2.4rem;line-height:1;color:var(--wk)}
+.bar2{height:16px;border-radius:8px;background:var(--sunk);overflow:hidden;margin:8px 0}
+.bar2 i{display:block;height:100%;background:var(--bad);transition:width .3s}
+.fx{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem}
+.fx th,.fx td{border:1px solid var(--line);padding:4px 7px;text-align:left;white-space:nowrap}
+.fx th{background:var(--sunk);font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.fx td.new{background:var(--wk-soft);font-weight:600}
+.fbar{font-family:var(--f-mono);font-size:.8rem;border:1px solid var(--line);border-radius:6px;padding:6px 9px;background:var(--surface);margin:8px 0;overflow-x:auto;white-space:nowrap}
+.fbar b{color:var(--wk)}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-mono);font-weight:600;font-size:.8rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+select{font:inherit;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+const PRIN={'Five principles':[
+ ['1 · Ownership','A person has ownership over their personal information. Collecting it without their agreement is unethical. Ask for clear consent, for example an opt-in box that is not ticked in advance.'],
+ ['2 · Transparency','People have a right to know how you plan to collect, store and use their data. Explain it in plain words, not hidden in long legal text.'],
+ ['3 · Privacy','Even with consent, personal information must be protected: stored securely, shared only when needed, and not published in a way that identifies people.'],
+ ['4 · Intention','Before collecting data, ask why you need it, what good it will do, and whether it could be used to harm. Collect only what you need.'],
+ ['5 · Outcomes','Even with good intentions, results can harm people, for example by treating a group unfairly. Check the effects, not only the plans.']]};
+
+/* ---------- re-identification tool (synthetic students) ---------- */
+function synth(){ let s=12345; const r=()=>{ s=(s*1103515245+12345)>>>0; return s/4294967296; };
+  const EM=['Dubai','Sharjah','Abu Dhabi','Ajman','Ras Al Khaimah','Fujairah','Umm Al Quwain'], EW=[.42,.24,.14,.09,.05,.03,.03], MJ=['Business','Design','Computing','Engineering','Media','Health'];
+  const pick=(a,w)=>{ let x=r(),c=0; for(let i=0;i<a.length;i++){ c+=w[i]; if(x<c) return a[i]; } return a[a.length-1]; };
+  return Array.from({length:300},()=>({ 'Gender':r()<.5?'F':'M', 'Birth year':2002+Math.floor(r()*5), 'Birthday (day + month)':`${1+Math.floor(r()*28)}/${1+Math.floor(r()*12)}`, 'Emirate':pick(EM,EW), 'Major':MJ[Math.floor(r()*MJ.length)] })); }
+const PEOPLE=synth();
+function reid(el){
+  const F=Object.keys(PEOPLE[0]);
+  el.innerHTML=`<p class="ui" style="margin:0 0 8px">You are publishing a class dataset of 300 students with <b>no names</b>. Tick the fields you include.</p><div class="chk">${F.map((f,i)=>`<label><input type="checkbox" value="${f}" ${i===0||i===3?'checked':''}> ${f}</label>`).join('')}</div>
+   <div class="big" id="rp"></div><div class="bar2"><i id="rb"></i></div><div class="feedback" id="rf"></div><p class="mono" style="color:var(--muted)">Synthetic data generated in the page. Uniqueness is counted, not estimated.</p>`;
+  const draw=()=>{ const on=[...el.querySelectorAll('input:checked')].map(x=>x.value); const m=new Map();
+    PEOPLE.forEach(p=>{ const k=on.map(f=>p[f]).join('|'); m.set(k,(m.get(k)||0)+1); });
+    const uniq=on.length?PEOPLE.filter(p=>m.get(on.map(f=>p[f]).join('|'))===1).length:0; const pct=uniq/PEOPLE.length*100;
+    el.querySelector('#rp').textContent=pct.toFixed(0)+'% unique';
+    el.querySelector('#rb').style.width=pct+'%';
+    el.querySelector('#rf').innerHTML=`<b>${uniq} of 300</b> students have a combination nobody else shares. Anyone who knows those facts about a classmate can find their row${on.length?'':' (tick at least one field)'}. ${pct>50?'Removing the names did <b>not</b> make this data anonymous.':pct>10?'Some people are already exposed.':'Low risk with these fields alone.'}`; };
+  el.querySelectorAll('input').forEach(x=>x.addEventListener('change',draw)); draw();
+}
+
+/* ---------- Lab 7: Excel function sandbox (fictional) ---------- */
+const ROWS=[['Aisha','Business',78,6],['Omar','Design',85,10],['Lina','Computing',52,4],['Yousef','Business',91,12],['Mariam','Media',66,7],['Khalid','Computing',48,3],['Sara','Design',88,9],['Hamdan','Business',59,5]];
+const LOOK=[['Business','School of Business'],['Computing','School of Computing'],['Design','School of Design'],['Media','School of Media']];
+function fx(el){
+  const F=['AVERAGE','COUNTIF','IF','VLOOKUP'];
+  el.innerHTML=`<div class="seg2">${F.map(f=>`<button type="button" data-f="${f}">${f}</button>`).join('')}</div><div id="opt" class="ui"></div><div class="fbar" id="fb"></div><div class="scroll" id="tb"></div><div class="feedback" id="fr" style="margin-top:8px"></div>
+   <p class="mono" style="color:var(--muted)">Fictional data. Lookup table (fictional) in F2:G5: ${LOOK.map(l=>l[0]+' → '+l[1]).join(' · ')}.</p>`;
+  let fn='AVERAGE';
+  const table=(extra,hdr,hlCol)=>`<table class="fx"><thead><tr><th></th><th>A Name</th><th>B Major</th><th>C Quiz</th><th>D Hours</th>${extra?`<th>E ${hdr}</th>`:''}</tr></thead><tbody>${ROWS.map((r,i)=>`<tr><th>${i+2}</th>${r.map((v,j)=>`<td class="${hlCol&&hlCol(i,j)?'new':''}">${v}</td>`).join('')}${extra?`<td class="new">${extra(r)}</td>`:''}</tr>`).join('')}</tbody></table>`;
+  const draw=()=>{ el.querySelectorAll('.seg2 button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===fn)); const opt=el.querySelector('#opt'); const fb=el.querySelector('#fb'), tb=el.querySelector('#tb'), fr=el.querySelector('#fr');
+    if(fn==='AVERAGE'){ if(!opt.dataset.k||opt.dataset.k!==fn){ opt.innerHTML=`<label>Column: <select id="ac"><option value="2">C Quiz</option><option value="3">D Hours</option></select></label>`; opt.dataset.k=fn; opt.querySelector('#ac').addEventListener('change',draw);} const c=+opt.querySelector('#ac').value, L='ABCD'[c];
+      const v=ROWS.reduce((a,r)=>a+r[c],0)/ROWS.length; fb.innerHTML=`<b>=AVERAGE(${L}2:${L}9)</b>`; tb.innerHTML=table(null,null,(i,j)=>j===c); fr.innerHTML=`Result: <b>${v.toFixed(2)}</b>. AVERAGE adds the 8 values and divides by 8 (the mean, Week 5).`; }
+    if(fn==='COUNTIF'){ if(opt.dataset.k!==fn){ opt.innerHTML=`<label>Count rows where <select id="cc"><option value="b">Major is…</option><option value="q">Quiz is at least…</option></select></label> <select id="cv"></select>`; opt.dataset.k=fn;
+        const fill=()=>{ const t=opt.querySelector('#cc').value; opt.querySelector('#cv').innerHTML=t==='b'?[...new Set(ROWS.map(r=>r[1]))].map(m=>`<option>${m}</option>`).join(''):[50,60,70,80,90].map(n=>`<option>${n}</option>`).join(''); };
+        fill(); opt.querySelector('#cc').addEventListener('change',()=>{fill();draw();}); opt.querySelector('#cv').addEventListener('change',draw); }
+      const t=opt.querySelector('#cc').value, v=opt.querySelector('#cv').value;
+      const hit=r=>t==='b'?r[1]===v:r[2]>=+v; const n=ROWS.filter(hit).length;
+      fb.innerHTML= t==='b'?`<b>=COUNTIF(B2:B9,"${v}")</b>`:`<b>=COUNTIF(C2:C9,"&gt;=${v}")</b>`; tb.innerHTML=table(null,null,(i,j)=>hit(ROWS[i])&&j===(t==='b'?1:2)); fr.innerHTML=`Result: <b>${n}</b>. COUNTIF counts the cells in a range that meet one condition.`; }
+    if(fn==='IF'){ if(opt.dataset.k!==fn){ opt.innerHTML=`<label>Pass mark: <b id="pv"></b> <input type="range" id="pm" min="40" max="90" value="60" style="width:150px;vertical-align:middle"></label>`; opt.dataset.k=fn; opt.querySelector('#pm').addEventListener('input',draw); }
+      const p=+opt.querySelector('#pm').value; opt.querySelector('#pv').textContent=p;
+      fb.innerHTML=`<b>=IF(C2&gt;=${p},"Pass","Fail")</b> <span style="color:var(--muted)">then fill down to E9</span>`; tb.innerHTML=table(r=>r[2]>=p?'Pass':'Fail','Result'); const n=ROWS.filter(r=>r[2]>=p).length; fr.innerHTML=`<b>${n}</b> Pass, <b>${8-n}</b> Fail. IF tests a condition and returns one value if true, another if false.`; }
+    if(fn==='VLOOKUP'){ opt.innerHTML=''; opt.dataset.k=fn;
+      fb.innerHTML=`<b>=VLOOKUP(B2,$F$2:$G$5,2,FALSE)</b> <span style="color:var(--muted)">then fill down</span>`; tb.innerHTML=table(r=>{ const f=LOOK.find(l=>l[0]===r[1]); return f?f[1]:'#N/A'; },'School');
+      fr.innerHTML=`VLOOKUP finds the Major in the first column of the lookup table and returns the value from column 2. <b>FALSE</b> means exact match. A value not in the table gives <b>#N/A</b>: a useful warning when cleaning data. (Newer Excel also has XLOOKUP.)`; }
+  };
+  el.querySelectorAll('.seg2 button').forEach(b=>b.addEventListener('click',()=>{ fn=b.dataset.f; draw(); })); draw();
+}
+
+Lecture.mount({
+  id:'g106-w7', course:'GED 106', week:7, clo:1, short:'Week 7 · Data Ethics 1',
+  title:'Data Ethics -1',
+  meta:'Be Data Literate, Chapter 4 · Cote (2021) · Lab 7 · 2-hour session',
+  scenes:[
+  { nav:'Start here', title:'Just because we can collect it, should we?', minutes:5,
+    narration:[
+     `So far we have learned to collect, clean and read data. This week we ask a different question: what is the <em>right</em> way to handle data about people?`,
+     `This week's syllabus topics: <strong>Principles of data Ethics: Ownership; Transparency; Privacy; Intention; Outcomes</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
+     B.plain(`<b>Key idea:</b> data ethics asks whether data use is fair and respectful to the people behind the data. Five principles guide it: <b>ownership, transparency, privacy, intention, outcomes</b>. In the UAE, the law also sets rules (Federal Decree-Law No. 45 of 2021).`)],
+    think:`Which app on your phone do you trust least with your data? Why?`,
+    src:`Readings: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4. Cote, C. (2021, March 16). 5 principles of data ethics for business professionals. Harvard Business School Online. Lab reading: Microsoft Forms + Excel, Be Data Literate Ch. 6.`,
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: free coffee`,6,'a'],[`Five principles`,8,'l'],[`Ownership and transparency`,10,'l'],[`Privacy: is it anonymous?`,12,'a'],[`Intention and outcomes`,8,'l'],[`UAE data protection law`,7,'l'],[`Case matcher`,8,'a'],[`Break`,5,'b'],[`Lab 7: Excel functions`,31,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+
+  { nav:'Hook', title:'Activity · A free coffee for your location?', kind:'activity', minutes:6,
+    narration:[`A café app offers you a free coffee every week if you turn on location “always”. What do you do?`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Free weekly coffee for “always on” location sharing?`,opts:[`Yes, free coffee!`,`Only “while using the app”`,`Only if they explain how the data is used`,`No`],reveal:i=>[`Many people choose this. Your location all day can show where you live, study, pray, exercise and who you meet.`,`A good middle path: you share less but still get the service.`,`That is the principle of <b>transparency</b>: you can only agree properly if you know what you agree to.`,`A valid choice. You <b>own</b> your data and can refuse.`][i]+` Today's five principles help you decide, as a user and as a future professional.`})} },
+
+  { nav:'Five principles', title:'The five principles of data ethics', minutes:8,
+    narration:[
+     B.plain(`<b>Data ethics</b> = the moral rules for how data is collected, stored, used and shared, especially data about people. Cote (2021) lists five principles for business professionals.`),
+     `Click each principle on the right. Then read the next three scenes, which give each one a real example.`,
+     B.exam(`Memorise the five in order: <b>Ownership, Transparency, Privacy, Intention, Outcomes</b>. A sentence to help: “<b>O</b>ur <b>T</b>eam <b>P</b>rotects <b>I</b>nformation <b>O</b>penly.”`)],
+    src:`Cote, C. (2021, March 16). 5 principles of data ethics for business professionals. Harvard Business School Online.`,
+    fig:{label:`Click each principle`, build:el=>W.picker(el,PRIN,'Select a principle.')} },
+
+  { nav:'Ownership + transparency', title:'Ownership and transparency', minutes:10,
+    video:{id:'OQSMr-3GGvQ',title:`Facebook's role in Brexit — and the threat to democracy`,by:'Carole Cadwalladr · TED',why:'The journalist who reported on Cambridge Analytica explains why the case mattered. Focus on what users did and did not know.'},
+    narration:[
+     B.plain(`<b>Ownership:</b> people own their personal data and must agree before it is collected. <b>Transparency:</b> people must be told, clearly, what will be collected and how it will be used.`),
+     B.ex(`In 2018, Facebook said the personal information of up to 87 million users may have been improperly shared with the political consulting firm Cambridge Analytica. Much of it came through a quiz app: people who took the quiz, and many of their friends, had data collected without understanding how it would be used.`),
+     B.plain(`<b>Risks and ethics:</b> “I clicked Agree” is not real consent if the terms were hidden, too long to read, or did not mention the real use.`),
+     B.exam(`Use <b>Cambridge Analytica (2018, up to 87 million users)</b> as an example of ownership and transparency failing.`)],
+    think:`Your friends' data was shared because <em>you</em> took a quiz. Whose consent was needed?`,
+    src:`Facebook statement reported in April 2018, e.g. Variety (2018), “Facebook says info on up to 87 million users was ‘improperly’ shared with Cambridge Analytica”.`,
+    notes:[`Present the case neutrally: the focus is consent and transparency, not party politics.`] },
+
+  { nav:'Privacy', title:'Privacy · is “no names” anonymous?', kind:'activity', minutes:12, wide:true,
+    narration:[
+     B.plain(`<b>Privacy:</b> even when people agree to share data, it must be protected and not published in a way that identifies them. Removing names is often <b>not enough</b>.`),
+     B.ex(`Researcher Latanya Sweeney estimated in 2000 that about 87% of the US population could be uniquely identified by just three facts: five-digit ZIP code, gender and date of birth.`),
+     `Try it on the right with 300 synthetic students. Tick Gender and Emirate only, then add Birthday and Birth year. Watch how quickly people become unique.`,
+     B.ex(`In 2018, the fitness app Strava's public global heat map of users' runs was reported to reveal the layout of military bases in several countries, because soldiers recorded their exercise routes.`),
+     B.exam(`Removing names ≠ anonymous. Combinations of <b>ordinary facts</b> (birth date, area, gender) can identify people (Sweeney, 2000).`)],
+    think:`Your group project dataset: which columns together could identify a classmate?`,
+    src:`Sweeney, L. (2000). <em>Simple demographics often identify people uniquely</em>. Carnegie Mellon University, Data Privacy Working Paper 3. Strava heat map reporting, January 2018 (e.g. The Guardian, BBC).`,
+    notes:[`Students should see uniqueness jump above 90% with birthday plus one more field.`,`Link to the project: publish age bands, not birth dates.`],
+    fig:{label:`How unique is each row? · synthetic data`, build:reid} },
+
+  { nav:'Intention + outcomes', title:'Intention and outcomes', minutes:8,
+    narration:[
+     B.plain(`<b>Intention:</b> before collecting data, ask why you need it and whether it could harm. Collect only what you need. <b>Outcomes:</b> even with good intentions, check the effects on real people, especially unfair effects on some groups.`),
+     B.ex(`In 2012, <em>The New York Times</em> reported that the US retailer Target analysed shopping patterns to predict which customers were likely to be pregnant, so it could send baby-product offers. The intention was marketing; the outcome raised serious questions about predicting very private facts.`),
+     B.plain(`<b>Outcomes</b> are the bridge to next week. Week 8 looks at common ethical problems, such as biased data, which harm people even when nobody intended harm.`),
+     B.exam(`Intention = <b>why</b> you collect. Outcomes = <b>what actually happens</b> to people. Good intentions do not guarantee good outcomes.`)],
+    src:`Duhigg, C. (2012, February 16). How companies learn your secrets. <em>The New York Times Magazine</em>.`,
+    notes:[`Present the Target story as “reported”; details of individual anecdotes have been debated.`],
+    fig:{label:`Ask before, check after`, flow:[
+      {t:'Intention',s:'before',d:'Why do we need this data? What good will it do? Could it harm anyone?'},
+      {t:'Minimise',s:'collect less',d:'Only collect the fields you need. Prefer age bands to birth dates.'},
+      {t:'Use',s:'as promised',d:'Use data only for the purpose people agreed to.'},
+      {t:'Outcomes',s:'after',d:'Check who benefits and who is harmed. Look for unfair effects on groups.'},
+      {t:'Fix',s:'and report',d:'Change the process if harm appears, and tell the people affected.'}]} },
+
+  { nav:'UAE law', title:'Regulatory impact · UAE personal data protection', minutes:7,
+    narration:[
+     `CLO-1 includes <em>governance and regulatory impact</em>. Ethics says what is right; laws say what is required. In the UAE, the main federal law is the Personal Data Protection Law.`,
+     B.plain(`<b>Federal Decree-Law No. 45 of 2021</b> on the Protection of Personal Data took effect on 2 January 2022.<ul><li><b>Consent</b> is the default legal basis. It must be specific, clear and unambiguous.</li><li>People have rights to <b>access</b>, <b>correct</b> or <b>erase</b> their data, to <b>restrict</b> or <b>object</b> to some processing, and to object to <b>automated</b> decisions.</li><li>It does not apply in the DIFC and ADGM financial free zones, which have their own data protection laws, and health data has its own law.</li></ul>`),
+     B.ex(`If your group survey collects names and emails, the law's ideas apply directly: tell people why, ask for clear consent, keep the data secure, and delete it when the project ends.`),
+     B.exam(`Name the law (<b>Federal Decree-Law No. 45 of 2021</b>), its default basis (<b>consent</b>), and two rights it gives people.`)],
+    src:`Herbert Smith Freehills (2021). New data protection law introduced in the UAE: 10 key takeaways. Official text: UAE Government portal, “Data protection laws” (u.ae), listed in the syllabus suggested readings.`,
+    notes:[`This is a summary for general education, not legal advice. Check the u.ae portal for the current status of executive regulations before class.`],
+    fig:{label:`Ethics principle → what the UAE law asks`, html:`<table class="tbl"><thead><tr><th>Principle</th><th>In the UAE law</th></tr></thead><tbody><tr><td>Ownership</td><td>Consent is the default basis</td></tr><tr><td>Transparency</td><td>People can access information about their data</td></tr><tr><td>Privacy</td><td>Security duties; rights to correct and erase</td></tr><tr><td>Intention</td><td>Process for a specific, clear purpose</td></tr><tr><td>Outcomes</td><td>Right to object to automated processing</td></tr></tbody></table>`} },
+
+  { nav:'Case matcher', title:'Activity · Which principle is at stake?', kind:'activity', minutes:8,
+    narration:[`Match each case to the principle most at stake. Several principles often apply; choose the main one.`],
+    fig:{label:`Match the cases`, build:el=>W.sort(el,{buckets:['Ownership','Transparency','Privacy','Intention','Outcomes'],items:[
+      {t:`A sign-up form has the marketing box already ticked.`,a:0,why:`Consent must be an active choice.`},
+      {t:`A gym publishes members' workout logs with names removed but full birth dates.`,a:2,why:`Birth dates plus other fields can identify people.`},
+      {t:`An app's privacy policy is 40 pages long and never mentions selling data to advertisers.`,a:1,why:`People cannot agree to what they are not told.`},
+      {t:`A club collects members' passport numbers “in case we need them”.`,a:3,why:`No clear purpose: collect only what you need.`},
+      {t:`A scholarship model, built in good faith, rejects far more students from one area.`,a:4,why:`Good intentions, unfair results. Check outcomes (Week 8).`},
+      {t:`A survey says answers are anonymous, but it records email addresses automatically.`,a:1,why:`What people were told does not match what happens.`}]})} },
+
+  { nav:'Lab 7 · Functions', title:'Lab 7 · Basic Analytical Functions in Excel', kind:'activity', minutes:31, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Use built-in Excel formulas (e.g., AVERAGE, COUNTIF, IF, VLOOKUP) for basic data computation and logical operations.</strong> (CLO4, CLO3)`,
+     `Try each function on the right, then use all four on your cleaned Lab 6 file:`,
+     `<ul><li><b>AVERAGE</b> of one numeric question.</li><li><b>COUNTIF</b> for how many respondents chose each option of one question.</li><li><b>IF</b> to create a new column, e.g. “High” if hours ≥ 10, else “Low”.</li><li><b>VLOOKUP</b> to add a label from a small lookup table you create (e.g. rating number → word).</li><li>Write two sentences interpreting your results.</li></ul>`,
+     B.plain(`<b>Ethics in the lab:</b> before sharing your file with the class, delete any column that could identify a respondent.`),
+     B.exam(`Know what each function does and read a formula such as <b>=COUNTIF(B2:B9,"Business")</b> aloud in words.`)],
+    src:`Lab reading: Microsoft Forms + Excel, Be Data Literate Ch. 6.`,
+    notes:[`The syllabus lab schedule lists Assignment 2 and the Midterm against this week; confirm the brief and due date with students.`,`Common errors: forgetting $ in the VLOOKUP range before filling down; text numbers making AVERAGE return #DIV/0!.`],
+    fig:{label:`Function sandbox · fictional data`, build:fx} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 7', kind:'exam', minutes:8,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Five principles:</b> ownership, transparency, privacy, intention, outcomes.</li><li><b>Ownership + transparency:</b> clear consent, plain explanations (Cambridge Analytica, 2018).</li><li><b>Privacy:</b> “no names” ≠ anonymous (Sweeney, 2000: about 87%).</li><li><b>Intention vs outcomes:</b> why you collect vs what actually happens.</li><li><b>UAE law:</b> Federal Decree-Law No. 45 of 2021; consent is the default; rights to access, correct, erase, object.</li><li><b>Excel:</b> AVERAGE, COUNTIF, IF, VLOOKUP.</li></ul>`),
+     `Try the likely exam questions on the right.`],
+    fig:{mindmap:{center:'Data ethics 1',branches:[{t:'Ownership',items:['People own their data','Active, clear consent']},{t:'Transparency',items:['Explain use in plain words','Cambridge Analytica 2018']},{t:'Privacy',items:['Protect and secure','No names ≠ anonymous','Sweeney: about 87%']},{t:'Intention',items:['Why do we need it?','Collect only what you need']},{t:'Outcomes',items:['Check real effects','Good intent ≠ good result']},{t:'UAE law',items:['Decree-Law 45 of 2021','Consent by default','Access, correct, erase']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`List and explain the five principles of data ethics.`,hint:`Ownership, transparency, privacy, intention, outcomes; one line each with an example.`},
+      {q:`Why is removing names not enough to make data anonymous?`,hint:`Combinations (birth date, area, gender) identify people; Sweeney 87%; use bands and remove fields.`},
+      {q:`Use Cambridge Analytica to discuss two principles.`,hint:`Ownership (friends did not consent), transparency (users not told the real use); up to 87 million users.`},
+      {q:`What does the UAE Personal Data Protection Law require, in brief?`,hint:`Decree-Law 45/2021; consent default; rights to access, correct, erase, object; separate regimes in DIFC/ADGM.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
+    narration:[`Six questions.`,`<strong>Before Week 8:</strong> re-read <em>Be Data Literate</em>, Chapter 4. The syllabus schedules the <strong>Midterm</strong> in Week 8: use the <a href="review.html">midterm review page</a>.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`A pre-ticked “send me offers” box breaks which principle?`,o:[`Ownership (consent)`,`Outcomes`,`Creativity`,`Prescriptive analytics`],a:0,why:`Consent must be an active choice.`},
+      {q:`Which is the best summary of “transparency”?`,o:[`Data is encrypted`,`People are told clearly how their data will be used`,`Data is deleted`,`Charts are clear`],a:1,why:`People must know what they agree to.`},
+      {q:`Sweeney (2000) showed that…`,o:[`names are needed to identify people`,`ZIP code, gender and birth date can identify most people`,`data cannot be anonymised`,`privacy laws work`],a:1,why:`About 87% of the US population.`},
+      {q:`“Good intentions, unfair results” is a problem of…`,o:[`intention`,`outcomes`,`ownership`,`transparency`],a:1,why:`Check what actually happens to people.`},
+      {q:`The UAE federal personal data protection law is…`,o:[`Federal Decree-Law No. 45 of 2021`,`GDPR`,`Law No. 1 of 1971`,`There is none`],a:0,why:`In force from 2 January 2022.`},
+      {q:`=COUNTIF(B2:B9,"Business") returns…`,o:[`the average of column B`,`how many cells in B2:B9 equal “Business”`,`the first Business row`,`Pass or Fail`],a:1,why:`COUNTIF counts cells meeting one condition.`}])} }
+  ]
+});
+</script>
+</body>
+</html>
