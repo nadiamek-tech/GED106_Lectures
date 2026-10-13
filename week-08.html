@@ -71,11 +71,11 @@ Lecture.mount({
   { nav:'Start here', title:'How does data harm people when nobody means to?', minutes:4,
     narration:[
      `Last week we learned the five principles. This week we look at the problems that appear again and again in real data projects, often without anyone intending harm.`,
-     `This week's syllabus topic: <strong>Common Ethical Problems in Data</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The syllabus schedules the <strong>Midterm</strong> this week.`,
+     `This week's syllabus topic: <strong>Common Ethical Problems in Data</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>.`,
      B.plain(`<b>Key idea:</b> five problems cause most data harm: <b>biased data</b>, <b>proxy variables</b>, <b>misleading presentation</b>, <b>privacy and security failures</b>, and <b>over-collection</b>. Each one has a check you can run.`)],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4.`,
-    notes:[`The agenda assumes the midterm runs in the second hour. Adjust if you scheduled it differently.`],
-    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,4,'l'],[`Hook`,4,'a'],[`Biased data`,8,'l'],[`Proxy variables`,10,'a'],[`Misleading presentation`,10,'a'],[`Privacy and security`,6,'l'],[`Ethics check for your project`,8,'a'],[`Exam takeaways`,5,'l'],[`Exit check`,5,'c'],[`Midterm examination`,60,'c']])} },
+    notes:[`The midterm is on Friday 23 October, 3 PM, so the second hour is midterm revision with the practice paper.`],
+    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,4,'l'],[`Hook`,4,'a'],[`Biased data`,8,'l'],[`Proxy variables`,10,'a'],[`Misleading presentation`,10,'a'],[`Privacy and security`,6,'l'],[`Ethics check for your project`,8,'a'],[`Exam takeaways`,5,'l'],[`Exit check`,5,'c'],[`Midterm revision · practice paper`,60,'a']])} },
 
   { nav:'Hook', title:'Activity · Can a computer be biased?', kind:'activity', minutes:4,
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`A computer follows the data exactly. Can its decisions still be unfair?`,opts:[`No, computers are neutral`,`Yes, if the data is unfair`,`Only if someone programs it to be`,`Not sure`],reveal:i=>(i===1?`<b>Yes.</b> `:``)+`A system that learns from the past learns the past's unfairness too. And a fair-looking variable can carry unfairness in, as the next two scenes show.`})} },
@@ -143,7 +143,7 @@ Lecture.mount({
       {q:`Give three ethics checks you would run on a student survey project.`,hint:`Who is missing; identifying columns and sharing settings; delete unneeded questions; fair charts.`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:5,
-    narration:[`Four quick questions before the midterm.`,`<strong>After the midterm:</strong> read <em>Be Data Literate</em>, Chapter 9, for Week 9 (Data-Informed Decision-Making).`],
+    narration:[`Four quick questions. Then work through the <a href="practice-midterm.html">practice midterm</a> for the rest of the session.`,`<strong>After the midterm:</strong> read <em>Be Data Literate</em>, Chapter 9, for Week 9 (Data-Informed Decision-Making).`],
     fig:{label:`Four questions`, build:el=>W.quiz(el,[
       {q:`An algorithm uses past spending to decide who needs care. This is a problem of…`,o:[`a proxy variable`,`too little data`,`a pie chart`,`over-collection`],a:0,why:`Cost stood in for need.`},
       {q:`Showing only the two months when sales fell, from a year of growth, is…`,o:[`cherry-picking`,`data cleaning`,`a data dictionary`,`prescriptive analytics`],a:0,why:`True numbers, misleading selection.`},
