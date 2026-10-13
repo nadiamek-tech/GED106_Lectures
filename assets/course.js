@@ -195,7 +195,7 @@
     const shell=h('div',{class:'shell'});
     const toc=h('nav',{class:'toc','aria-label':'Scenes'});
     toc.innerHTML=`<div class="eyebrow">Week ${cfg.week} · CLO ${cfg.clo}</div><h1>${esc(cfg.title)}</h1>
-      <div class="meta">${esc(cfg.meta)}</div>`;
+      <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Eng. Nadia Mek')}</b></div>`;
     const ol=h('ol'); toc.appendChild(ol);
     S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
     const stage=h('main',{class:'stage',id:'stage'});
