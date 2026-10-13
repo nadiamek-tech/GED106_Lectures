@@ -28,9 +28,10 @@
         q.o.forEach((o,oi)=>{
           const b=h('button',{class:'opt',type:'button'},esc(o));
           b.addEventListener('click',()=>{
-            opts.querySelectorAll('button').forEach((x,xi)=>{x.disabled=true; if(xi===q.a) x.classList.add('right');});
-            if(oi!==q.a) b.classList.add('wrong'); else right++;
-            answered++; why.hidden=false; why.innerHTML=(oi===q.a?'<b>Correct.</b> ':'<b>Not quite.</b> ')+q.why;
+            const ok=[].concat(q.a); /* q.a may be one index or an array of accepted indexes */
+            opts.querySelectorAll('button').forEach((x,xi)=>{x.disabled=true; if(ok.includes(xi)) x.classList.add('right');});
+            if(!ok.includes(oi)) b.classList.add('wrong'); else right++;
+            answered++; why.hidden=false; why.innerHTML=(ok.includes(oi)?'<b>Correct.</b> ':'<b>Not quite.</b> ')+q.why;
             score.textContent=`Score: ${right} / ${qs.length}`+(answered===qs.length?(right===qs.length?' · full marks':' · review the scenes you missed'):'');
           });
           opts.appendChild(b);

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Practice Quiz 1 · GED 106</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#9C3D6E;--wk-soft:rgba(156,61,110,.10);--wk-d:#EE9CC4;--wk-soft-d:rgba(238,156,196,.14)}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+const MA={label:'Show model answer',prefix:'<b>Model answer:</b> ',numbered:false};
+const SALES=`<div class="scroll"><table class="tbl"><thead><tr><th>Product Category</th><th>Percentage of Orders</th><th>Average Customer Rating</th></tr></thead><tbody>
+<tr><td>Electronics</td><td>35 %</td><td>3.8</td></tr><tr><td>Fashion</td><td>25 %</td><td>4.6</td></tr><tr><td>Home Appliances</td><td>20 %</td><td>4.2</td></tr><tr><td>Groceries</td><td>15 %</td><td>4.8</td></tr><tr><td>Others</td><td>5 %</td><td>3.5</td></tr></tbody></table></div>`;
+
+Lecture.mount({
+  id:'g106-pq1', course:'GED 106', week:'Practice', clo:'1, 2', short:'Practice · Quiz 1 (Fall 2025)',
+  title:'Practice Quiz 1',
+  meta:'Last year\'s Quiz 1 · 15 marks · 45 minutes',
+  scenes:[
+  { nav:'How to use this', title:'Practice with last year\'s Quiz 1', kind:'review',
+    narration:[
+     `This is the <strong>Quiz 1 from Fall 2025</strong>, with model answers. It had three parts and was worth <strong>15 marks</strong> in <strong>45 minutes</strong>, closed book.`,
+     `<ul><li><b>Part A:</b> 5 multiple-choice questions on core principles (5 marks).</li><li><b>Part B:</b> survey practice (5 marks).</li><li><b>Part C:</b> an industry scenario with a data table (5 marks).</li></ul>`,
+     B.exam(`Do it like the real quiz: set a 45-minute timer, write your answers on paper first, and only then open the model answers. Your own wording can differ from the model answer; what matters is the key point and a reason.`)],
+    notes:[`Model answers were written for practice; adjust them to match your marking scheme if needed.`],
+    fig:{label:`Suggested time · 45 minutes`, build:el=>W.agenda(el,[[`Part A · MCQs (5 marks)`,15,'l'],[`Part B · Survey practice (5 marks)`,15,'a'],[`Part C · Industry scenario (5 marks)`,15,'c']])} },
+
+  { nav:'Part A · MCQs', title:'Part A · MCQs: Core Principles (5 marks)', kind:'check',
+    narration:[`One mark each. Click your answer: the feedback explains why.`,
+     B.plain(`Question 2 has <b>two accepted answers</b>: a company that gathers comments and sales data is both <b>collecting</b> data and <b>integrating</b> (combining) two sources.`)],
+    fig:{label:`Five questions · 1 mark each`, build:el=>W.quiz(el,[
+      {q:`Which statement best describes data stewardship?`,o:[`A marketing role that promotes data products`,`The responsibility to ensure data quality, protection, and ethical use`,`The process of visualizing large data sets`,`Deleting old data once analysis is done`],a:1,why:`A data steward looks after data: its quality, its protection and its ethical use.`},
+      {q:`A company combines social-media comments and sales data to understand customer behavior. This process represents:`,o:[`Data collection`,`Data integration`,`Data anonymization`,`Data disposal`],a:[0,1],why:`Both <b>a</b> and <b>b</b> are accepted. The company <b>collects</b> data from two sources and <b>integrates</b> it, combining the comments and the sales figures into one view.`},
+      {q:`Which of the following violates data governance principles?`,o:[`Tracking consent before collecting personal information`,`Limiting access based on employee roles`,`Storing customer data in unsecured public drives`,`Auditing datasets for accuracy`],a:2,why:`Unsecured public storage breaks privacy and security rules. The other three are good governance practice.`},
+      {q:`“Employees use one data file, while management uses a different version with conflicting figures.” This issue reflects:`,o:[`Data bias`,`Lack of a single source of truth`,`Predictive modeling`,`Data ethics policy`],a:1,why:`Two conflicting versions means there is no single, agreed source of truth.`},
+      {q:`When communicating analytical results, which option shows data literacy in action?`,o:[`Using technical terms only experts understand`,`Interpreting visuals clearly and linking them to business decisions`,`Showing all raw numbers without context`,`Focusing only on software tools used`],a:1,why:`Communicating with data = a clear message that leads to a decision (Week 2).`}])} },
+
+  { nav:'Part B · Q6', title:'Part B · Q6 Classifying Questions (3 marks)', kind:'review',
+    narration:[`<b>Identify the type of each question and explain <em>why</em>.</b> One mark each. Answer first, then open the model answer.`],
+    fig:{label:`Q6 · 3 marks`, build:el=>W.practice(el,[
+      {q:`a) “How likely are you to recommend our service to a friend?”`,hint:`<b>Closed-ended rating (scale) question.</b> The answer is chosen on a scale (for example 0–10 or 1–5), so it gives numbers that can be counted, averaged and compared.`},
+      {q:`b) “What challenges did you face when using the mobile app?”`,hint:`<b>Open-ended question.</b> Respondents write their own answer in words. It gives rich reasons and new ideas, but takes longer to analyse.`},
+      {q:`c) “Wouldn't you agree our product quality is unmatched?”`,hint:`<b>Leading (biased) question.</b> The wording pushes the respondent to agree. Neutral version: “How would you rate our product quality? (1 = very poor, 5 = very good)”.`}],MA)} },
+
+  { nav:'Part B · Q7', title:'Part B · Q7 Improving a Survey (2 marks)', kind:'review',
+    narration:[`You are designing a satisfaction survey for <strong>Dubai Metro commuters</strong>.`,
+     `<ul><li>(1 mark) Propose an appropriate <b>sampling method</b> (e.g., random, stratified, cluster) and justify it.</li><li>(1 mark) Suggest one <b>bias</b> that might affect results and how to reduce it.</li></ul>`,
+     B.exam(`Always name the <b>population</b> first. Here the population is <b>Dubai Metro commuters</b>, so the sample must be taken from people who actually ride the metro.`)],
+    fig:{label:`Q7 · 2 marks`, build:el=>W.practice(el,[
+      {q:`Sampling method (1 mark)`,hint:`The sample must be drawn from the <b>population of Dubai Metro commuters</b>, not from people in general. Use <b>stratified random sampling</b>: divide commuters into groups (for example by metro line, station, and peak vs off-peak time) and randomly select commuters from each group. <b>Why:</b> every type of commuter is represented, so the results describe all metro users, not just one line or one time of day. (Simple random sampling of commuters is also acceptable if justified.)`},
+      {q:`One bias and how to reduce it (1 mark)`,hint:`<b>Sampling bias:</b> surveying only at one busy station or only at rush hour misses other commuters. <b>Reduce it</b> by sampling across lines, stations and times of day. (Also accepted: <b>non-response bias</b>, where busy commuters skip the survey; reduce it with a short survey, a QR code and several languages.)`}],MA)} },
+
+  { nav:'Part C · Q8', title:'Part C · Q8 Industry Scenario (5 marks)', kind:'review', wide:true,
+    narration:[`An online store analyzed its October sales data. Answer the four parts.`,
+     B.exam(`Use the numbers in your answer. “Groceries has the highest rating” earns less than “Groceries has the highest rating, 4.8 out of 5”.`)],
+    fig:{label:`October sales data`, html:SALES, build:el=>{ const d=document.createElement('div'); d.style.marginTop='16px'; el.appendChild(d); W.practice(d,[
+      {q:`a) Which category contributes most to sales volume? (1 mark)`,hint:`<b>Electronics</b>, with 35% of orders, the largest share.`},
+      {q:`b) Which category shows the highest customer satisfaction and why should management pay attention to it? (1.5 marks)`,hint:`<b>Groceries</b>, with the highest average rating (4.8). Customers are very satisfied, but it is only 15% of orders, so it is a strong product to <b>grow</b> (promote it, keep its quality and learn what it does well).`},
+      {q:`c) Suggest one data-driven decision the company can make from this table. (1.5 marks)`,hint:`Example: Electronics brings the most orders (35%) but has a low rating (3.8), so <b>investigate electronics reviews and improve product quality or delivery</b>, because unhappy customers in the biggest category put the most sales at risk. (Also accepted: promote Groceries or Fashion, which have high ratings; review the “Others” category, which has the lowest rating, 3.5.)`},
+      {q:`d) Identify the type of analytics used here. (1 mark)`,hint:`<b>Descriptive analytics</b>: the table summarises what happened in October (share of orders and average ratings). It does not explain why, predict, or recommend.`}],MA); }} },
+
+  { nav:'Before Quiz 1', title:'Checklist before the quiz', kind:'review',
+    narration:[
+     `<ul><li>Revise the <b>Exam takeaways</b> of Weeks 1–4.</li><li>Know question types: closed, rating/Likert, open, and the faults: leading, double-barrelled, loaded, vague (Week 3).</li><li>Know sampling methods and always link the sample to the <b>population</b>.</li><li>Know the four levels of analytics and be able to name the level used by a table or chart (Week 4).</li><li>In table questions, quote the numbers.</li></ul>`,
+     `Next: the <a href="practice-midterm.html">practice midterm</a> and the <a href="review.html">midterm review page</a>.`] }
+  ]
+});
+</script>
+</body>
+</html>
