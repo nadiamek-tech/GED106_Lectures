@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 · Labs</title>
+<meta name="description" content="GED 106 labs">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/portal.css">
+<style>:root{--wk:#2F55C8;--wk-soft:rgba(47,85,200,.10);--wk-d:#8AA6FF;--wk-soft-d:rgba(138,166,255,.14)}
+body{font-family:var(--f-display)}
+.pt h1.pg{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1;margin:28px 0 6px}
+:root{--c1:#1F6F8B;--c2:#9C3D6E;--c3:#B4562F;--c4:#2E7D5B;--c5:#5B3FA8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#7CC4DE;--c2:#EE9CC4;--c3:#F2A07E;--c4:#7FD3AA;--c5:#B9A3F5}}
+:root[data-theme="dark"]{--c1:#7CC4DE;--c2:#EE9CC4;--c3:#F2A07E;--c4:#7FD3AA;--c5:#B9A3F5}
+.ledger{display:grid;border-top:1px solid var(--line)}
+.wk{display:grid;grid-template-columns:56px minmax(0,1.2fr) minmax(0,1fr) 150px 110px;gap:16px;align-items:start;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.wk .no{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1;color:var(--cc);font-variant-numeric:tabular-nums}
+.wk h3{font-size:1.02rem;font-weight:700;margin-bottom:3px}
+.wk ul{margin:0;padding-left:1.05em;font-size:.86rem;color:var(--muted);font-family:var(--f-display)}
+.wk .lab{font-family:var(--f-display);font-size:.86rem;color:var(--muted)}
+.wk .lab b,.wk .meta b{display:block;font-family:var(--f-mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted)}
+.wk .lab span{color:var(--ink)}
+.wk .meta{font-family:var(--f-display);font-size:.84rem;color:var(--muted)}
+.wk .st{justify-self:end;text-align:right}
+.wk.ready{background:linear-gradient(90deg,color-mix(in srgb,var(--cc) 8%,transparent),transparent 70%)}
+.wk.ready:hover h3{text-decoration:underline;text-decoration-color:var(--cc)}
+.wk.ready .open{font-family:var(--f-display);font-weight:700;color:var(--cc);font-size:.9rem;white-space:nowrap}
+.wk:not(.ready) h3{color:var(--muted)}
+.wk .d{margin:0;font-size:.86rem;color:var(--muted);font-family:var(--f-display)}
+.wk .meta b{display:block;font-family:var(--f-mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;font-weight:400;color:var(--muted)}
+@media (max-width:900px){.wk{grid-template-columns:44px minmax(0,1fr);gap:6px 12px}.wk .meta,.wk .st{grid-column:2;justify-self:start;text-align:left}}
+</style>
+</head>
+<body>
+<div id="hub" data-cur="labs"></div>
+<main class="pt pt-wrap" id="portal">
+<h1 class="pg">Labs</h1>
+<p class="sub">Microsoft Forms and Excel, one lab per week. Submit graded work on Moodle.</p>
+<h2>Lab submissions</h2>
+<div class="pt-subs" id="subs"></div>
+<h2>Lab guides</h2>
+<div class="ledger" id="lab"></div>
+</main>
+<footer class="pt-foot">Created and owned by <b>Eng. Nadia Mek</b></footer>
+<script src="assets/course.js"></script>
+<script src="assets/course-info.js"></script>
+<script src="assets/portal.js"></script>
+<script>
+Portal.header('labs');
+/* Lectures: [week, title, subtopics, CLO colour, CLO label, reading, assessment, href] */
+const LEC=[
+ [1,'The World of Data','Introduction, Understanding the Digital Economy, Data Skills Gap',1,'CLO-1','Be Data Literate, Chapter 1','','week-01.html'],
+ [2,'The Four Pillars of Data Literacy','Explaining the 4 Characteristic of Data literacy, reading data, working with data, analysing data , Communicating with data',1,'CLO-1','Be Data Literate, Chapter 3','','week-02.html'],
+ [3,'Data Collection & Surveys','Survey design, Choosing the right Questions for a A Survey; Data Cleaning Concept',3,'CLO-3','Questback. (n.d.). A beginner’s guide to successful online surveys.','','week-03.html'],
+ [4,'The Four Levels of Analytics','Descriptive analytics; Diagnostic analytics; Predictive analytics; Prescriptive analytics',1,'CLO-1','Be Data Literate, Chapter 2','','week-04.html'],
+ [5,'Reading and Speaking the Language of Data','Defining Reading data, Data fluency, The data dictionary',1,'CLO-1','Be Data Literate, Chapter 5','In class Quiz (done)','week-05.html'],
+ [6,'The Three Cs of Data Literacy','Curiosity, Creativity, and Critical thinking',1,'CLO-1','Be Data Literate, Chapter 8','','week-06.html'],
+ [7,'Data Ethics -1','Principles of data Ethics: Ownership; Transparency; Privacy; Intention; Outcomes',1,'CLO-1','Be Data Literate, Chapter 4 · Cote (2021), Harvard Business School Online','','week-07.html'],
+ [8,'Data Ethics -2','Common Ethical Problems in Data',1,'CLO-1','Be Data Literate, Chapter 4','Midterm · Fri 23 Oct, 3 PM','week-08.html'],
+ [9,'Data-Informed Decision-Making','Ask; Acquire ;Analyse ; Integrate ; Iterate',5,'CLO-5','Be Data Literate, Chapter 9','',''],
+ [10,'Charts and Graphics','Selecting the right visualization · Different types of Graphs',2,'CLO-2','Data Literacy in Practice Chapter 7 · Data Visualization Made Simple, Chapter 3','',''],
+ [11,'Data Visualization and Storytelling','Data visualization, The Three Components of a Data Story',2,'CLO-2, CLO-4','Data Visualization Made Simple, Chapter 3','',''],
+ [12,'Begin Your Data & Analytics Journey','COVID-19 and data and analytics',1,'CLO-1, CLO-5','Be Data Literate, Chapter 11','Quiz 2',''],
+ [13,'Planning Capstone Projects: From Insight to Proposal','Field alignment, problem framing, initial storyboard of project goals',4,'CLO-4','Ch. 7, Data Literacy in Practice Ch','Project draft submission',''],
+ [14,'Developing Data Projects: From Structure to Insight Delivery','Report formatting, storytelling with visuals, draft feedback loop',4,'CLO-4','Ch. 7, Data Literacy in Practice Ch','Final project development',''],
+ [15,'Project Presentations','Develops and finalizes group projects applying all course concepts.',5,'CLO-5','','Projects Submission',''],
+];
+/* Labs (syllabus 4.2): [week, title, task, CLO colour, CLO label, reading, assessment, href] */
+const LAB=[
+ [1,'Introduction to Course Tools and Platforms','Set up Microsoft 365 environment. Navigate and familiarize with Microsoft Excel, Forms, and OneDrive.',4,'CLO4','Data Literacy in Practice (Klidas & Hanegan, Ch. 2 – "Foundations of Data Literacy")','','lab-01.html'],
+ [2,'Fundamentals of Microsoft Forms and Excel','Explore interface features and core functionalities in Microsoft Forms (survey design) and Excel (data structures).',4,'CLO4','Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel)','','lab-02.html'],
+ [3,'Survey Design Using Microsoft Forms','Construct a basic survey instrument targeting specific data collection objectives.',3,'CLO3','Data Literacy in Practice (Klidas & Hanegan, Ch. 6 – "From Collection to Insight")','','lab-03.html'],
+ [4,'Data Collection and Exporting','Simulate and record responses. Download and format structured data for Excel-based analysis.',4,'CLO3, CLO4','Microsoft official tutorials, Data Literacy in Practice Ch. 4','','lab-04.html'],
+ [5,'Sorting and Filtering Data','Apply Excel’s sorting, filtering, and conditional formatting tools to explore and manage datasets.',4,'CLO4','Microsoft Excel guides, Data Literacy in Practice Ch. 4','','lab-05.html'],
+ [6,'Data Cleaning and Preparation','Identify and address inconsistencies, missing values, and outliers to ensure data quality.',4,'CLO4, CLO2','Microsoft Forms tutorials, Be Data Literate Ch. 5','Lab assignment','lab-06.html'],
+ [7,'Basic Analytical Functions in Excel','Use built-in Excel formulas (e.g., AVERAGE, COUNTIF, IF, VLOOKUP) for basic data computation and logical operations.',4,'CLO4, CLO3','Microsoft Forms + Excel, Be Data Literate Ch. 6','','lab-07.html'],
+ [9,'Project Scoping and Dataset Selection','Select a real-world dataset aligned with personal or academic interests. Define research questions and key variables.',4,'CLO4, CLO3','Excel datasets, Data Literacy in Practice Ch. 4','In-class lab exercise',''],
+ [10,'Data Visualization Techniques','Create meaningful data visuals (bar charts, pie charts, line graphs) that support storytelling and interpretation.',4,'CLO4','Excel datasets, Data Literacy in Practice Ch. 4','In-class lab exercise',''],
+ [11,'Drafting Project Reports','Begin constructing a project report with data narratives, insights, and visual evidence.',4,'CLO4, CLO3','Excel datasets, Data Literacy in Practice Ch. 4','In-class lab exercise',''],
+ [12,'Iterative Feedback and Refinement','Implement peer or instructor feedback to enhance report quality, structure, and clarity.',4,'CLO4, CLO5','Data Literacy in Practice Ch. 9','In-class lab exercise',''],
+ [13,'Presentation Skills Development','Practice presenting key findings using slides or dashboards. Focus on clarity, audience engagement, and data ethics.',5,'CLO5','Be Data Literate Ch. 7, Data Literacy in Practice Ch. 5','Project draft submission',''],
+ [14,'Final Project Presentation','Deliver a polished, well-structured final project presentation with a data dashboard and insights summary.',5,'CLO5','Be Data Literate Ch. 7, Data Literacy in Practice Ch. 5','Final project development',''],
+ [15,'Final Presentations and Feedback','',5,'CLO5','','Group project presentation',''],
+];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const row=(open)=>([n,t,sub,c,clo,ref,ass,href])=>{ const tag=href?'a':'div';
+  return `<${tag} class="wk${href?' ready':''}" ${href?`href="${href}"`:''} style="--cc:var(--c${c})">
+    <span class="no">${String(n).padStart(2,'0')}</span>
+    <div><h3>${esc(t)}</h3>${sub?`<p class="d">${esc(sub)}</p>`:''}</div>
+    <div class="meta">${ref?`<b>Reading</b>${esc(ref)}`:''}</div>
+    <div class="meta"><b>CLO</b>${clo}${ass?`<b style="margin-top:6px">Assessment</b>${ass}`:''}</div>
+    <div class="st">${href?`<span class="open">${open} →</span>`:'<span class="tag">In preparation</span>'}</div></${tag}>`; };
+document.getElementById('lab').innerHTML=LAB.map(row('Open lab')).join('');
+Portal.submissions(document.getElementById('subs'));
+</script>
+</body>
+</html>

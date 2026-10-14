@@ -189,7 +189,7 @@
 
     const bar=h('header',{class:'bar'});
     bar.innerHTML=`<div class="bar-in">
-      <a class="brand" href="index.html" title="Back to the course map"><b>${esc(cfg.course||'GED 102')}</b><span>← Course map · ${esc(cfg.short)}</span></a>
+      <a class="brand" href="index.html" title="Back to the course map"><b>${esc(cfg.course||'GED 102')}</b><span>← Course home · ${esc(cfg.short)}</span></a>
       <div class="controls">
         <span class="seg-label">Layout</span>
         <div class="seg" role="group" aria-label="Layout">

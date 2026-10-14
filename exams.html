@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 · Exams</title>
+<meta name="description" content="GED 106 exams and revision">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/portal.css">
+<style>:root{--wk:#2F55C8;--wk-soft:rgba(47,85,200,.10);--wk-d:#8AA6FF;--wk-soft-d:rgba(138,166,255,.14)}
+body{font-family:var(--f-display)}
+.pt h1.pg{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1;margin:28px 0 6px}
+.pt .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.pt .cards a{display:grid;gap:4px;border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface);text-decoration:none;color:var(--ink)}.pt .cards a:hover{border-color:var(--wk)}.pt .cards span{color:var(--muted);font-size:.88rem}</style>
+</head>
+<body>
+<div id="hub" data-cur="exams"></div>
+<main class="pt pt-wrap" id="portal">
+<h1 class="pg">Exams</h1>
+<p class="sub">Click an assessment to see what it includes.</p>
+<div class="pt-exams" id="ex"></div>
+<h2>Revision</h2>
+<div class="cards">
+  <a href="review.html"><b>Midterm review</b><span>Summary tables, flashcards, practice questions, mixed quiz</span></a>
+  <a href="practice-midterm.html"><b>Midterm practice</b><span>150 questions in 5 parts, with model answers</span></a>
+  <a href="practice-quiz1.html"><b>Practice Quiz 1</b><span>Weeks 1–4, with model answers</span></a>
+  <a href="assessments.html"><b>Assessments in detail</b><span>Grade weights, CLO map, project rubric</span></a>
+</div>
+<h2>Semester calendar</h2>
+<div id="cal"></div>
+</main>
+<footer class="pt-foot">Created and owned by <b>Eng. Nadia Mek</b></footer>
+<script src="assets/course.js"></script>
+<script src="assets/course-info.js"></script>
+<script src="assets/portal.js"></script>
+<script>
+Portal.header('exams');
+Portal.examCards(document.getElementById('ex'));
+Portal.calendar(document.getElementById('cal'));
+</script>
+</body>
+</html>
