@@ -18,6 +18,19 @@
   const typeTag=t=>`<span class="pt-tag ${t==='Lab'?'lab':'lec'}">${esc(t)}</span>`;
   const ext=u=>/^https?:/.test(u)?' target="_blank" rel="noopener"':'';
 
+  const SV=d=>`<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const IC={
+    ask:SV('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'),
+    help:SV('<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7"/><path d="M12 17h.01"/>'),
+    absent:SV('<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M10 13.5l4 4M14 13.5l-4 4"/>'),
+    meet:SV('<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.5 3.6-5.5 7-5.5s6.2 2 7 5.5"/>'),
+    grades:SV('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'),
+    lectures:SV('<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M10 8.5v5l4.5-2.5z"/><path d="M8 21h8"/>'),
+    labs:SV('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>'),
+    exams:SV('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 13l2 2 4-4"/>'),
+    lec:SV('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>'),
+    lab:SV('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>')
+  };
   /* ---------- header ---------- */
   function header(cur){
     const el=document.getElementById('hub'); if(!el||el.children.length) return;
@@ -42,20 +55,20 @@
   /* ---------- agents ---------- */
   const mail=(subj,body)=>`mailto:${C.email}?subject=${encodeURIComponent('['+C.code+'] '+subj)}&body=${encodeURIComponent(body)}`;
   const AG={
-    ask:{face:'🙂',t:'Ask me',s:'Find anything in the course',c:'var(--wk)'},
-    help:{face:'🙋',t:'I need help',s:'A topic, Moodle, any problem',c:'#2E7D5B',
+    ask:{face:IC.ask,t:'Ask me',s:'Find anything in the course',c:'var(--wk)'},
+    help:{face:IC.help,t:'I need help',s:'A topic, Moodle, any problem',c:'#2E7D5B',
       what:['Which week or topic, and what you tried','A screenshot if something does not work','The reply comes to your CUD email'],
       url:()=>L.formHelp||L.form, btn:'Open the request form',
       mail:()=>mail('I need help','Name:\nStudent ID:\nSection:\nWeek / topic:\nMy question:\n')},
-    absent:{face:'🗓️',t:'I will be absent',s:'Before or after the class',c:'#B4562F',
+    absent:{face:IC.absent,t:'I will be absent',s:'Before or after the class',c:'#B4562F',
       what:['Date(s) and which class: lecture or lab','The reason','Your evidence (medical note, official letter)','Missed a quiz or exam? Choose that option in the form'],
       url:()=>L.formAbsent||L.form, btn:'Open the absence form',
       mail:()=>mail('Absence','Name:\nStudent ID:\nSection:\nDate(s) of absence:\nClass: lecture / lab\nReason:\nAssessment missed (if any):\nEvidence: attached / will bring\n')},
-    meet:{face:'👩‍🏫',t:'Meet the professor',s:C.officeHours?'Office hours: '+C.officeHours:'Book a time',c:'#5B3FA8',
+    meet:{face:IC.meet,t:'Meet the professor',s:C.officeHours?'Office hours: '+C.officeHours:'Book a time',c:'#5B3FA8',
       what:[C.officeHours?'Office hours: '+C.officeHours:'',C.office?'Office: '+C.office:'','Book a slot, then bring your question ready'].filter(Boolean),
       url:()=>L.booking||L.formMeet, btn:'Book a time',
       mail:()=>mail('Meeting request','Name:\nStudent ID:\nSection:\nPreferred day and time:\nTopic:\n')},
-    grades:{face:'📊',t:'Check my grades',s:'Student portal',c:'#1F6F8B',
+    grades:{face:IC.grades,t:'Check my grades',s:'Student portal',c:'#1F6F8B',
       what:['Log in with your CUD account','Marks appear once grading is complete','A question about a mark? Use “I need help”'],
       url:()=>L.portal, btn:'Open the student portal'}
   };
@@ -81,10 +94,10 @@
       a.submit?['Submit',a.submit.dueText?esc(a.submit.dueText)+' · on Moodle':'On Moodle']:null].filter(Boolean);
     const btns=(a.revise||[]).map(([t,h])=>`<a class="pt-btn ghost" href="${esc(h)}"${ext(h)}>${esc(t)} →</a>`);
     if(a.submit) btns.unshift(a.submit.link?`<a class="pt-btn" href="${esc(a.submit.link)}" target="_blank" rel="noopener">Submit on Moodle ↗</a>`:`<span class="pt-btn" aria-disabled="true">Moodle link coming soon</span>`);
-    dialog(head(a.type==='Lab'?'🧪':'📝',esc(a.name),a.date&&!a.done?until(a.date):'')+`<dl class="kv">${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl><div class="row">${btns.join('')}</div>`
+    dialog(head(a.type==='Lab'?IC.lab:IC.lec,esc(a.name),a.date&&!a.done?until(a.date):'')+`<dl class="kv">${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl><div class="row">${btns.join('')}</div>`
       +(a.done?'':`<p class="pt-note">Can't make it? <a href="#" data-agent="absent">Tell the professor →</a></p>`), a.type==='Lab'?'var(--good)':'var(--wk)');
   }
-  const chip=id=>{ const a=byId(id); return a?`<button type="button" class="pt-chip ${a.type==='Lab'?'lab':''}" data-a="${id}">${a.type==='Lab'?'🧪':'📝'} ${esc(a.short||a.name)}<span class="i">ⓘ</span></button>`:''; };
+  const chip=id=>{ const a=byId(id); return a?`<button type="button" class="pt-chip ${a.type==='Lab'?'lab':''}" data-a="${id}">${esc(a.short||a.name)}<span class="i">ⓘ</span></button>`:''; };
   const wire=el=>el.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>assess(b.dataset.a)));
 
   function calendar(el){
@@ -92,7 +105,7 @@
       return `<td data-l="${l}">${h?`<a href="${esc(h)}">${esc(t)}</a>`:`<span class="${C.soonLabel!==false&&!h?'soon':''}">${esc(t)}</span>`}</td>`; };
     el.innerHTML=`<div style="overflow-x:auto"><table class="pt-cal"><thead><tr><th>Week</th><th>Lecture</th><th>Lab</th><th>Assessment</th></tr></thead><tbody>${
       C.weeks.map(w=>`<tr class="${(w.ev||[]).length?'ex':''}"><td class="w">W${esc(w.w)}</td>${cell(w.lec,'Lecture')}${cell(w.lab,'Lab')}<td>${(w.ev||[]).length?`<div class="pt-ev">${w.ev.map(chip).join('')}</div>`:''}</td></tr>`).join('')
-    }</tbody></table></div><div class="pt-legend"><span>📝 Lecture assessment</span><span>🧪 Lab assessment</span><span>Click an assessment for details. Linked topics are open now.</span></div>`;
+    }</tbody></table></div><div class="pt-legend"><span><i class="dot"></i>Lecture assessment</span><span><i class="dot lab"></i>Lab assessment</span><span>Click an assessment for details. Linked topics are open now.</span></div>`;
     wire(el);
   }
   function examCards(el){
@@ -114,18 +127,18 @@
     const book=L.booking?`<a href="${esc(L.booking)}" target="_blank" rel="noopener">Book a time ↗</a>`:'Use <a href="#" data-agent="meet">Meet the professor</a>.';
     const weights=A.map(a=>`${esc(a.name)} · ${esc(a.weight)}`).join('<br>');
     const Q=[
-      ['❓','I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
-      ['✉️','What is the professor’s email?',`<a href="mailto:${esc(C.email)}">${esc(C.email)}</a> · ${esc(C.instructor)}`],
-      ['🕑','When are office hours?',esc(C.officeHours||'Announced in class.')+(C.office?' · Office '+esc(C.office):'')],
-      ['📅','How do I book office hours?',book],
-      ['📝','What are the assessments?',weights+`<br><a href="#calendar">See them on the calendar →</a>`],
-      ['📤','Where do I submit my work?',`On Moodle, through the buttons in <a href="#submissions">Upcoming submissions</a>. Never by email.`],
-      ['📊','How do I check my grades?',L.portal?`<a href="${esc(L.portal)}" target="_blank" rel="noopener">Student portal ↗</a>`:'On the student portal (link coming soon).'],
-      ['🚪','What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).'],
-      ['🙋','I don’t understand a topic.',`Try <a href="#" data-agent="ask">Ask me</a> first, then <a href="#" data-agent="help">I need help</a> or office hours.`]
-    ].concat((C.faqExtra||[]).map(x=>x.length===3?x:['💡',x[0],x[1]]));
+      ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
+      ['What is the professor’s email?',`<a href="mailto:${esc(C.email)}">${esc(C.email)}</a> · ${esc(C.instructor)}`],
+      ['When are office hours?',esc(C.officeHours||'Announced in class.')+(C.office?' · Office '+esc(C.office):'')],
+      ['How do I book office hours?',book],
+      ['What are the assessments?',weights+`<br><a href="#calendar">See them on the calendar →</a>`],
+      ['Where do I submit my work?',`On Moodle, through the buttons in <a href="#submissions">Upcoming submissions</a>. Never by email.`],
+      ['How do I check my grades?',L.portal?`<a href="${esc(L.portal)}" target="_blank" rel="noopener">Student portal ↗</a>`:'On the student portal (link coming soon).'],
+      ['What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).'],
+      ['I don’t understand a topic.',`Try <a href="#" data-agent="ask">Ask me</a> first, then <a href="#" data-agent="help">I need help</a> or office hours.`]
+    ].concat((C.faqExtra||[]).map(x=>x.length===3?[x[1],x[2]]:x));
     el.className='pt-faq';
-    el.innerHTML=Q.map(([i,q,a])=>`<details><summary><span class="q" aria-hidden="true">${i}</span>${esc(q)}</summary><div>${a}</div></details>`).join('');
+    el.innerHTML=Q.map(([q,a])=>`<details><summary>${esc(q)}</summary><div>${a}</div></details>`).join('');
     el.querySelectorAll('[data-agent]').forEach(b=>b.addEventListener('click',e=>{ e.preventDefault(); agent(b.dataset.agent); }));
   }
 
@@ -138,22 +151,22 @@
 <section class="pt-hero"><span class="pt-eyebrow">${esc(C.eyebrow||C.code)}</span><h1>${esc(C.title[0])} <span>${esc(C.title[1]||'')}</span></h1><p class="pt-by">${esc(C.role||'Instructor')}: <b>${esc(C.instructor)}</b>${C.classTime?' · '+esc(C.classTime):''}</p>
 ${n?`<button type="button" class="pt-next" data-a="${n.id}"><b>Next: ${esc(n.name)}</b><span>${esc(dayShort(n.date))}${n.time!==false?' · '+esc(n.timeText||time(n.date)):''}${n.place?' · '+esc(n.place):''}</span><span class="mono">${until(n.date)}</span><b style="margin-left:auto">Details →</b></button>`:''}</section>
 <div class="pt-big">
- <a href="${P.lectures||'lectures.html'}"><span class="ic" aria-hidden="true">🎧</span><b>Lectures</b><span>${esc(C.blurbs&&C.blurbs.lectures||'Narrated lectures, practice with answers.')}</span></a>
- <a href="${P.labs||'labs.html'}"><span class="ic" aria-hidden="true">🧪</span><b>Labs</b><span>${esc(C.blurbs&&C.blurbs.labs||'Step-by-step lab guides.')}</span></a>
- <a href="${P.exams||'exams.html'}"><span class="ic" aria-hidden="true">📝</span><b>Exams</b><span>${esc(C.blurbs&&C.blurbs.exams||'Dates, what is included, revision.')}</span></a>
+ <a href="${P.lectures||'lectures.html'}"><span class="ic">${IC.lectures}</span><b>Lectures</b><span>${esc(C.blurbs&&C.blurbs.lectures||'Narrated lectures, practice with answers.')}</span></a>
+ <a href="${P.labs||'labs.html'}"><span class="ic">${IC.labs}</span><b>Labs</b><span>${esc(C.blurbs&&C.blurbs.labs||'Step-by-step lab guides.')}</span></a>
+ <a href="${P.exams||'exams.html'}"><span class="ic">${IC.exams}</span><b>Exams</b><span>${esc(C.blurbs&&C.blurbs.exams||'Dates, what is included, revision.')}</span></a>
 </div>
 <section class="pt-help" aria-label="Help"><form class="pt-find" role="search"><input type="search" placeholder="Search the course: a topic, a formula, a date" aria-label="Search the course" autocomplete="off"><button type="submit">Search</button></form><div class="pt-hits" aria-live="polite"></div><div class="pt-agents"></div></section>
 <nav class="pt-jump" aria-label="On this page"><a href="#faq">FAQ</a><a href="#calendar">Calendar</a><a href="#clos">CLOs and grades</a><a href="#submissions">Submissions</a></nav>
 <h2 id="faq">FAQ</h2><div id="pt-faq"></div>
 <h2 id="calendar">Semester calendar</h2><p class="sub">Click an assessment to see what it includes.</p><div id="pt-cal"></div>
 <h2 id="clos">CLOs and grades</h2><p class="sub">What you will be able to do by the end of the course.</p><div class="pt-clos">${C.clos.map(([k,t])=>`<div><b>${esc(k)}</b><span>${esc(t)}</span></div>`).join('')}</div>
-<div class="pt-actions">${L.portal?`<a class="pt-btn" href="${esc(L.portal)}" target="_blank" rel="noopener">📊 Check my grades ↗</a>`:'<button type="button" class="pt-btn" data-agent="grades">📊 Check my grades</button>'}<a class="pt-btn ghost" href="#submissions">📤 Upcoming submissions</a></div>
+<div class="pt-actions">${L.portal?`<a class="pt-btn" href="${esc(L.portal)}" target="_blank" rel="noopener">Check my grades ↗</a>`:'<button type="button" class="pt-btn" data-agent="grades">Check my grades</button>'}<a class="pt-btn ghost" href="#submissions">Upcoming submissions</a></div>
 <h2 id="submissions">Upcoming submissions</h2><p class="sub">Every submission is on Moodle. Use these buttons to go straight to the right place.</p><div class="pt-subs" id="pt-subs"></div>`;
     agents($('.pt-agents',root)); faq($('#pt-faq',root)); calendar($('#pt-cal',root)); submissions($('#pt-subs',root)); wire($('.pt-hero',root));
     root.querySelectorAll('.pt-actions [data-agent]').forEach(b=>b.addEventListener('click',()=>agent(b.dataset.agent)));
     const f=$('.pt-find',root), inp=$('input',f), hits=$('.pt-hits',root);
     const show=()=>{ const q=inp.value.trim(); if(!C.search){ return; } if(q.length<2){ hits.innerHTML=''; return; }
-      const r=C.search(q)||[]; hits.innerHTML=r.slice(0,6).map(x=>`<a href="${esc(x.l)}"><b>${esc(x.t)}</b>${x.s?`<small>${esc(x.s)}</small>`:''}</a>`).join('')||'<p class="sub" style="margin:0">No match. Try one key word, or press 🙂 Ask me.</p>'; };
+      const r=C.search(q)||[]; hits.innerHTML=r.slice(0,6).map(x=>`<a href="${esc(x.l)}"><b>${esc(x.t)}</b>${x.s?`<small>${esc(x.s)}</small>`:''}</a>`).join('')||'<p class="sub" style="margin:0">No match. Try one key word, or use Ask me.</p>'; };
     inp.addEventListener('input',show);
     f.addEventListener('submit',e=>{ e.preventDefault(); if(C.search) show(); else if(C.openSearch) C.openSearch(inp.value); });
   }

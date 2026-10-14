@@ -61,8 +61,8 @@ window.COURSE={
   ],
 
   faqExtra:[
-    ['📘','What are the textbooks?','Morrow (2024) <i>Be Data Literate</i> (2nd ed.) · Sosulski (2019) <i>Data Visualization Made Simple</i> · Klidas &amp; Hanegan (2022) <i>Data Literacy in Practice</i>.'],
-    ['⚖️','How is my grade made?','Quizzes 30% · Lab work 30% · Midterm 20% · Final project 20%. Full details in <a href="assessments.html">Assessments</a>.'],
-    ['💻','What do I need for the labs?','Your CUD Microsoft 365 account: Excel, Forms and OneDrive.']
+    ['What are the textbooks?','Morrow (2024) <i>Be Data Literate</i> (2nd ed.) · Sosulski (2019) <i>Data Visualization Made Simple</i> · Klidas &amp; Hanegan (2022) <i>Data Literacy in Practice</i>.'],
+    ['How is my grade made?','Quizzes 30% · Lab work 30% · Midterm 20% · Final project 20%. Full details in <a href="assessments.html">Assessments</a>.'],
+    ['What do I need for the labs?','Your CUD Microsoft 365 account: Excel, Forms and OneDrive.']
   ]
 };
