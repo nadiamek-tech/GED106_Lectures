@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Practice Midterm · GED 106</title>
+<title>Midterm Practice · GED 106</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
@@ -11,93 +11,233 @@
 <style>
 :root{--wk:#A3333D;--wk-soft:rgba(163,51,61,.10);--wk-d:#F2939B;--wk-soft-d:rgba(242,147,155,.14)}
 .scroll{overflow-x:auto}
-.charts{display:grid;gap:12px}
-.charts img{display:block;width:100%;max-width:100%;height:auto;background:#fff;border-radius:8px;border:1px solid var(--line)}
-.charts .two{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
-@media (max-width:640px){.charts .two{grid-template-columns:minmax(0,1fr)}}
+.data{margin-bottom:16px}
+.data h4{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px;font-weight:400}
+.tbl td.n,.tbl th.n{text-align:right;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
 <script src="assets/course.js"></script>
 <script>
-const {W,B}=Lecture;
-const MA={label:'Show model answer',prefix:'<b>Model answer:</b> ',numbered:false};
-const CAFE=`<div class="scroll"><table class="tbl"><thead><tr><th>Branch</th><th>Customer Rating (/10)</th><th>Wait Time (min)</th><th>Daily Orders</th><th>Monthly Revenue (AED '000)</th></tr></thead><tbody>
-<tr><td>Dubai Marina</td><td>9.1</td><td>6</td><td>310</td><td>148</td></tr><tr><td>Sharjah City</td><td>7.8</td><td>11</td><td>250</td><td>116</td></tr><tr><td>Abu Dhabi Mall</td><td>8.5</td><td>8</td><td>280</td><td>132</td></tr><tr><td>Ajman Downtown</td><td>6.9</td><td>13</td><td>200</td><td>94</td></tr></tbody></table></div>`;
-const CHARTS=`<div class="charts"><div class="two"><img src="assets/img/midterm-revenue-trend.png" alt="Line chart: Smart Café UAE monthly revenue rises from about 128 thousand AED in January to 132 in February, 141 in March and 148 in April."><img src="assets/img/midterm-rating-vs-wait.png" alt="Bar chart of customer rating and wait time per branch: Dubai Marina 9.1 and 6 min, Sharjah City 7.8 and 11 min, Abu Dhabi Mall 8.5 and 8 min, Ajman Downtown 6.9 and 13 min."></div><img src="assets/img/midterm-feedback-pie.png" alt="Pie chart of customer feedback: Excellent 45%, Good 35%, Fair 15%, Poor 5%." style="max-width:360px;margin:0 auto">${CAFE}</div>`;
-const LIB=`<div class="scroll"><table class="tbl"><thead><tr><th>Faculty</th><th>Avg. Books Borrowed per Student</th><th>Avg. Exam Score (%)</th><th>Number of Students</th></tr></thead><tbody>
-<tr><td>Business</td><td>3.2</td><td>77</td><td>180</td></tr><tr><td>Engineering</td><td>4.8</td><td>83</td><td>150</td></tr><tr><td>Communication</td><td>2.6</td><td>71</td><td>120</td></tr><tr><td>Architecture</td><td>1.9</td><td>68</td><td>100</td></tr></tbody></table></div>`;
-const SURVEY=`<ol><li>“How satisfied are you with EcoSip's environmental performance?”</li><li>“Don't you agree EcoSip is the best green brand?”</li><li>“Share your location and phone number for a discount coupon?”</li><li>“What do you think about EcoSip bottles in general?”</li></ol>`;
+const {W}=Lecture;
+/* deterministic shuffle so the correct option is not always first */
+function rng(seed){ let s=seed>>>0; return ()=>{ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+function mix(items,seed){ const r=rng(seed); return items.map(it=>{ const idx=it.o.map((_,i)=>i); for(let i=idx.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; } return {q:it.q,o:idx.map(i=>it.o[i]),a:idx.indexOf(it.a),why:it.why}; }); }
 
+/* ---------- Part 1 · four levels of analytics ---------- */
+const LV=['Descriptive','Diagnostic','Predictive','Prescriptive'];
+const NOT={0:'it does not only report what happened',1:'it does not explain a cause',2:'it does not estimate the future',3:'it does not recommend an action'};
+const WHY={0:'it reports what happened',1:'it explains why something happened',2:'it estimates what is likely to happen',3:'it recommends what to do'};
+const P1=[
+ ['Average emergency-room waiting time last month was 42 minutes.',0],
+ ['Absences rose in March, mainly because of a flu outbreak on campus.',1],
+ ['The model estimates that about 4,200 new students will enrol next year.',2],
+ ['Send a reminder to any student who misses a second lab.',3],
+ ['The library lent 3,150 books in September.',0],
+ ['What explains the longer emergency-room waits on Friday nights?',1],
+ ['This patient has a 70% risk of readmission within 30 days.',2],
+ ['Schedule two extra nurses on Friday nights to cut waiting times.',3],
+ ['45% of respondents use the metro to reach campus.',0],
+ ['Wards without hand-gel stations show the highest infection rates, which points to the cause.',1],
+ ['The weather model forecasts 43 °C in Dubai tomorrow.',2],
+ ['Route each delivery driver along the fastest path given current traffic.',3],
+ ['Rainfall in Fujairah totalled 120 mm in January.',0],
+ ['Library visits fell when opening hours were shortened; the two dates match.',1],
+ ['Students who miss three labs by Week 6 are likely to fail the course.',2],
+ ['Set the air conditioning to 24 °C in empty rooms to reduce energy use.',3],
+ ['What share of students passed the statistics course in Fall?',0],
+ ['A drill-down shows most failed log-ins came from one outdated app version.',1],
+ ['Demand for flights to Muscat is projected to rise 15% during Eid.',2],
+ ['The system recommends which flights to overbook, and by how many seats.',3],
+ ['The dashboard shows each building’s energy use in 2025.',0],
+ ['The team investigates whether the exam timetable explains low attendance in Week 9.',1],
+ ['Which customers are likely to cancel their phone contract next quarter?',2],
+ ['Move the statistics exam to the morning slot, where attendance is highest.',3],
+ ['The airport’s on-time rate was 81% in Q2.',0],
+ ['Root-cause analysis links the power cut to an overloaded transformer.',1],
+ ['Water use in the dorms will probably exceed capacity by 2028.',2],
+ ['Offer the vaccine first to patients with the highest predicted risk.',3],
+ ['Report the number of patients admitted to each ward in 2025.',0],
+ ['Restock umbrellas in stores where rain is forecast this week.',3]];
+const p1q=P1.map(([s,a])=>({q:`“${s}”`,o:LV,a,why:`<b>${LV[a]}</b>: ${WHY[a]}. `+[0,1,2,3].filter(k=>k!==a).map(k=>`Not ${LV[k].toLowerCase()}: ${NOT[k]}.`).join(' ')}));
+
+/* ---------- Part 2 · reading tables and charts (fictional data) ---------- */
+const D1=`<div class="data"><h4>Table 1 · Sports-centre visits per term</h4><div class="scroll"><table class="tbl"><thead><tr><th>Activity</th><th class="n">Fall</th><th class="n">Spring</th></tr></thead><tbody><tr><td>Swimming</td><td class="n">1,240</td><td class="n">1,180</td></tr><tr><td>Football</td><td class="n">980</td><td class="n">1,150</td></tr><tr><td>Gym</td><td class="n">2,310</td><td class="n">2,420</td></tr><tr><td>Yoga</td><td class="n">450</td><td class="n">360</td></tr></tbody></table></div></div>`;
+const D3=`<div class="data"><h4>Table 2 · Quiz scores of nine students</h4><div class="scroll"><table class="tbl"><tbody><tr>${[52,61,64,67,70,72,75,78,98].map(v=>`<td class="n">${v}</td>`).join('')}</tr></tbody></table></div></div>`;
+const EV=[[2019,4],[2020,6],[2021,9],[2022,15],[2023,22],[2024,30]];
+const D4=(()=>{ const X=i=>60+i*90, Y=v=>200-v*5.5; let s=`<div class="data"><h4>Chart 2 · Electric vehicles registered (thousands)</h4><svg viewBox="0 0 560 240" role="img" aria-label="Line chart rising from 4 thousand in 2019 to 30 thousand in 2024"><line x1="40" y1="200" x2="540" y2="200" stroke="var(--muted)"/>`;
+  [0,10,20,30].forEach(v=>s+=`<line x1="40" x2="540" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-dasharray="2 4"/><text x="32" y="${Y(v)+4}" text-anchor="end" font-size="11" class="t-muted t-mono">${v}</text>`);
+  s+=`<polyline points="${EV.map(([,v],i)=>`${X(i)},${Y(v)}`).join(' ')}" fill="none" stroke="var(--wk)" stroke-width="2.5"/>`;
+  EV.forEach(([y,v],i)=>s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="5" fill="var(--wk)"/><text x="${X(i)}" y="${Y(v)-10}" text-anchor="middle" font-size="11" font-weight="700">${v}</text><text x="${X(i)}" y="220" text-anchor="middle" font-size="11" class="t-muted t-mono">${y}</text>`);
+  return s+`</svg></div>`; })();
+const D5=`<div class="data"><h4>Table 3 · How students reach campus (% of each year group)</h4><div class="scroll"><table class="tbl"><thead><tr><th>Mode</th><th class="n">Year 1</th><th class="n">Year 4</th></tr></thead><tbody><tr><td>Car</td><td class="n">30</td><td class="n">55</td></tr><tr><td>Metro</td><td class="n">25</td><td class="n">20</td></tr><tr><td>Bus</td><td class="n">35</td><td class="n">15</td></tr><tr><td>Walk / other</td><td class="n">10</td><td class="n">10</td></tr></tbody></table></div></div>`;
+const D6=`<div class="data"><h4>Table 4 · Sleep and average course score (120 students)</h4><div class="scroll"><table class="tbl"><thead><tr><th>Sleep per night</th><th class="n">Students</th><th class="n">Average score</th></tr></thead><tbody><tr><td>Under 6 h</td><td class="n">30</td><td class="n">64</td></tr><tr><td>6–8 h</td><td class="n">70</td><td class="n">73</td></tr><tr><td>Over 8 h</td><td class="n">20</td><td class="n">71</td></tr></tbody></table></div></div>`;
+const p2a=[
+ {q:'Table 1: total visits in Fall?',o:['4,980','5,110','4,890','2,310'],a:0,why:'1,240 + 980 + 2,310 + 450 = 4,980. 5,110 is the Spring total; 2,310 is the gym alone.'},
+ {q:'Table 1: change in total visits from Fall to Spring?',o:['+130','−130','+110','+5,110'],a:0,why:'5,110 − 4,980 = +130. It is an increase, so not −130; 5,110 is a total, not a change.'},
+ {q:'Table 1: percentage change for Yoga?',o:['−20%','−90%','−25%','+20%'],a:0,why:'(360 − 450) ÷ 450 = −20%. −90 is the change in visits, not a percentage; −25% wrongly divides by the Spring value.'},
+ {q:'Table 1: which activities had fewer visits in Spring?',o:['Swimming and Yoga','Football and Gym','Only Yoga','All four'],a:0,why:'Swimming fell (1,240 → 1,180) and Yoga fell (450 → 360). Football and Gym rose.'},
+ {q:'Table 1: Gym’s share of Spring visits?',o:['About 47%','About 24%','About 53%','2,420%'],a:0,why:'2,420 ÷ 5,110 ≈ 47%. A share must be between 0% and 100%.'},
+ {q:'Chart 1: which time band has the longest average wait?',o:['18–24','12–18','00–06','06–12'],a:0,why:'18–24 has the longest bar, 57 minutes.'},
+ {q:'Chart 1: difference between the longest and shortest wait?',o:['29 min','57 min','16 min','85 min'],a:0,why:'57 − 28 = 29 minutes. 57 is the longest wait itself; 85 adds them instead of subtracting.'},
+ {q:'Chart 1: mean of the four bands?',o:['About 40 min','About 35 min','57 min','161 min'],a:0,why:'(28 + 35 + 41 + 57) ÷ 4 = 40.25. 161 is the sum before dividing.'},
+ {q:'Chart 1: how many bands are above 40 minutes?',o:['2','1','3','4'],a:0,why:'Only 12–18 (41) and 18–24 (57) are above 40.'},
+ {q:'Chart 1 alone: can you conclude that night waits are longer because fewer staff work at night?',o:['No, the chart shows waits, not staffing','Yes, the chart proves it','Yes, because 57 is the highest','No, the chart is wrong'],a:0,why:'The chart describes waits. Explaining why (diagnostic) needs staffing data as well.'}];
+const p2b=[
+ {q:'Table 2: median score?',o:['70','70.8','72','67'],a:0,why:'Nine sorted values: the 5th is 70. 70.8 is the mean.'},
+ {q:'Table 2: mean score (one decimal)?',o:['70.8','70','68.5','71.2'],a:0,why:'Sum 637 ÷ 9 = 70.8. 70 is the median.'},
+ {q:'Table 2: range?',o:['46','98','52','26'],a:0,why:'98 − 52 = 46. 98 and 52 are the maximum and minimum, not the range.'},
+ {q:'Table 2: if the 98 is removed, which measure changes more?',o:['The mean','The median','Both change equally','Neither changes'],a:0,why:'The mean drops to 67.4 (−3.4); the median to 68.5 (−1.5). Outliers pull the mean more.'},
+ {q:'Table 2: how many students scored 70 or more?',o:['5','4','6','9'],a:0,why:'70, 72, 75, 78 and 98: five students. “70 or more” includes 70.'},
+ {q:'Chart 2: increase from 2019 to 2024?',o:['26 thousand','30 thousand','34 thousand','8 thousand'],a:0,why:'30 − 4 = 26 thousand. 30 is the 2024 value; 8 is only the last year’s increase.'},
+ {q:'Chart 2: largest one-year increase?',o:['2023 to 2024','2022 to 2023','2021 to 2022','2019 to 2020'],a:0,why:'2023→2024 = +8; 2022→2023 = +7; 2021→2022 = +6; 2019→2020 = +2.'},
+ {q:'Chart 2: percentage increase from 2023 to 2024?',o:['About 36%','About 27%','8%','30%'],a:0,why:'(30 − 22) ÷ 22 ≈ 36%. 27% wrongly divides by 30; 8 is the change in thousands.'},
+ {q:'Chart 2: average yearly increase, 2019–2024?',o:['5.2 thousand','4.3 thousand','26 thousand','6 thousand'],a:0,why:'26 thousand over 5 yearly steps = 5.2. Dividing by 6 (years, not steps) gives 4.3.'},
+ {q:'Chart 2: what can you say about 2025?',o:['It will probably be above 30 thousand, but that is a prediction','It will be exactly 38 thousand','It must fall','The chart shows 2025'],a:0,why:'Extending the trend is predictive: an estimate, not a fact. The chart stops at 2024.'}];
+const p2c=[
+ {q:'Table 3: most common mode for Year 1?',o:['Bus','Car','Metro','Walk / other'],a:0,why:'Bus has the largest Year 1 share, 35%.'},
+ {q:'Table 3: difference in car use between Year 4 and Year 1?',o:['25 percentage points','25%','85 percentage points','55%'],a:0,why:'55 − 30 = 25 percentage points. Calling it “25%” confuses points with relative change.'},
+ {q:'Table 3: relative to Year 1, Year 4 car use is…',o:['About 83% higher','25% higher','55% higher','The same'],a:0,why:'55 ÷ 30 ≈ 1.83, so about 83% higher. 25 is the difference in points.'},
+ {q:'Table 3: Year 4 bus share compared with Year 1?',o:['Less than half','About the same','Double','Triple'],a:0,why:'15 ÷ 35 ≈ 0.43, which is less than half.'},
+ {q:'Table 3: can you tell how many Year 4 students drive?',o:['No, the table gives percentages without group sizes','Yes, 55 students','Yes, 55% of 120','Yes, 25 students'],a:0,why:'Counts need the number of students in each group, which the table does not give.'},
+ {q:'Table 4: which group is largest?',o:['6–8 h','Under 6 h','Over 8 h','All equal'],a:0,why:'70 of the 120 students sleep 6–8 hours.'},
+ {q:'Table 4: what percentage of students sleep under 6 hours?',o:['25%','30%','64%','20%'],a:0,why:'30 ÷ 120 = 25%. 30 is the count; 64 is that group’s average score.'},
+ {q:'Table 4: score difference between 6–8 h and under 6 h?',o:['9 points','7 points','2 points','73 points'],a:0,why:'73 − 64 = 9. 7 compares 71 and 64; 2 compares 73 and 71.'},
+ {q:'Table 4: overall average score of all 120 students?',o:['About 70.4','About 69.3','73','71'],a:0,why:'Weighted: (30×64 + 70×73 + 20×71) ÷ 120 ≈ 70.4. 69.3 averages the three group means without weighting.'},
+ {q:'Table 4: does this prove that more sleep causes higher scores?',o:['No, it shows an association; other factors may explain it','Yes, the 6–8 h group scored highest','Yes, the under-6 h group scored lowest','Yes, all groups differ'],a:0,why:'Correlation is not causation. The over-8 h group also scored lower than the 6–8 h group.'}];
+
+/* ---------- Part 3 · MCQs ---------- */
+const p3=[
+ {q:'A data dictionary describes…',o:['each field (column) in a dataset','the meaning of English words','an app’s source code','the people who answered a survey'],a:0,why:'It documents fields: name, type, unit, allowed values, definition, source. It is not a language dictionary, code, or a list of respondents.'},
+ {q:'Which is NOT normally part of a data dictionary entry?',o:['The analyst’s opinion of the results','Field name','Data type','Allowed values'],a:0,why:'Name, type and allowed values describe a field. Opinions about results belong in a report.'},
+ {q:'“Rating: 1–5, where 5 = strongly agree” is best described as…',o:['ordinal data','continuous data','free text','a date'],a:0,why:'Ordered categories are ordinal. It is not continuous (no in-between values), not text, not a date.'},
+ {q:'A field “Major” with values Business, Design, Media is…',o:['categorical','numerical','a date','an identifier'],a:0,why:'Labels for groups are categorical. You cannot calculate with them, and they do not identify one person.'},
+ {q:'The dictionary says Hours_studied is 0–80. A value of 230 should be…',o:['flagged as outside the allowed values','accepted as it is','silently changed to 80','deleted with the whole row'],a:0,why:'Flag and check it. Accepting ignores the rule; changing it invents data; deleting loses the other answers.'},
+ {q:'Why record a unit such as “minutes” in a data dictionary?',o:['So readers do not misread the values','To make the file smaller','To hide the data','It is not needed'],a:0,why:'Without a unit, 30 could mean minutes or hours. Units do not change file size or hide data.'},
+ {q:'The “Source” entry of a field tells you…',o:['where its values came from','the file size','who owns the computer','the chart colour'],a:0,why:'Source records origin, for example “survey question 3” or “added by Forms”.'},
+ {q:'Student_ID should be treated as…',o:['an identifier, not a quantity to average','a numerical measure','an ordinal rating','a date'],a:0,why:'IDs label people. Averaging IDs has no meaning, even though they look like numbers.'},
+ {q:'Morrow’s four pillars are reading, working with, analysing and…',o:['communicating with data','storing data','selling data','coding data'],a:0,why:'The fourth pillar is communicating with data. Storing, selling and coding are not pillars.'},
+ {q:'Raw values organised with context become…',o:['information','wisdom','noise','a sample'],a:0,why:'Data + context = information. Wisdom is higher in the hierarchy; a sample is a subset of a population.'},
+ {q:'Which is unstructured data?',o:['A recorded phone call','A table of prices','A list of dates','Exam marks in Excel'],a:0,why:'Audio does not fit rows and columns. The other three are structured tables or lists.'},
+ {q:'Support rose from 30% to 36%. This is…',o:['6 percentage points (a 20% relative rise)','6% (a 6 percentage-point rise)','36 percentage points','20 percentage points'],a:0,why:'36 − 30 = 6 points; 6 ÷ 30 = 20% relative. The other options mix up points and percent.'},
+ {q:'For house prices with a few very expensive villas, the best “typical” value is the…',o:['median','mean','maximum','range'],a:0,why:'The median resists outliers. The mean is pulled up; the maximum and range do not describe a typical value.'},
+ {q:'Two variables rise together. You can conclude that they are…',o:['correlated','causally linked','measured wrongly','random'],a:0,why:'Moving together shows correlation only. Cause needs more evidence; nothing suggests error or randomness.'},
+ {q:'Asking “who is missing from this dataset?” is an example of…',o:['critical thinking','creativity only','prescriptive analytics','data storage'],a:0,why:'Questioning a dataset’s coverage is critical thinking. It does not recommend an action or store data.'},
+ {q:'The data skills gap is the difference between…',o:['skills employers need and skills workers have','two bars on a chart','missing and complete values','storage space and file size'],a:0,why:'It is a labour-market gap (WEF, 2025), not a chart, data-quality or storage term.'},
+ {q:'The UAE Personal Data Protection Law took effect on…',o:['2 January 2022','1 January 2019','1 June 2025','It is not yet in force'],a:0,why:'Federal Decree-Law No. 45 of 2021 took effect on 2 January 2022.'},
+ {q:'Under the UAE PDPL, the default legal basis for processing personal data is…',o:['the consent of the data subject','the company’s profit','public curiosity','no basis is needed'],a:0,why:'Consent is the default; a few exceptions exist, such as legal obligations. Profit or curiosity are not legal bases.'},
+ {q:'Which right does the UAE PDPL give individuals?',o:['To correct inaccurate personal data','To see other people’s data','To be paid for each use','No rights'],a:0,why:'Rights include access, correction and erasure of one’s own data, not other people’s data or payment.'},
+ {q:'Which UAE zones have their own data protection laws?',o:['DIFC and ADGM','Dubai Marina and Al Ain','All emirates equally','None'],a:0,why:'The DIFC and ADGM financial free zones have separate regimes; the federal law does not apply there.'},
+ {q:'Replacing names with codes while a key can re-link them is…',o:['pseudonymisation','anonymisation','deletion','encryption of hardware'],a:0,why:'If a key can re-link records, they are pseudonymised. Anonymised data cannot be linked back.'},
+ {q:'Re-identification means…',o:['linking “anonymous” records back to a person','deleting a dataset','asking for consent','encrypting a file'],a:0,why:'Combining facts such as birth date and postcode can reveal who someone is (Sweeney, 2000).'},
+ {q:'Valid consent should be…',o:['clear, specific and actively given','assumed if the user says nothing','hidden in long terms','given by a friend'],a:0,why:'Silence, hidden terms or someone else’s agreement are not valid consent.'},
+ {q:'The whole group you want to draw conclusions about is the…',o:['population','sample','pilot','frame error'],a:0,why:'The population is everyone of interest; the sample is the part you actually ask.'},
+ {q:'Every member has an equal chance of selection in a…',o:['simple random sample','convenience sample','volunteer sample','quota sample'],a:0,why:'Only random selection gives everyone an equal chance; the others depend on who is easy to reach or who volunteers.'},
+ {q:'Grouping students by year and sampling randomly within each year is…',o:['stratified sampling','cluster sampling','convenience sampling','snowball sampling'],a:0,why:'Random within every group = stratified. Cluster sampling picks whole groups; convenience and snowball are non-random.'},
+ {q:'People who reply differ from those who do not. This is…',o:['non-response bias','a leading question','a pilot test','a unit error'],a:0,why:'Bias from who replies is non-response bias (as in the 1936 Literary Digest poll).'},
+ {q:'A 1–5 scale from “strongly disagree” to “strongly agree” is a…',o:['Likert scale','open question','ranking question','demographic question'],a:0,why:'Agreement on a fixed scale is a Likert item. Open questions have free text; ranking orders items.'},
+ {q:'Testing a survey on a few people before launch is a…',o:['pilot test','census','sampling frame','data dictionary'],a:0,why:'A pilot finds confusing questions early. A census asks everyone; a frame is the list you sample from.'},
+ {q:'Surveying only your friends because they are easy to reach is…',o:['convenience sampling','random sampling','stratified sampling','systematic sampling'],a:0,why:'Ease of access, not chance, decides who is asked, so it is convenience sampling.'}];
+const p3m=mix(p3,106);
+
+/* ---------- Part 4 · find the error and fix it ---------- */
+const P4=[
+ ['How satisfied are you with the gym’s equipment and opening hours?','Double-barrelled: two topics in one question.','Ask two questions: one about equipment, one about opening hours (1–5 each).'],
+ ['How often do you skip breakfast before class?','Loaded: assumes you skip breakfast.','First ask “Do you usually eat breakfast before class? (Yes/No)”, then ask how often.'],
+ ['Do you exercise regularly?','Vague: “regularly” means different things.','“How many days did you exercise last week? (0–7)”'],
+ ['Age: 18–20 / 20–22 / 22–25','Overlapping options: 20 and 22 fit two boxes.','18–19 / 20–21 / 22–25 / 26 or older'],
+ ['How do you travel to campus? Car / Bus','Missing options.','Car / Bus / Metro / Taxi / Walk / Other (please specify)'],
+ ['Most students love the new timetable. Do you?','Leading: social pressure towards “yes”.','“How would you rate the new timetable? (1 = very poor, 5 = very good)”'],
+ ['Do you never not attend lectures?','Double negative: confusing.','“How many lectures did you miss last month?”'],
+ ['How would you rate the LMS’s UX and SSO integration?','Jargon (and two topics).','“How easy is Moodle to use?” and “How easy is it to log in?” as separate questions.'],
+ ['Rate the library: Excellent / Very good / Good / Poor','Unbalanced scale: three positive, one negative.','Very poor / Poor / Neutral / Good / Very good'],
+ ['How many hours did you study on each day of last semester?','Unrealistic recall.','“About how many hours did you study last week?”'],
+ ['Do you always check your email?','Absolute word: almost no one “always” does.','“How often do you check your email? Several times a day / Daily / Weekly / Rarely”'],
+ ['Should the university improve its outdated website?','Loaded wording: “outdated” assumes the answer.','“How would you rate the university website? (1–5)”'],
+ ['Why do you prefer online classes?','Assumes a preference.','First ask “Which do you prefer: online, in person, or no preference?”'],
+ ['Was the orientation useful and well organised?','Double-barrelled.','Ask about usefulness and organisation separately.'],
+ ['Rate from 1 to 10 (1 = best).','Reversed scale: most scales use 10 = best, which confuses respondents.','“Rate from 1 to 10 (1 = very poor, 10 = excellent).”'],
+ ['Do you agree that the bus service is good?','Leading agreement and vague “good”.','“How often is the campus bus on time? Always / Usually / Sometimes / Rarely / Never”'],
+ ['How satisfied are you with the course? Very satisfied / Satisfied','Missing neutral and negative options.','Very dissatisfied / Dissatisfied / Neutral / Satisfied / Very satisfied'],
+ ['What do you think about parking?','Too vague to analyse: no clear aspect or scale.','“How easy is it to find parking before 9 am? (1–5)”'],
+ ['Given rising costs, should tuition increase?','Leading: the preamble pushes towards “yes”.','“Do you support, oppose, or have no opinion on a tuition increase?”'],
+ ['In the past, how often have you used the career centre?','Vague time frame.','“How many times have you used the career centre this semester?”'],
+ ['Are you happy with your grades and your advisor?','Double-barrelled.','Two questions: one on grades, one on the advisor.'],
+ ['How much do you spend on books? ____','Missing unit and time frame.','“How much did you spend on books this semester, in AED?”'],
+ ['Do you use the library? Yes / No','Too limited when frequency matters.','“How often do you use the library? Daily / Weekly / Monthly / Rarely / Never”'],
+ ['Which social media app do you use? (choose one)','Single choice where several apply.','“Which social media apps do you use? (select all that apply)”'],
+ ['Experts say sleep improves grades. How many hours do you sleep?','Priming: the preamble may change answers.','Remove the preamble: “On a typical school night, how many hours do you sleep?”'],
+ ['How likely are you to not recommend this course?','Negative wording: confusing.','“How likely are you to recommend this course? (0–10)”'],
+ ['Rate the lecture’s clarity, pace and examples (1–5).','Triple-barrelled: three topics, one score.','Three separate ratings: clarity, pace, examples.'],
+ ['Year of study: 1 / 2 / 3','Missing options.','1 / 2 / 3 / 4 / 5 or more'],
+ ['Do you agree or disagree that group work should not be removed?','Double negative.','“Should group work stay in this course? Yes / No / No opinion”'],
+ ['How often do you use the shuttle? Often / Sometimes / Rarely','Vague quantifiers: “often” differs between people.','“How many days a week do you use the shuttle? 0 / 1–2 / 3–4 / 5+”']];
+const p4=P4.map(([q,e,f])=>({q:`“${q}”`,hint:`<b>Error:</b> ${e}<br><b>Fix:</b> ${f}`}));
+
+/* ---------- Part 5 · five principles ---------- */
+const PR=['Ownership','Transparency','Privacy','Intention','Outcomes'];
+const PNOT={0:'the main issue is not consent or control',1:'the main issue is not how clearly people are informed',2:'the main issue is not exposure or security of the data',3:'the main issue is not the purpose of collection',4:'the main issue is not the effect on people after use'};
+const PWHY={0:'the issue is people’s permission or control over their own data',1:'the issue is whether people are told how their data are used',2:'the issue is protecting data from exposure or identification',3:'the issue is the purpose for collecting data, decided before collection',4:'the issue is the effect on people after the data are used'};
+const P5=[
+ ['A fitness app shares users’ heart-rate data with partners without asking them.',0],
+ ['An airline uses booking data to set personalised prices but never mentions this anywhere.',1],
+ ['A clinic emails a spreadsheet of patient results to the wrong mailing list.',2],
+ ['Before launching a study app, the team writes down why each field is needed and how it could harm users.',3],
+ ['A navigation app’s shortcuts send heavy traffic through a quiet residential street.',4],
+ ['A smart TV records viewing habits by default, and users cannot switch it off.',0],
+ ['A smart speaker’s 60-page policy never mentions that staff listen to some recordings.',1],
+ ['A researcher publishes “anonymous” data that still contain birth dates and postcodes.',2],
+ ['A school plans to collect students’ face images with no defined purpose.',3],
+ ['A scholarship formula, built in good faith, ends up favouring students from wealthy areas.',4],
+ ['A user asks a streaming service to delete her account data and is refused.',0],
+ ['A city installs number-plate cameras with no signs telling drivers.',1],
+ ['A gym’s member file is shared as “anyone with the link”.',2],
+ ['A marketing firm plans to collect teenagers’ data to target them with gambling-style game ads.',3],
+ ['A course-recommendation app gradually pushes students into narrower subject choices.',4],
+ ['A sign-up form has the “share my data with partners” box already ticked.',0],
+ ['A retailer starts using customer data in a new way and does not inform customers.',1],
+ ['A hotel stores guests’ passport scans on an unencrypted shared drive.',2],
+ ['A city collects location data to plan bus routes and decides in advance not to use it for anything else.',3],
+ ['Patrols increase in one neighbourhood after a prediction tool, which then records more incidents there.',4],
+ ['A hospital lets patients download a copy of their own records.',0],
+ ['An HR team screens CVs with software, but candidates are never told software is used.',1],
+ ['A class list with students’ phone numbers is posted publicly.',2],
+ ['An employer considers monitoring staff keystrokes “just to see what we find”.',3],
+ ['A face-recognition gate fails more often for some users, delaying them every day.',4],
+ ['A game keeps collecting location after the player withdraws consent.',0],
+ ['A research team publishes its data-collection method so others can check it.',1],
+ ['Results are aggregated to faculty level before publication so no student can be identified.',2],
+ ['A survey designer first asks: what decision will these answers support?',3],
+ ['An automatic timetable gives evening classes mostly to working students, who then drop out more.',4]];
+const p5q=P5.map(([s,a])=>({q:s,o:PR,a,why:`<b>${PR[a]}</b>: ${PWHY[a]}. `+[0,1,2,3,4].filter(k=>k!==a).map(k=>`Not ${PR[k].toLowerCase()}: ${PNOT[k]}.`).join(' ')}));
+
+const PRAC={label:'Show model answer',prefix:''};
 Lecture.mount({
-  id:'g106-pmid', course:'GED 106', week:'Practice', clo:'1, 2, 3', short:'Practice · Midterm (Fall 2025)',
-  title:'Practice Midterm',
-  meta:'Last year\'s Midterm · 20 marks · 90 minutes',
+  id:'g106-mprac', course:'GED 106', week:'1–8', clo:'1–3', short:'Midterm practice · 150 questions',
+  title:'Midterm Practice',
+  meta:'5 parts · 30 questions each',
   scenes:[
-  { nav:'How to use this', title:'Practice with last year\'s Midterm', kind:'review',
-    narration:[
-     `This is the <strong>Midterm Exam from Fall 2025</strong>, with model answers. It was worth <strong>20 marks</strong> in <strong>90 minutes</strong>, closed book. This year's midterm is on <strong>Friday 23 October, 3 PM</strong>.`,
-     `<ul><li><b>Section A:</b> ethical and governance principles (6 marks).</li><li><b>Section B:</b> reading and interpreting data from charts and a table (7 marks).</li><li><b>Section C:</b> descriptive and diagnostic analytics for decisions (7 marks).</li></ul>`,
-     B.exam(`Set a 90-minute timer, answer on paper, then compare with the model answers. In data questions, always quote the numbers you used.`)],
-    notes:[`Model answers were written for practice; adjust them to match your marking scheme if needed.`],
-    fig:{label:`Suggested time · 90 minutes`, build:el=>W.agenda(el,[[`Section A · Ethics and governance (6 marks)`,27,'l'],[`Section B · Reading data (7 marks)`,31,'a'],[`Section C · Analytics for decisions (7 marks)`,32,'c']])} },
-
-  { nav:'A1 · Smart surveys', title:'Section A · Part 1: Smart Surveys Across Borders (3.5 marks)', kind:'review',
-    narration:[
-     `EcoSip Inc. launched a customer-feedback survey in both <strong>Dubai</strong> and <strong>Toronto</strong>. Each region followed its own data-governance framework: in <strong>Canada</strong>, <em>PIPEDA (2000)</em>; in the <strong>UAE</strong>, the <em>Dubai Data Law (Law No. 26 of 2015)</em>.`,
-     `<b>Selected survey items:</b>${SURVEY}`,
-     `For each item, decide whether it is <b>biased</b>, <b>open-ended</b>, or <b>violates ethics</b>. Rewrite biased items neutrally; convert open-ended items to closed-ended versions.`],
-    fig:{label:`Q1–Q4`, build:el=>W.practice(el,[
-      {q:`<b>Q1.</b> Which survey item violates the Principle of Privacy? How could you correct it? (1 mark)`,hint:`<b>Item 3.</b> It asks for location and phone number, personal data that is not needed to give feedback. Correction: make it optional and separate from the survey, ask only for what the coupon needs (for example an email), explain how the data will be used and stored, and get clear consent: “If you would like a discount coupon, you may enter your email (optional). We will use it only to send the coupon.”`},
-      {q:`<b>Q2.</b> Which item demonstrates bias in wording and violates an ethical principle? Rewrite it neutrally. (1 mark)`,hint:`<b>Item 2.</b> “Don't you agree…” is a leading question that pushes people to agree. Neutral version: “How would you rate EcoSip as a green brand? (1 = very poor, 5 = excellent)”.`},
-      {q:`<b>Q3.</b> “What do you think about EcoSip's environmental policy?” is close-ended or open-ended? If open-ended, convert it.`,hint:`<b>Open-ended.</b> Closed version: “How would you rate EcoSip's environmental policy? Very poor / Poor / Neutral / Good / Very good”. (Item 4 is also open-ended and is converted the same way.)`},
-      {q:`<b>Q4.</b> A company collects data only to advertise but tells participants it is for research. Which principle is broken? (0.5 mark)`,hint:`<b>Transparency</b>: people were not told the true use of their data. (The real intention also differs from the stated one, so Intention is affected too.)`}],MA)} },
-
-  { nav:'A2 · Matching', title:'Section A · Part 2: Matching (2.5 marks)', kind:'review',
-    narration:[`Match each scenario to the single best principle: <b>Ownership, Transparency, Privacy, Intention, Outcomes.</b> Half a mark each.`],
-    fig:{label:`Five scenarios`, build:el=>W.sort(el,{buckets:['Ownership','Transparency','Privacy','Intention','Outcomes'],reveal:'Show model answers',items:[
-      {t:`1. An app collects location data in the background without visible consent.`,a:0,why:`People own their data; collecting it without consent breaks ownership.`},
-      {t:`2. A survey form states how responses will be stored and who can see them.`,a:1,why:`Telling people how data is stored and used is transparency.`},
-      {t:`3. A university collects dining data for “event recommendations” that do not require it.`,a:3,why:`Collecting data the stated purpose does not need: check intention and collect only what you need.`},
-      {t:`4. A dashboard team removes names/IDs and limits who can access raw files.`,a:2,why:`Protecting identities and limiting access is privacy.`},
-      {t:`5. Before launching a hiring model, a team evaluates if any group is unfairly harmed.`,a:4,why:`Checking real effects on groups is outcomes.`}]})} },
-
-  { nav:'A3 · True/False', title:'Section A · Part 3: True/False with Correction (1.5 marks)', kind:'review',
-    narration:[`Write <b>T</b> or <b>F</b>. If <b>F</b>, give a 3–5-word correction.`],
-    fig:{label:`Three statements`, build:el=>W.practice(el,[
-      {q:`1. “People own their personal data.”`,hint:`<b>T</b> (Ownership).`},
-      {q:`2. “Transparency means hiding methods to avoid confusion.”`,hint:`<b>F</b>. Correction: “Transparency means openly explaining methods.”`},
-      {q:`3. “Collect the minimum data needed for the stated purpose.”`,hint:`<b>T</b> (data minimisation, linked to Intention).`}],MA)} },
-
-  { nav:'Section B', title:'Section B · Reading & Interpreting Data (7 marks)', kind:'review', wide:true,
-    narration:[
-     `Use the charts and the table <b>Dataset B: Smart Café UAE – Monthly Snapshot</b> to answer B1–B5.`,
-     B.exam(`Quote the numbers. For B3 and B5, describe a relationship carefully: data can show a link, but other factors may also play a part.`)],
-    fig:{label:`Smart Café UAE · charts and Dataset B`, html:CHARTS, build:el=>{ const d=document.createElement('div'); d.style.marginTop='16px'; el.appendChild(d); W.practice(d,[
-      {q:`<b>B1.</b> Best overall branch (rating + revenue). (1 mark)`,hint:`<b>Dubai Marina</b>: highest rating (9.1/10) and highest monthly revenue (AED 148,000), with the shortest wait (6 min).`},
-      {q:`<b>B2.</b> Needs improvement: state branch + one reason. (1.5 marks)`,hint:`<b>Ajman Downtown</b>: lowest rating (6.9/10) and lowest revenue (AED 94,000), with the longest wait time (13 min).`},
-      {q:`<b>B3.</b> As wait time increases, customer satisfaction generally: Increases / Decreases / No clear change. (1 mark)`,hint:`<b>Decreases.</b> Ratings fall as waits get longer: 6 min → 9.1, 8 min → 8.5, 11 min → 7.8, 13 min → 6.9.`},
-      {q:`<b>B4.</b> One managerial action supported by the data. (1.5 marks)`,hint:`Reduce wait times at <b>Ajman Downtown</b> (and Sharjah City): add staff at peak hours or copy Dubai Marina's service process, with a target of about 8 minutes or less. Shorter waits go with higher ratings and revenue in the data.`},
-      {q:`<b>B5.</b> If Ajman reduces wait time and revenue rises next month, write the most reasonable conclusion (one phrase). (2 marks)`,hint:`“<b>Shorter wait times are associated with higher customer satisfaction and revenue</b>”: the result supports the link seen in the data, though other factors (season, promotions) should also be checked.`}],MA); },
-      caption:`Charts and table from the Fall 2025 midterm.`} },
-
-  { nav:'Section C', title:'Section C · CUD Library Use and Exam Performance (7 marks)', kind:'review', wide:true,
-    narration:[
-     `The Canadian University Dubai collected data on how many books students borrowed this semester and their corresponding average exam scores. The Academic Affairs Office wants to analyze whether students who use the library more tend to achieve better results, and how this insight can guide future support programs.`,
-     B.exam(`Use the four levels from Week 4: <b>what happened → why → what will happen → what should we do</b>. Remember: correlation is not causation (Week 6).`)],
-    fig:{label:`Library use and exam scores`, html:LIB, build:el=>{ const d=document.createElement('div'); d.style.marginTop='16px'; el.appendChild(d); W.practice(d,[
-      {q:`<b>1.</b> The table mainly represents which level of analytics? (1 mark)`,hint:`<b>Descriptive</b>: it summarises what happened this semester.`},
-      {q:`<b>2.</b> Write one short descriptive statement summarizing what happened. (1 mark)`,hint:`Engineering students borrowed the most books (4.8 per student) and had the highest average score (83%), while Architecture borrowed the fewest (1.9) and had the lowest (68%).`},
-      {q:`<b>3.</b> Give one possible diagnostic reason explaining this pattern. (1 mark)`,hint:`Students who borrow more books may spend more time studying and preparing, which can raise exam scores. (Also accepted: some programmes need more reading than others, so the link may come partly from differences between faculties.)`},
-      {q:`<b>4.</b> Suggest one predictive use of this data for next semester. (1 mark)`,hint:`Use borrowing levels to predict which faculties or students are likely to score lower, so support can start early.`},
-      {q:`<b>5.</b> Suggest one prescriptive action the university could take. (1 mark)`,hint:`Run library workshops and recommended reading lists for faculties with low borrowing (Architecture, Communication), and encourage library use early in the semester.`},
-      {q:`<b>6.</b> The Academic Affairs team plans to post the comparison by faculty on the website. Which data-ethics principle must be considered? `,hint:`<b>Privacy</b>: publish only aggregated faculty-level results, never data that could identify individual students. (Outcomes is also worth mentioning: a public ranking could unfairly label a faculty.)`},
-      {q:`<b>7.</b> If each faculty increases borrowing by one book per student next term, predict one possible impact on exam performance. (1 mark)`,hint:`Average exam scores would likely <b>rise</b>. Based on the trend across the four faculties, one extra book goes with roughly <b>5 percentage points</b> higher scores. This is a prediction from a correlation, not proof that borrowing causes higher scores.`}],MA); }} },
-
-  { nav:'Before the midterm', title:'Checklist before the midterm', kind:'review',
-    narration:[
-     `<ul><li>Know the five ethics principles and match scenarios to them (Week 7).</li><li>Spot leading, open-ended and privacy-breaking survey items, and rewrite them (Weeks 3 and 7).</li><li>Read charts and tables: name the best and worst, quote numbers, describe relationships (Week 5).</li><li>Use the four levels of analytics on a case (Week 4).</li><li>Say “associated with”, not “causes”, unless there is proof (Week 6).</li></ul>`,
-     `See also: <a href="practice-quiz1.html">practice Quiz 1</a> and the <a href="review.html">midterm review page</a>.`] }
+  { nav:'Start', title:'Midterm practice', kind:'review',
+    narration:[`Five parts, 30 questions each. Answer first; the model answer explains why each option is right or wrong. All data are fictional.`],
+    fig:{label:`Parts`, html:`<table class="tbl"><tbody><tr><td>1</td><td>Four levels of analytics</td></tr><tr><td>2</td><td>Reading data from tables and charts</td></tr><tr><td>3</td><td>MCQs: data dictionary, data literacy, data protection, surveys</td></tr><tr><td>4</td><td>Survey questions: find the error and fix it</td></tr><tr><td>5</td><td>Five principles of data ethics</td></tr></tbody></table>`} },
+  { nav:'1 · Analytics A', title:'Part 1 · Four levels of analytics (1–10)', kind:'check', narration:[`Name the level of analytics.`], fig:{label:`Questions 1–10`, build:el=>W.quiz(el,p1q.slice(0,10))} },
+  { nav:'1 · Analytics B', title:'Part 1 · Four levels of analytics (11–20)', kind:'check', narration:[`Name the level of analytics.`], fig:{label:`Questions 11–20`, build:el=>W.quiz(el,p1q.slice(10,20))} },
+  { nav:'1 · Analytics C', title:'Part 1 · Four levels of analytics (21–30)', kind:'check', narration:[`Name the level of analytics.`], fig:{label:`Questions 21–30`, build:el=>W.quiz(el,p1q.slice(20))} },
+  { nav:'2 · Data A', title:'Part 2 · Reading data (1–10)', kind:'check', wide:true, narration:[`Use Table 1 and Chart 1.`],
+    fig:{label:`Data`, html:D1+`<div class="data"><h4>Chart 1 · Average emergency-room wait (minutes) by arrival time</h4><div id="c1"></div></div>`, build:el=>{ W.bars(el.querySelector('#c1'),{rows:[['00–06',28],['06–12',35],['12–18',41],['18–24',57]],unit:' min',max:60}); const q=document.createElement('div'); el.appendChild(q); W.quiz(q,mix(p2a,11)); }} },
+  { nav:'2 · Data B', title:'Part 2 · Reading data (11–20)', kind:'check', wide:true, narration:[`Use Table 2 and Chart 2.`],
+    fig:{label:`Data`, html:D3+D4, build:el=>{ const q=document.createElement('div'); el.appendChild(q); W.quiz(q,mix(p2b,12)); }} },
+  { nav:'2 · Data C', title:'Part 2 · Reading data (21–30)', kind:'check', wide:true, narration:[`Use Tables 3 and 4.`],
+    fig:{label:`Data`, html:D5+D6, build:el=>{ const q=document.createElement('div'); el.appendChild(q); W.quiz(q,mix(p2c,13)); }} },
+  { nav:'3 · MCQ A', title:'Part 3 · MCQs (1–10)', kind:'check', narration:[`Data dictionary and data literacy.`], fig:{label:`Questions 1–10`, build:el=>W.quiz(el,p3m.slice(0,10))} },
+  { nav:'3 · MCQ B', title:'Part 3 · MCQs (11–20)', kind:'check', narration:[`Data literacy and data protection.`], fig:{label:`Questions 11–20`, build:el=>W.quiz(el,p3m.slice(10,20))} },
+  { nav:'3 · MCQ C', title:'Part 3 · MCQs (21–30)', kind:'check', narration:[`Data protection and surveys.`], fig:{label:`Questions 21–30`, build:el=>W.quiz(el,p3m.slice(20))} },
+  { nav:'4 · Surveys A', title:'Part 4 · Find the error and fix it (1–10)', kind:'review', narration:[`Name the error, then rewrite the question.`], fig:{label:`Questions 1–10`, build:el=>W.practice(el,p4.slice(0,10),PRAC)} },
+  { nav:'4 · Surveys B', title:'Part 4 · Find the error and fix it (11–20)', kind:'review', narration:[`Name the error, then rewrite the question.`], fig:{label:`Questions 11–20`, build:el=>W.practice(el,p4.slice(10,20),PRAC)} },
+  { nav:'4 · Surveys C', title:'Part 4 · Find the error and fix it (21–30)', kind:'review', narration:[`Name the error, then rewrite the question.`], fig:{label:`Questions 21–30`, build:el=>W.practice(el,p4.slice(20),PRAC)} },
+  { nav:'5 · Principles A', title:'Part 5 · Five principles (1–10)', kind:'check', narration:[`Choose the principle most at stake.`], fig:{label:`Questions 1–10`, build:el=>W.quiz(el,p5q.slice(0,10))} },
+  { nav:'5 · Principles B', title:'Part 5 · Five principles (11–20)', kind:'check', narration:[`Choose the principle most at stake.`], fig:{label:`Questions 11–20`, build:el=>W.quiz(el,p5q.slice(10,20))} },
+  { nav:'5 · Principles C', title:'Part 5 · Five principles (21–30)', kind:'check', narration:[`Choose the principle most at stake.`], fig:{label:`Questions 21–30`, build:el=>W.quiz(el,p5q.slice(20))} }
   ]
 });
 </script>
