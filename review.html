@@ -20,102 +20,83 @@
 <script src="assets/course.js"></script>
 <script>
 const {W,B}=Lecture;
-const FORMULA=`<div class="formula"><span>Define</span><i>→</i><span>Example</span><i>→</i><span>Benefit</span><i>→</i><span>Risk</span><i>→</i><span>Human check</span></div>`;
 const T14=`<div class="scroll"><table class="tbl"><thead><tr><th></th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th></tr></thead><tbody>
-<tr><td>Question</td><td>What is data?</td><td>What skills do I need?</td><td>How do I collect it well?</td><td>What can it tell us?</td></tr>
-<tr><td>Key idea</td><td>Data → decision</td><td>Four pillars</td><td>Fair sample, fair questions</td><td>Four levels of analytics</td></tr>
-<tr><td>Key terms</td><td>Structured, digital economy, skills gap</td><td>Reading, working with, analysing, communicating</td><td>Population, sample, sampling bias, leading question</td><td>Descriptive, diagnostic, predictive, prescriptive</td></tr>
-<tr><td>Key example</td><td>WEF Future of Jobs 2025</td><td>Café sales, four ways</td><td>Literary Digest 1936</td><td>Google Flu Trends</td></tr>
-<tr><td>Lab skill</td><td>Microsoft 365 set-up</td><td>Tidy Excel table</td><td>Survey in Forms</td><td>Export to Excel</td></tr></tbody></table></div>`;
+<tr><td>Key idea</td><td>Data → information → knowledge</td><td>Four pillars</td><td>Fair sample, fair questions</td><td>Four levels of analytics</td></tr>
+<tr><td>Key terms</td><td>Structured, digital economy, skills gap</td><td>Reading, working with, analysing, communicating</td><td>Population, sample, non-response bias, tidy data</td><td>Descriptive, diagnostic, predictive, prescriptive</td></tr>
+<tr><td>Evidence</td><td>Rowley (2007); WEF (2025)</td><td>Cleveland &amp; McGill (1984)</td><td>Squire (1988); Loftus &amp; Palmer (1974)</td><td>Lazer et al. (2014)</td></tr></tbody></table></div>`;
 const T58=`<div class="scroll"><table class="tbl"><thead><tr><th></th><th>Week 5</th><th>Week 6</th><th>Week 7</th><th>Week 8</th></tr></thead><tbody>
-<tr><td>Question</td><td>Can I read and speak data?</td><td>How should I think?</td><td>What is right?</td><td>What goes wrong?</td></tr>
-<tr><td>Key idea</td><td>Five checks; data dictionary</td><td>Curiosity, creativity, critical thinking</td><td>Five ethics principles</td><td>Five common problems</td></tr>
-<tr><td>Key terms</td><td>Mean, median, percentage points</td><td>Correlation vs causation</td><td>Consent, re-identification</td><td>Biased data, proxy, cherry-picking</td></tr>
-<tr><td>Key example</td><td>Cut-off axis</td><td>Snow 1854, Nightingale 1858</td><td>Cambridge Analytica, Sweeney</td><td>Amazon tool, Obermeyer 2019</td></tr>
-<tr><td>Lab skill</td><td>Sort, filter, conditional formatting</td><td>Data cleaning</td><td>AVERAGE, COUNTIF, IF, VLOOKUP</td><td>Ethics check</td></tr></tbody></table></div>`;
-const CARDS=[
- ['Data','Recorded facts or observations'],['Structured / unstructured','Fits rows and columns / does not (photos, free text)'],['Digital economy','Economic activity built on digital technology and data'],['Data skills gap','Jobs need data skills that many workers lack'],['Four pillars','Reading, working with, analysing, communicating with data'],['Tidy table','Row = record, column = variable, one value per cell'],['Population / sample','Everyone you care about / the people you actually ask'],['Sampling bias','Some groups more likely to be included, so results are pushed one way'],['Leading question','Pushes the respondent towards an answer'],['Double-barrelled','Two questions in one'],['Data cleaning','Fixing errors, duplicates, missing and impossible values before analysis'],['Descriptive analytics','What happened?'],['Diagnostic analytics','Why did it happen?'],['Predictive analytics','What will happen?'],['Prescriptive analytics','What should we do?'],['Reading data','Understanding what data says and does not say'],['Data fluency','Talking about data confidently and correctly'],['Data dictionary','Name, type, unit, allowed values, description, source for each field'],['Mean / median','Sum ÷ count / the middle value'],['Percentage points','Difference between two percentages'],['Correlation ≠ causation','Moving together does not prove one causes the other'],['Three Cs','Curiosity, creativity, critical thinking'],['Five ethics principles','Ownership, transparency, privacy, intention, outcomes'],['Re-identification','Finding people in “anonymous” data by combining facts'],['UAE PDPL','Federal Decree-Law No. 45 of 2021; consent by default'],['Proxy variable','A stand-in variable that can carry hidden unfairness'],['Cherry-picking','Choosing only the data that supports your story'],['COUNTIF / IF / VLOOKUP','Count by condition / choose by test / find a value in a table']];
+<tr><td>Key idea</td><td>Read before you believe</td><td>Curiosity, creativity, critical thinking</td><td>Five ethics principles</td><td>Common ethical problems</td></tr>
+<tr><td>Key terms</td><td>Mean, median, percentage points, data dictionary</td><td>Correlation vs causation</td><td>Consent, re-identification</td><td>Biased data, proxy, cherry-picking</td></tr>
+<tr><td>Evidence</td><td>Pandey et al. (2015)</td><td>Snow (1855); Messerli (2012)</td><td>Sweeney (2000); Kosinski et al. (2013)</td><td>Buolamwini &amp; Gebru (2018); Obermeyer et al. (2019)</td></tr></tbody></table></div>`;
+const CONF=`<div class="scroll"><table class="tbl"><thead><tr><th>Often confused</th><th>The difference</th></tr></thead><tbody>
+<tr><td>Data · information</td><td>Raw values · values organised with context</td></tr>
+<tr><td>Population · sample</td><td>Everyone you study · those you actually ask</td></tr>
+<tr><td>Sampling bias · non-response bias</td><td>Who is asked · who chooses to reply</td></tr>
+<tr><td>Leading · loaded question</td><td>Pushes an answer · assumes a fact</td></tr>
+<tr><td>Mean · median</td><td>Sum ÷ count · middle value (robust to outliers)</td></tr>
+<tr><td>Percent · percentage points</td><td>Relative change · difference between two percentages</td></tr>
+<tr><td>Correlation · causation</td><td>Move together · one changes the other</td></tr>
+<tr><td>Predictive · prescriptive</td><td>What will happen · what we should do</td></tr>
+<tr><td>Transparency · privacy</td><td>Telling people how data are used · protecting the data</td></tr>
+<tr><td>Intention · outcomes</td><td>Why data are collected · what happens to people</td></tr>
+<tr><td>Anonymised · de-identified</td><td>Cannot be linked to a person · names removed, may still be linked</td></tr>
+</tbody></table></div>`;
+const CARDS=[['Data','Recorded observations'],['Information','Data organised with context'],['Structured data','Fits rows and columns'],['Digital economy','Economic activity that depends on digital technology and data'],['Data skills gap','Skills employers need minus skills workers have'],['Four pillars','Reading, working with, analysing, communicating with data'],['Tidy data','One variable per column, one observation per row'],['Non-response bias','Those who reply differ from those who do not'],['Loaded question','Assumes something that may not be true'],['Descriptive analytics','What happened?'],['Diagnostic analytics','Why did it happen?'],['Predictive analytics','What will happen?'],['Prescriptive analytics','What should we do?'],['Data dictionary','Name, type, unit, allowed values, definition, source'],['Median','Middle value of sorted data'],['Percentage points','Difference between two percentages'],['Three Cs','Curiosity, creativity, critical thinking'],['Re-identification','Finding people in data without names'],['Proxy variable','A stand-in for what you want to measure'],['Cherry-picking','Showing only the data that supports a story']];
 
 Lecture.mount({
-  id:'g106-rev', course:'GED 106', week:'1–8', clo:'1–4', short:'Midterm review · Weeks 1–8',
+  id:'g106-rev', course:'GED 106', week:'1–8', clo:'1–3', short:'Midterm review · Weeks 1–8',
   title:'Midterm Review',
-  meta:'Weeks 1–8 · Midterm · Fri 23 Oct, 3 PM',
+  meta:'Weeks 1–8 · Fri 23 Oct, 3 PM',
   scenes:[
-  { nav:'Midterm topics', title:'Midterm · Friday 23 October, 3:00–4:30 PM', kind:'review',
-    narration:[`Hub Zones · 90 minutes · closed book · 20 marks. Three sections: <b>A</b> analytics for decisions (7), <b>B</b> reading and interpreting data (7), <b>C</b> data ethics and governance (6). Practise with the <a href="practice-midterm.html">Fall 2025 midterm</a>.`],
-    fig:{label:`What to revise`, html:`<table class="tbl"><thead><tr><th>Section</th><th>Topics</th></tr></thead><tbody><tr><td>A · Analytics</td><td>Descriptive, diagnostic, predictive, prescriptive; reading a data table (<a href="week-04.html">Week 4</a>)</td></tr><tr><td>B · Reading data</td><td>Values and trends in charts; correlation; y-axis start; choosing a chart type (<a href="week-05.html">Week 5</a>)</td></tr><tr><td>C · Ethics</td><td>Five principles; UAE PDPL; data minimisation; algorithmic bias; survey questions (<a href="week-07.html">Weeks 7</a>–<a href="week-08.html">8</a>)</td></tr></tbody></table>`} },
+  { nav:'Midterm', title:'Midterm · Friday 23 October, 3:00–4:30 PM', kind:'review',
+    narration:[`Hub Zones · 90 minutes · closed book · 20 marks. The midterm covers <b>Weeks 1–8</b>. Start with the terms students most often confuse.`],
+    fig:{label:`Often confused`, html:CONF} },
 
-  { nav:'Weeks 1–4', title:'Weeks 1–4 in one table', kind:'review', wide:true,
-    narration:[`Cover a column and test yourself. If you can rebuild the table from memory, you are ready for these weeks.`],
-    fig:{label:`Foundations of data literacy`, html:T14} },
+  { nav:'Weeks 1–4', title:'Weeks 1–4', kind:'review', wide:true,
+    narration:[`Cover a column and recall it.`],
+    fig:{label:`Weeks 1–4`, html:T14} },
 
-  { nav:'Weeks 5–8', title:'Weeks 5–8 in one table', kind:'review', wide:true,
-    narration:[`The second half: reading, thinking and ethics. Practise saying one row across all four weeks.`],
-    fig:{label:`Reading, thinking, ethics`, html:T58} },
+  { nav:'Weeks 5–8', title:'Weeks 5–8', kind:'review', wide:true,
+    narration:[`Cover a column and recall it.`],
+    fig:{label:`Weeks 5–8`, html:T58} },
 
-  { nav:'Repeating themes', title:'Four themes that repeat in every week', kind:'review',
-    narration:[B.exam(`For any discussion question, use at least two of these themes. They link every week of the course.`)],
-    fig:{label:`Click each theme`, build:el=>W.picker(el,{'Themes':[
-      [`1 · Ask good questions`,`Who collected it, from whom, compared with what? (Weeks 3, 5, 6)`],
-      [`2 · Check quality`,`Biased samples, messy data and missing values give wrong answers (Weeks 3, 6, 8).`],
-      [`3 · Show it fairly`,`Clear message, honest axis, full time range (Weeks 2, 5, 8).`],
-      [`4 · Respect people`,`Consent, privacy, fair outcomes, UAE law (Weeks 7, 8).`]]})} },
+  { nav:'Flashcards', title:'Key terms', kind:'review', wide:true,
+    narration:[`Switch on Self-test and work through the cards.`],
+    fig:{label:`${CARDS.length} terms`, build:el=>W.flashcards(el,CARDS)} },
 
-  { nav:'Flashcards', title:'Cheat sheet: key terms to memorise', kind:'review', wide:true,
-    narration:[`Read the cards first. Then switch on <strong>Self-test</strong>: tap a card to reveal the meaning, and tap again to mark it as known.`],
-    fig:{label:`${CARDS.length} key terms · Weeks 1–8`, build:el=>W.flashcards(el,CARDS)} },
+  { nav:'Practice', title:'Practice questions', kind:'review',
+    narration:[`Answer on paper first, then open the hint.`],
+    fig:{label:`Nine questions`, build:el=>W.practice(el,[
+      {q:`Distinguish data from information, with one example.`,hint:`Data: raw values (38, 41, 43). Information: organised with context (temperature rose three days in a row).`},
+      {q:`What is a data skills gap?`,hint:`The difference between skills employers need and skills workers have; WEF (2025): analytical thinking is the top core skill.`},
+      {q:`Why did the 1936 <em>Literary Digest</em> poll fail despite 2.4 million replies?`,hint:`Non-response bias: Landon supporters replied more often (Squire, 1988; Lusinchi, 2012). A large sample does not correct bias.`},
+      {q:`What is tidy data? Give two rules.`,hint:`Wickham (2014): each variable a column, each observation a row; one value per cell.`},
+      {q:`Which better describes a typical salary, the mean or the median? Why?`,hint:`Median: one very high salary pulls the mean up but barely moves the median.`},
+      {q:`List four things a data dictionary records.`,hint:`Name, data type, unit, allowed values, definition, source.`},
+      {q:`Chocolate consumption and Nobel prizes correlate (r = 0.79). What can you conclude?`,hint:`Only that they move together; a third factor such as national wealth may drive both (Messerli, 2012).`},
+      {q:`Why does removing names not make a dataset anonymous?`,hint:`Combinations of ordinary facts identify people: ZIP code, gender and birth date (Sweeney, 2000); four location points (de Montjoye et al., 2013).`},
+      {q:`What is a proxy variable? Give a published example.`,hint:`A stand-in for the quantity of interest; healthcare cost used for health need (Obermeyer et al., 2019).`}])} },
 
-  { nav:'Practice: Weeks 1–4', title:'Practice questions · Weeks 1–4', kind:'review',
-    narration:[`Try each question without notes, then open the hint.`],
-    fig:{label:`Seven questions`, build:el=>W.practice(el,[
-      {type:'short',q:`Define data and explain the chain from data to decision.`,hint:`Recorded facts; data → information → knowledge → decision, with an example.`},
-      {type:'short',q:`What is the data skills gap? Give one piece of evidence.`,hint:`Required vs actual skills; WEF 2025: analytical thinking top core skill, AI and big data fastest growing.`},
-      {type:'short',q:`Name the four pillars of data literacy with an example of each.`,hint:`Reading, working with, analysing, communicating; same situation for all four.`},
-      {type:'short',q:`Explain sampling bias using the 1936 Literary Digest poll.`,hint:`Non-response bias (Landon supporters replied more often) plus a biased mailing list; 2.4 million replies, wrong winner; size does not fix bias (Squire, 1988; Lusinchi, 2012).`},
-      {type:'apply',q:`Rewrite: “Don't you agree the library is too noisy and too small?”`,hint:`Leading and double-barrelled; two neutral 1–5 rating questions.`},
-      {type:'apply',q:`For a campus café, give one question at each level of analytics.`,hint:`How many sold? Why did Wednesday fall? How many tomorrow? How many to prepare?`},
-      {type:'discuss',q:`Why are predictions risky? Use Google Flu Trends.`,hint:`Patterns can change; about 2× overestimate in 2012–13; check and update; human oversight.`}])} },
-
-  { nav:'Practice: Weeks 5–8', title:'Practice questions · Weeks 5–8', kind:'review',
-    narration:[`Same method. For discuss questions, use the answer formula.`],
-    fig:{label:`Seven questions`, build:el=>W.practice(el,[
-      {type:'short',q:`List the five checks for reading a chart.`,hint:`Title, axes and units, scale, source, message and limits.`},
-      {type:'short',q:`When is the median better than the mean?`,hint:`Skewed data with outliers, e.g. salaries.`},
-      {type:'apply',q:`Write a data dictionary entry for “Rating”.`,hint:`Whole number (ordinal), scale 1–5, allowed 1–5, meaning of 1 and 5, source question.`},
-      {type:'apply',q:`Name three cleaning problems and the Excel tool for each.`,hint:`TRIM/PROPER, Remove Duplicates, filter blanks, conditional formatting for outliers.`},
-      {type:'short',q:`List the five principles of data ethics.`,hint:`Ownership, transparency, privacy, intention, outcomes.`},
-      {type:'discuss',q:`“We removed names, so the data is anonymous.” Respond.`,hint:`Re-identification; Sweeney 87%; use bands, remove fields, limit sharing.`},
-      {type:'discuss',q:`How can data be unfair even when nobody intends harm?`,hint:`Biased data (Amazon), proxy variables (Obermeyer 2019), misleading presentation; check outcomes.`}])} },
-
-  { nav:'Excel skills', title:'Excel skills to practise', kind:'review',
-    narration:[
-     `The midterm also checks literacy with Microsoft tools. Make sure you can explain each of these, and do them on a small dataset.`,
-     `<table class="tbl"><thead><tr><th>Task</th><th>Excel tool</th></tr></thead><tbody><tr><td>Organise a table</td><td>Format as Table, Freeze Top Row</td></tr><tr><td>Change order</td><td>Sort (whole table, multi-level)</td></tr><tr><td>Show some rows</td><td>Filter</td></tr><tr><td>Highlight by rule</td><td>Conditional Formatting</td></tr><tr><td>Clean text</td><td>TRIM, PROPER, Find &amp; Replace</td></tr><tr><td>Remove repeats</td><td>Remove Duplicates</td></tr><tr><td>Mean</td><td>=AVERAGE(C2:C9)</td></tr><tr><td>Count by condition</td><td>=COUNTIF(B2:B9,"Business")</td></tr><tr><td>Label by test</td><td>=IF(C2&gt;=60,"Pass","Fail")</td></tr><tr><td>Look up a value</td><td>=VLOOKUP(B2,$F$2:$G$5,2,FALSE)</td></tr></tbody></table>`],
-    fig:{label:`Read each formula aloud`, build:el=>W.practice(el,[
-      {q:`=COUNTIF(C2:C40,">=70")`,hint:`Count the cells in C2 to C40 with a value of 70 or more.`},
-      {q:`=IF(D2="","Missing","OK")`,hint:`If D2 is empty, show “Missing”, otherwise “OK”: a cleaning check.`},
-      {q:`=VLOOKUP(A2,Majors!A:B,2,FALSE)`,hint:`Find A2 exactly in column A of the Majors sheet and return the value from column B.`}],{label:'Show meaning',prefix:'',numbered:false})} },
-
-  { nav:'Mixed quiz', title:'Mixed quiz · Weeks 1–8', kind:'check',
-    narration:[`Ten questions across all eight weeks. Revisit the week of any question you miss.`],
+  { nav:'Mixed quiz', title:'Mixed quiz', kind:'check',
+    narration:[`Ten questions across Weeks 1–8.`],
     fig:{label:`Ten questions`, build:el=>W.quiz(el,[
       {q:`A voice note is…`,o:[`structured data`,`unstructured data`,`not data`,`a variable`],a:1,why:`Week 1.`},
-      {q:`Organising and cleaning data is which pillar?`,o:[`Reading`,`Working with`,`Analysing`,`Communicating`],a:1,why:`Week 2.`},
-      {q:`The Literary Digest poll was wrong mainly because of…`,o:[`a small sample`,`non-response bias`,`bad maths`,`late printing`],a:1,why:`Week 3: Landon supporters replied more often (Squire, 1988; Lusinchi, 2012).`},
-      {q:`“Why did sales fall?” is…`,o:[`descriptive`,`diagnostic`,`predictive`,`prescriptive`],a:1,why:`Week 4.`},
-      {q:`From 40% to 50% is…`,o:[`+10%`,`+10 percentage points`,`+50%`,`+40 points`],a:1,why:`Week 5.`},
-      {q:`A third factor causing two things to rise together shows…`,o:[`causation`,`correlation without causation`,`a duplicate`,`a proxy`],a:1,why:`Week 6.`},
-      {q:`Which Excel tool removes extra spaces?`,o:[`TRIM`,`IF`,`SUM`,`VLOOKUP`],a:0,why:`Week 6 lab.`},
-      {q:`A pre-ticked consent box breaks…`,o:[`ownership`,`outcomes`,`creativity`,`fluency`],a:0,why:`Week 7.`},
-      {q:`The UAE federal data protection law is…`,o:[`Decree-Law No. 45 of 2021`,`GDPR`,`Law No. 26 of 2015`,`none`],a:0,why:`Week 7.`},
-      {q:`Using past healthcare cost to rank health need is an example of…`,o:[`a proxy variable`,`cherry-picking`,`a leading question`,`a data dictionary`],a:0,why:`Week 8: Obermeyer et al. (2019).`}])} },
+      {q:`Removing duplicate rows belongs to which pillar?`,o:[`Reading`,`Working with`,`Analysing`,`Communicating`],a:1,why:`Week 2.`},
+      {q:`Readers judge which encoding most accurately?`,o:[`Area`,`Colour`,`Position on a common scale`,`Volume`],a:2,why:`Week 2: Cleveland &amp; McGill (1984).`},
+      {q:`The main cause of the 1936 Literary Digest error was…`,o:[`a small sample`,`non-response bias`,`a printing error`,`late ballots`],a:1,why:`Week 3.`},
+      {q:`Loftus &amp; Palmer (1974) showed that…`,o:[`wording changes answers`,`samples must be large`,`charts mislead`,`data must be cleaned`],a:0,why:`Week 3.`},
+      {q:`Support rose from 40% to 50%. That is…`,o:[`+10%`,`+10 percentage points`,`+50%`,`+40 points`],a:1,why:`Week 5.`},
+      {q:`One very high value is added. Which measure moves most?`,o:[`Median`,`Mean`,`Mode`,`Number of values`],a:1,why:`Week 5.`},
+      {q:`Google Flu Trends failed mainly because…`,o:[`search behaviour changed`,`it had too little data`,`flu cannot be measured`,`it used surveys`],a:0,why:`Week 4: Lazer et al. (2014).`},
+      {q:`Sweeney (2000) estimated that ZIP code, gender and birth date identify about…`,o:[`8%`,`37%`,`87%`,`100%`],a:2,why:`Week 7.`},
+      {q:`Showing only the months that support your story is…`,o:[`cherry-picking`,`cleaning`,`sampling`,`a proxy`],a:0,why:`Week 8.`}])} },
 
-  { nav:'Before the midterm', title:'Before the midterm', kind:'review',
-    narration:[
-     `<ul><li><b>Revise:</b> each week's Exam takeaways and the two tables.</li><li><b>Practise:</b> the 14 questions aloud with a partner.</li><li><b>Excel:</b> redo Labs 5–7 on your own file.</li><li><b>Remember the formula:</b> define → example → benefit → risk → human check.</li><li><b>When:</b> Friday 23 October, 3 PM. <b>Weight:</b> 20% of the course grade.</li></ul>`,
-     `Then sit last year's <a href="practice-midterm.html">practice midterm</a> under a 90-minute timer.`,
-     `Questions? Bring them to office hours before the exam.`],
-    notes:[`Office hours are TBE in the syllabus; announce them on Moodle.`] }
+  { nav:'Excel', title:'Excel functions', kind:'review',
+    narration:[`Read each formula aloud, then check its meaning.`],
+    fig:{label:`Three formulas`, build:el=>W.practice(el,[
+      {q:`=COUNTIF(C2:C40,">=70")`,hint:`Counts cells in C2:C40 with a value of 70 or more.`},
+      {q:`=IF(D2="","Missing","OK")`,hint:`Shows “Missing” if D2 is empty, otherwise “OK”.`},
+      {q:`=VLOOKUP(A2,Majors!A:B,2,FALSE)`,hint:`Finds A2 exactly in column A of Majors and returns column B.`}],{label:'Show meaning',prefix:'',numbered:false})} }
   ]
 });
 </script>

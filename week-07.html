@@ -94,7 +94,7 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 4 · Cote (2021) · Lecture',
   scenes:[
   { nav:'Start here', title:'Just because we can collect it, should we?', minutes:5,
-    narration:[`Syllabus topics: <strong>Principles of data Ethics: Ownership; Transparency; Privacy; Intention; Outcomes</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
+    narration:[`Syllabus topics: <strong>Principles of data Ethics: Ownership; Transparency; Privacy; Intention; Outcomes</strong> · CLO-1`],
     src:`Readings: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4. Cote, C. (2021, March 16). 5 principles of data ethics for business professionals. Harvard Business School Online. Lab reading: Microsoft Forms + Excel, Be Data Literate Ch. 6.`,
     fig:{label:`Lecture · 84 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: free coffee`,6,'a'],[`Five principles`,8,'l'],[`Ownership and transparency`,10,'l'],[`Privacy: is it anonymous?`,12,'a'],[`Intention and outcomes`,8,'l'],[`UAE data protection law`,7,'l'],[`Case matcher`,8,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
@@ -103,27 +103,24 @@ Lecture.mount({
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`Free weekly coffee for “always on” location sharing?`,opts:[`Yes, free coffee!`,`Only “while using the app”`,`Only if they explain how the data is used`,`No`],reveal:i=>[`Many people choose this. Your location all day can show where you live, study, pray, exercise and who you meet.`,`A good middle path: you share less but still get the service.`,`That is the principle of <b>transparency</b>: you can only agree properly if you know what you agree to.`,`A valid choice. You <b>own</b> your data and can refuse.`][i]+` Today's five principles help you decide, as a user and as a future professional.`})} },
 
   { nav:'Five principles', title:'The five principles of data ethics', minutes:8,
-    narration:[`Cote (2021) sets out five principles of data ethics: <b>ownership</b> (individuals own their personal data), <b>transparency</b> (they should know how it is used), <b>privacy</b> (it must be protected), <b>intention</b> (collect it for a legitimate purpose) and <b>outcomes</b> (assess the effects on people).`],
+    narration:[`Cote (2021) lists five principles of data ethics: ownership, transparency, privacy, intention and outcomes.`],
     src:`Cote, C. (2021, March 16). 5 principles of data ethics for business professionals. Harvard Business School Online. Morrow (2024), Chapter 4.`,
     fig:{label:`Click each principle`, build:el=>W.picker(el,PRIN,'Select a principle.')} },
 
   { nav:'Ownership + transparency', title:'Ownership and transparency', minutes:10,
-    video:{id:'OQSMr-3GGvQ',title:`Facebook's role in Brexit — and the threat to democracy`,by:'Carole Cadwalladr · TED',why:'The journalist who reported on Cambridge Analytica explains why the case mattered. Focus on what users did and did not know.'},
-    narration:[`Kosinski et al. (2013) showed that Facebook “Likes” from 58,000 volunteers predicted personal attributes that users had not disclosed. In 2018, Facebook stated that data from up to 87 million users may have been improperly shared with Cambridge Analytica. Both cases show why consent must be informed and why uses must be disclosed.`],
+    video:{id:'OQSMr-3GGvQ',title:`Facebook's role in Brexit — and the threat to democracy`,by:'Carole Cadwalladr · TED'},
+    narration:[`Facebook Likes alone predicted traits users never disclosed (Kosinski et al., 2013). Informed consent requires that people know what is collected and how it is used.`],
     chart:{rows:[['Ethnicity',95],['Gender',93],['Political party',85],['Parents divorced',60]],unit:'%',max:100,hl:2,note:'Accuracy of predictions from Likes alone (Kosinski et al., 2013).'}, litLabel:`What Likes revealed · Kosinski et al. (2013)`,
-    src:`Kosinski, M., Stillwell, D., &amp; Graepel, T. (2013). Private traits and attributes are predictable from digital records of human behavior. <em>PNAS, 110</em>(15), 5802–5805.`,
-    notes:[`Present the case neutrally: the focus is consent and transparency, not party politics.`] },
+    src:`Kosinski, M., Stillwell, D., &amp; Graepel, T. (2013). Private traits and attributes are predictable from digital records of human behavior. <em>PNAS, 110</em>(15), 5802–5805.` },
 
   { nav:'Privacy', title:'Privacy · is “no names” anonymous?', kind:'activity', minutes:12, wide:true,
-    narration:[`Removing names does not make data anonymous. Sweeney (2000) estimated that 87% of the US population could be uniquely identified by ZIP code, gender and date of birth, and de Montjoye et al. (2013) found that four location points identified 95% of 1.5 million mobile users. Test this on the synthetic class dataset.`],
+    narration:[`Removing names does not anonymise data. Four location points identified 95% of 1.5 million mobile users (de Montjoye et al., 2013).`],
     src:`Sweeney, L. (2000). <em>Simple demographics often identify people uniquely</em> (Data Privacy Working Paper 3). Carnegie Mellon University. de Montjoye, Y.-A., Hidalgo, C. A., Verleysen, M., &amp; Blondel, V. D. (2013). Unique in the crowd: The privacy bounds of human mobility. <em>Scientific Reports, 3</em>, 1376.`,
-    notes:[`Students should see uniqueness jump above 90% with birthday plus one more field.`,`Link to the project: publish age bands, not birth dates.`],
     fig:{label:`How unique is each row? · synthetic data`, build:reid} },
 
   { nav:'Intention + outcomes', title:'Intention and outcomes', minutes:8,
-    narration:[`Intention concerns why data are collected; outcomes concern what happens to people as a result. A legitimate purpose does not guarantee fair results, so organisations should collect only what they need and evaluate effects after use. Week 8 examines unintended harms in detail.`],
+    narration:[`Intention asks why data are collected; outcomes asks what happens to people as a result. A good purpose does not guarantee a fair result.`],
     src:`Cote (2021). Morrow (2024), Chapter 4.`,
-    notes:[`Present the Target story as “reported”; details of individual anecdotes have been debated.`],
     fig:{label:`Ask before, check after`, flow:[
       {t:'Intention',s:'before',d:'Why do we need this data? What good will it do? Could it harm anyone?'},
       {t:'Minimise',s:'collect less',d:'Only collect the fields you need. Prefer age bands to birth dates.'},
@@ -132,9 +129,8 @@ Lecture.mount({
       {t:'Fix',s:'and report',d:'Change the process if harm appears, and tell the people affected.'}]} },
 
   { nav:'UAE law', title:'Regulatory impact · UAE personal data protection', minutes:7,
-    narration:[`Federal Decree-Law No. 45 of 2021 on the Protection of Personal Data took effect on 2 January 2022. Consent is the default legal basis, and individuals may access, correct and erase their data and object to automated processing. The DIFC and ADGM free zones have separate data protection laws.`],
+    narration:[`Federal Decree-Law No. 45 of 2021 governs personal data in the UAE. Consent is the default basis; individuals can access, correct and erase their data.`],
     src:`Federal Decree-Law No. 45 of 2021 (UAE). Summary: Herbert Smith Freehills (2021). Official text: u.ae, “Data protection laws”.`,
-    notes:[`This is a summary for general education, not legal advice. Check the u.ae portal for the current status of executive regulations before class.`],
     fig:{label:`Ethics principle → what the UAE law asks`, html:`<table class="tbl"><thead><tr><th>Principle</th><th>In the UAE law</th></tr></thead><tbody><tr><td>Ownership</td><td>Consent is the default basis</td></tr><tr><td>Transparency</td><td>People can access information about their data</td></tr><tr><td>Privacy</td><td>Security duties; rights to correct and erase</td></tr><tr><td>Intention</td><td>Process for a specific, clear purpose</td></tr><tr><td>Outcomes</td><td>Right to object to automated processing</td></tr></tbody></table>`} },
 
   { nav:'Case matcher', title:'Activity · Which principle is at stake?', kind:'activity', minutes:8,
@@ -153,16 +149,16 @@ Lecture.mount({
       {q:`List and explain the five principles of data ethics.`,hint:`Ownership, transparency, privacy, intention, outcomes; one line each with an example.`},
       {q:`Why is removing names not enough to make data anonymous?`,hint:`Combinations (birth date, area, gender) identify people; Sweeney 87%; use bands and remove fields.`},
       {q:`Use Cambridge Analytica to discuss two principles.`,hint:`Ownership (friends did not consent), transparency (users not told the real use); up to 87 million users.`},
-      {q:`What does the UAE Personal Data Protection Law require, in brief?`,hint:`Decree-Law 45/2021; consent default; rights to access, correct, erase, object; separate regimes in DIFC/ADGM.`}])} },
+      {q:`Explain the difference between intention and outcomes with one example.`,hint:`Intention: why data are collected (purpose, need). Outcomes: what happens to people afterwards (fair or unfair effects).`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
     narration:[`<strong>This week's lab:</strong> <a href="lab-07.html">Lab 7 · Basic Analytical Functions in Excel →</a>`,`Six questions.`,`<strong>Before Week 8:</strong> re-read <em>Be Data Literate</em>, Chapter 4. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>: use the <a href="review.html">midterm review page</a>.`],
     fig:{label:`Six questions`, build:el=>W.quiz(el,[
-      {q:`A pre-ticked “send me offers” box breaks which principle?`,o:[`Ownership (consent)`,`Outcomes`,`Creativity`,`Prescriptive analytics`],a:0,why:`Consent must be an active choice.`},
+      {q:`In de Montjoye et al. (2013), how many location points identified 95% of users?`,o:[`One`,`Four`,`Twenty`,`One hundred`],a:1,why:`Four points were enough for 95% of 1.5 million users.`},
       {q:`Which is the best summary of “transparency”?`,o:[`Data is encrypted`,`People are told clearly how their data will be used`,`Data is deleted`,`Charts are clear`],a:1,why:`People must know what they agree to.`},
       {q:`Sweeney (2000) showed that…`,o:[`names are needed to identify people`,`ZIP code, gender and birth date can identify most people`,`data cannot be anonymised`,`privacy laws work`],a:1,why:`About 87% of the US population.`},
       {q:`“Good intentions, unfair results” is a problem of…`,o:[`intention`,`outcomes`,`ownership`,`transparency`],a:1,why:`Check what actually happens to people.`},
-      {q:`The UAE federal personal data protection law is…`,o:[`Federal Decree-Law No. 45 of 2021`,`GDPR`,`Law No. 1 of 1971`,`There is none`],a:0,why:`In force from 2 January 2022.`},
+      {q:`Facebook Likes predicted political party with about what accuracy (Kosinski et al., 2013)?`,o:[`25%`,`50%`,`85%`,`100%`],a:2,why:`About 85%, from Likes alone.`},
       {q:`=COUNTIF(B2:B9,"Business") returns…`,o:[`the average of column B`,`how many cells in B2:B9 equal “Business”`,`the first Business row`,`Pass or Fail`],a:1,why:`COUNTIF counts cells meeting one condition.`}])} }
   ]
 });

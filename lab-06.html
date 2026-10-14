@@ -107,18 +107,12 @@ Lecture.mount({
   meta:'Lab · Week 6',
   scenes:[
   { nav:'The lab · Cleaning', title:'Lab 6 · Data Cleaning and Preparation', kind:'activity', minutes:40, wide:true,
-    narration:[
-     `Lab task from the syllabus: <strong>Identify and address inconsistencies, missing values, and outliers to ensure data quality.</strong> (CLO4, CLO2)`,
-     `First clean the fictional responses on the right. Each button shows the Excel tool that does the same job. Then clean your own Lab 4 file in Excel, using the same steps.`,
-     `<ul><li>Work on a <b>copy</b>: keep the raw sheet untouched and clean in a new sheet called Clean.</li><li>Add a sheet called <b>Log</b> and write one line for every change.</li><li><b>Flag</b> values you are not sure about. Do not invent missing answers.</li></ul>`,
-     B.plain(`<b>The three Cs in cleaning:</b> curiosity (why is this age 230?), creativity (how can the form prevent this next time?), critical thinking (is 60 hours wrong, or just unusual?).`),
-     B.exam(`Five cleaning problems and their Excel tools: inconsistent text (TRIM, PROPER, Find &amp; Replace), wrong format (VALUE), duplicates (Remove Duplicates), missing values (filter blanks), outliers (sort, conditional formatting).`)],
+    narration:[`Identify and address inconsistencies, missing values, and outliers to ensure data quality. Clean the sample, then your own file: keep the raw sheet, clean in a Clean sheet, and record every change in a Log sheet.`],
     src:`Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.`,
-    notes:[`The syllabus methodology lists a graded lab on data cleaning in Week 6. Collect the Clean sheet plus the Log sheet.`,`Discuss the 60-hour case: flag and check, not delete.`],
     fig:{label:`Clean the data · fictional responses`, build:cleaner} },
 
   { nav:'Submit', title:'Before you leave', kind:'check',
-    narration:[`<b>Submit on Moodle:</b><ul><li>Your file with a Clean sheet and a Log sheet (graded lab assignment)</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-06.html">Week 6</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    narration:[`Submit on Moodle: your file with Clean and Log sheets (graded lab assignment). Save your files in OneDrive › GED106 › Labs.`],
     src:`Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.` }
   ]
 });

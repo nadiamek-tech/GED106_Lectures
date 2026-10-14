@@ -112,17 +112,12 @@ Lecture.mount({
   meta:'Lab · Week 5',
   scenes:[
   { nav:'The lab · Sort and filter', title:'Lab 5 · Sorting and Filtering Data', kind:'activity', minutes:30, wide:true,
-    narration:[
-     `Lab task from the syllabus: <strong>Apply Excel's sorting, filtering, and conditional formatting tools to explore and manage datasets.</strong> (CLO4)`,
-     `Practise on the table on the right first: sort by Quiz, filter one major, then change the highlight threshold. Then do the same in Excel on your Lab 4 file.`,
-     `<ul><li><b>Sort:</b> click in the table → <b>Data → Sort</b>, or use the header arrow. Sort by more than one level (Major, then Quiz).</li><li><b>Filter:</b> header arrow → tick the values to show. Filtering hides rows; it does not delete them.</li><li><b>Conditional formatting:</b> select a column → <b>Home → Conditional Formatting → Highlight Cells Rules → Less Than</b>.</li><li>Write three sentences about what you found, using correct data words.</li></ul>`,
-     B.exam(`Know the difference: <b>sort</b> changes the order, <b>filter</b> hides rows that do not match, <b>conditional formatting</b> changes how cells look based on a rule.`)],
+    narration:[`Apply Excel’s sorting, filtering, and conditional formatting tools to explore and manage datasets. Practise on the table, then repeat in Excel on your Lab 4 file.`],
     src:`Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.`,
-    notes:[`Common error: sorting one column only, which breaks the rows. Always sort the whole table.`],
-    fig:{label:`Practise · sort, filter, highlight`, build:lab5} },
+    fig:{label:`Practise · sort, filter, highlight`, flow:[{t:'Sort',s:'Data › Sort',d:'Select any cell in the table, then Data › Sort. Sort by Major, then by Quiz.'},{t:'Filter',s:'header arrow',d:'Click a header arrow and tick the values to show. Filtering hides rows; it does not delete them.'},{t:'Highlight',s:'Conditional Formatting',d:'Select the Quiz column, then Home › Conditional Formatting › Highlight Cells Rules › Less Than.'},{t:'Interpret',s:'three sentences',d:'Write three sentences about what you found, using correct data terms.'}], build:lab5} },
 
   { nav:'Submit', title:'Before you leave', kind:'check',
-    narration:[`<b>Submit on Moodle:</b><ul><li>Lab05_YourName.xlsx with a sort, a filter and a conditional-formatting rule</li><li>Three sentences on what you found</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-05.html">Week 5</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    narration:[`Submit on Moodle: Lab05_YourName.xlsx and three sentences on what you found. Save your files in OneDrive › GED106 › Labs.`],
     src:`Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.` }
   ]
 });

@@ -44,7 +44,7 @@ const LADDER=`<svg viewBox="0 0 560 300" role="img" aria-label="Four steps risin
  <text x="477" y="69" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--surface)">Prescriptive</text><text x="477" y="87" text-anchor="middle" font-size="10" style="fill:var(--surface)">What should we do?</text>
  <text x="108" y="200" text-anchor="middle" font-size="10" class="t-mono t-muted">hindsight</text><text x="230" y="150" text-anchor="middle" font-size="10" class="t-mono t-muted">insight</text><text x="352" y="95" text-anchor="middle" font-size="10" class="t-mono t-muted">foresight</text><text x="477" y="36" text-anchor="middle" font-size="10" class="t-mono t-muted">action</text></svg>`;
 
-/* ---------- café analytics tool (fictional data) ---------- */
+/* ---------- campus energy analytics tool (fictional data) ---------- */
 const TEMP=[34,36,38,35,40,41,39,37,42,43,36,38,44,41];
 const SALES=[44,45,55,49,58,66,56,51,68,65,49,57,70,64];
 const mean=a=>a.reduce((x,y)=>x+y,0)/a.length;
@@ -52,14 +52,14 @@ function fit(){ const mx=mean(TEMP), my=mean(SALES); let sxy=0,sxx=0,syy=0; TEMP
 const FIT=fit();
 function scatter(showLine,xMark){
   const X=t=>40+(t-32)/(46-32)*500, Y=s=>230-(s-35)/(75-35)*200;
-  let s=`<svg viewBox="0 0 560 260" role="img" aria-label="Scatter plot of iced coffee sales against temperature, rising from left to right">
+  let s=`<svg viewBox="0 0 560 260" role="img" aria-label="Scatter plot of daily cooling energy against temperature, rising from left to right">
    <line x1="40" y1="230" x2="545" y2="230" stroke="var(--line)"/><line x1="40" y1="230" x2="40" y2="25" stroke="var(--line)"/>`;
   [34,38,42,46].forEach(t=>s+=`<text x="${X(t)}" y="248" text-anchor="middle" font-size="10" class="t-muted t-mono">${t}°C</text>`);
   [40,55,70].forEach(v=>s+=`<text x="34" y="${Y(v)+4}" text-anchor="end" font-size="10" class="t-muted t-mono">${v}</text><line x1="40" x2="545" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-dasharray="2 4"/>`);
   if(showLine) s+=`<line x1="${X(32)}" y1="${Y(FIT.a+FIT.b*32)}" x2="${X(46)}" y2="${Y(FIT.a+FIT.b*46)}" stroke="var(--wk)" stroke-width="2.5"/>`;
   TEMP.forEach((t,i)=>s+=`<circle cx="${X(t)}" cy="${Y(SALES[i])}" r="6" fill="var(--wk)" fill-opacity=".55" stroke="var(--wk)"/>`);
   if(xMark!=null){ const p=FIT.a+FIT.b*xMark; s+=`<line x1="${X(xMark)}" x2="${X(xMark)}" y1="230" y2="${Y(p)}" stroke="var(--warn)" stroke-dasharray="4 3"/><circle cx="${X(xMark)}" cy="${Y(p)}" r="8" fill="none" stroke="var(--warn)" stroke-width="3"/>`; }
-  return s+`<text x="300" y="18" text-anchor="middle" font-size="11" class="t-muted t-mono">ICED COFFEES SOLD vs NOON TEMPERATURE · 14 DAYS</text></svg>`;
+  return s+`<text x="300" y="18" text-anchor="middle" font-size="11" class="t-muted t-mono">COOLING ENERGY (MWh) vs NOON TEMPERATURE · 14 DAYS</text></svg>`;
 }
 function cafe(el){
   const L=['Descriptive','Diagnostic','Predictive','Prescriptive'];
@@ -68,17 +68,17 @@ function cafe(el){
   const show=l=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
     if(l==='Descriptive'){ const mx=Math.max(...SALES), mn=Math.min(...SALES);
       out.innerHTML=`<p style="margin:0"><b>What happened?</b> Summarise the last 14 days.</p><div class="kpis"><div>Average per day<b>${mean(SALES).toFixed(1)}</b></div><div>Best day<b>${mx}</b></div><div>Worst day<b>${mn}</b></div></div>
-       <svg viewBox="0 0 560 120" role="img" aria-label="Daily sales bar chart">${SALES.map((v,i)=>`<rect x="${10+i*39}" y="${110-v*1.4}" width="30" height="${v*1.4}" rx="3" fill="var(--wk)" fill-opacity=".8"/><text x="${25+i*39}" y="${106-v*1.4}" text-anchor="middle" font-size="9" class="t-mono t-muted">${v}</text>`).join('')}</svg>
-       <div class="ans">Answer: we sold about ${Math.round(mean(SALES))} iced coffees a day, between ${mn} and ${mx}.</div>`; }
-    if(l==='Diagnostic'){ out.innerHTML=`<p style="margin:0"><b>Why did it happen?</b> Look for a factor that moves with sales.</p>${scatter(false)}<div class="ans">Hotter days sold more. Correlation r = ${FIT.r.toFixed(2)} (close to 1 means a strong positive link). But correlation is not proof of cause: check other factors too.</div>`; }
+       <svg viewBox="0 0 560 120" role="img" aria-label="Daily energy bar chart">${SALES.map((v,i)=>`<rect x="${10+i*39}" y="${110-v*1.4}" width="30" height="${v*1.4}" rx="3" fill="var(--wk)" fill-opacity=".8"/><text x="${25+i*39}" y="${106-v*1.4}" text-anchor="middle" font-size="9" class="t-mono t-muted">${v}</text>`).join('')}</svg>
+       <div class="ans">Answer: the building used about ${Math.round(mean(SALES))} MWh a day, between ${mn} and ${mx}.</div>`; }
+    if(l==='Diagnostic'){ out.innerHTML=`<p style="margin:0"><b>Why did it happen?</b> Look for a factor that moves with energy use.</p>${scatter(false)}<div class="ans">Hotter days used more energy. Correlation r = ${FIT.r.toFixed(2)} (close to 1 means a strong positive link). But correlation is not proof of cause: check other factors too.</div>`; }
     if(l==='Predictive'){ out.innerHTML=`<p style="margin:0"><b>What will happen?</b> Use the pattern to forecast tomorrow.</p><label for="tt">Tomorrow's forecast temperature: <b id="tv"></b></label><input type="range" id="tt" min="33" max="46" value="40"><div id="sc"></div><div class="ans" id="pa"></div>`;
       const t=out.querySelector('#tt'); const upd=()=>{ const x=+t.value, p=FIT.a+FIT.b*x; out.querySelector('#tv').textContent=x+'°C'; out.querySelector('#sc').innerHTML=scatter(true,x);
-        out.querySelector('#pa').innerHTML=`Predicted sales ≈ <b>${Math.round(p)}</b>, likely between ${Math.round(p-2*FIT.sd)} and ${Math.round(p+2*FIT.sd)}. ${x>44||x<34?'<br><b>Careful:</b> this is outside the temperatures we have data for, so the prediction is less trustworthy.':''}`; };
+        out.querySelector('#pa').innerHTML=`Predicted energy ≈ <b>${Math.round(p)}</b>, likely between ${Math.round(p-2*FIT.sd)} and ${Math.round(p+2*FIT.sd)}. ${x>44||x<34?'<br><b>Careful:</b> this is outside the temperatures we have data for, so the prediction is less trustworthy.':''}`; };
       t.addEventListener('input',upd); upd(); }
-    if(l==='Prescriptive'){ out.innerHTML=`<p style="margin:0"><b>What should we do?</b> Turn the forecast into a decision: how many cups and ice to prepare?</p><label for="pt">Forecast: <b id="pv"></b></label><input type="range" id="pt" min="33" max="46" value="42"><div class="seg2" id="pr" style="margin-top:8px"><button type="button" data-k="run" aria-pressed="true">Running out is worse</button><button type="button" data-k="waste" aria-pressed="false">Waste is worse</button></div><div class="ans" id="ra"></div>`;
+    if(l==='Prescriptive'){ out.innerHTML=`<p style="margin:0"><b>What should we do?</b> Turn the forecast into a decision: how much cooling to schedule?</p><label for="pt">Forecast: <b id="pv"></b></label><input type="range" id="pt" min="33" max="46" value="42"><div class="seg2" id="pr" style="margin-top:8px"><button type="button" data-k="run" aria-pressed="true">Too warm is worse</button><button type="button" data-k="waste" aria-pressed="false">Wasted energy is worse</button></div><div class="ans" id="ra"></div>`;
       let k='run'; const t=out.querySelector('#pt');
       const upd=()=>{ const x=+t.value, p=FIT.a+FIT.b*x, rec=Math.round(k==='run'?p+FIT.sd:p-FIT.sd*0.5); out.querySelector('#pv').textContent=x+'°C';
-        out.querySelector('#ra').innerHTML=`Recommendation: prepare <b>${rec}</b> iced coffees (forecast ${Math.round(p)}${k==='run'?' plus a safety margin':' minus a little, to avoid waste'}). A person still checks: is there an event on campus tomorrow?`; };
+        out.querySelector('#ra').innerHTML=`Recommendation: schedule <b>${rec}</b> MWh of cooling (forecast ${Math.round(p)}${k==='run'?' plus a safety margin':' minus a little'}). A person still checks: is the building fully occupied tomorrow?`; };
       t.addEventListener('input',upd); out.querySelectorAll('#pr button').forEach(b=>b.addEventListener('click',()=>{ k=b.dataset.k; out.querySelectorAll('#pr button').forEach(x=>x.setAttribute('aria-pressed',x===b)); upd(); })); upd(); }
   };
   bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.l))); show('Descriptive');
@@ -95,9 +95,8 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 2 · Lecture',
   scenes:[
   { nav:'Start here', title:'From “what happened?” to “what should we do?”', minutes:5,
-    narration:[`Syllabus topics: <strong>Descriptive analytics; Diagnostic analytics; Predictive analytics; Prescriptive analytics</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
+    narration:[`Syllabus topics: <strong>Descriptive analytics; Diagnostic analytics; Predictive analytics; Prescriptive analytics</strong> · CLO-1`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 2. Lab reading: Microsoft official tutorials, Data Literacy in Practice Ch. 4.`,
-    notes:[`Answer: descriptive (what happened). If it compares with last week and says why, it starts to be diagnostic.`],
     fig:{label:`Lecture · 80 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which question?`,8,'a'],[`The four levels`,12,'l'],[`Café analytics tool`,18,'a'],[`Sort the questions`,10,'a'],[`When analytics goes wrong`,7,'l'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · What is the manager really asking?', kind:'activity', minutes:8,
@@ -105,15 +104,13 @@ Lecture.mount({
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`“How many new members should we target next month, and what offer should we run?”`,opts:[`What happened?`,`Why did it happen?`,`What will happen?`,`What should we do?`],reveal:i=>(i===3?`<b>Yes.</b> `:`<b>Look again.</b> `)+`She wants a recommendation for action. That is the top of the ladder, <b>prescriptive</b> analytics. To answer it, she first needs the three levels below: last month's numbers (descriptive), why sign-ups changed (diagnostic) and a forecast (predictive).`})} },
 
   { nav:'Four levels', title:'The four levels of analytics', minutes:12,
-    narration:[`Analytics is commonly divided into four levels. <b>Descriptive</b> analytics reports what happened, <b>diagnostic</b> explains why, <b>predictive</b> estimates what is likely to happen, and <b>prescriptive</b> recommends an action. Lepenioti et al. (2020) note that prescriptive analytics is the least mature level, because it depends on accurate predictions and explicit goals.`],
+    narration:[`Descriptive analytics reports what happened, diagnostic explains why, predictive estimates what will happen, and prescriptive recommends an action. Prescriptive is the least mature level (Lepenioti et al., 2020).`],
     src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 2. Lepenioti, K., Bousdekis, A., Apostolou, D., &amp; Mentzas, G. (2020). Prescriptive analytics: Literature review and research challenges. <em>International Journal of Information Management, 50</em>, 57–70.`,
-    notes:[`Students' final projects will mostly be descriptive and diagnostic; that is fine for GE level.`],
     fig:{label:`The analytics ladder`, html:LADDER} },
 
-  { nav:'Café tool', title:'Activity · One café, four levels', kind:'activity', minutes:18, wide:true,
-    narration:[`Open each level in order on 14 days of fictional café data. In Predictive, try a temperature outside the data range.`],
-    notes:[`Expected: exam weeks, campus events, weekday vs weekend, price changes. Testing it = diagnostic analytics with more data.`,`r ≈ 0.95 here because the data is constructed; real data is usually messier.`],
-    fig:{label:`Campus café · 14 days · fictional`, build:cafe} },
+  { nav:'Energy tool', title:'Activity · One building, four levels', kind:'activity', minutes:18, wide:true,
+    narration:[`Open each level in order on 14 days of fictional campus energy data. In Predictive, try a temperature outside the data range.`],
+    fig:{label:`Campus building energy · 14 days · fictional`, build:cafe} },
 
   { nav:'Sort the questions', title:'Activity · Which level is it?', kind:'activity', minutes:10,
     narration:[`Sort each question into the level of analytics it requires.`],
@@ -122,16 +119,15 @@ Lecture.mount({
       {t:`Why did more students drop the course this year?`,a:1,why:`Looking for the cause.`},
       {t:`How many students will register next semester?`,a:2,why:`A forecast.`},
       {t:`Should we open an extra section, and at what time?`,a:3,why:`A recommended action.`},
-      {t:`Which day had the most metro passengers last month?`,a:0,why:`Summary of past data.`},
+      {t:`What was the average quiz score this term?`,a:0,why:`A summary of past data.`},
       {t:`Which customers are likely to cancel their phone contract?`,a:2,why:`Predicting future behaviour.`},
       {t:`What route should each delivery rider take right now?`,a:3,why:`Navigation apps recommend the best action.`},
-      {t:`Did the price rise cause the drop in sales, or the summer break?`,a:1,why:`Comparing possible causes.`}]})} },
+      {t:`Did the new timetable or the exam period cause fewer library visits?`,a:1,why:`Comparing possible causes.`}]})} },
 
   { nav:'When it goes wrong', title:'When analytics goes wrong', minutes:7,
-    narration:[`Google Flu Trends estimated influenza levels from search queries. In the 2012–13 season it estimated more than double the doctor visits for influenza-like illness later reported by the US Centers for Disease Control and Prevention. Lazer et al. (2014) attributed the failure partly to changes in search behaviour: the pattern the model learned no longer held.`],
+    narration:[`Google Flu Trends predicted flu from search queries. In 2012–13 it estimated more than double the official rate, because search behaviour had changed (Lazer et al., 2014).`],
     lit:W.study({stat:'> 2×',finding:'Google Flu Trends’ peak estimate for 2012–13 was more than double the CDC figure.',cite:'Butler, D. (2013). When Google got flu wrong. <em>Nature, 494</em>, 155–156.'}), litLabel:`From the literature`,
     src:`Lazer, D., Kennedy, R., King, G., &amp; Vespignani, A. (2014). The parable of Google Flu: Traps in big data analysis. <em>Science, 343</em>(6176), 1203–1205.`,
-    notes:[`Keep this short and neutral. The point is not “Google is bad” but “predictions need checking”.`],
     fig:{label:`Why predictions fail`, flow:[
       {t:'Past pattern',s:'searches ↔ flu',d:'Searches for flu symptoms matched flu levels in past years.'},
       {t:'Model',s:'forecast',d:'The model used today\'s searches to estimate today\'s flu.'},
@@ -143,15 +139,15 @@ Lecture.mount({
     narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
     fig:{mindmap:{center:'Four levels',branches:[{t:'Descriptive',items:['What happened?','Totals, averages, charts']},{t:'Diagnostic',items:['Why did it happen?','Compare, drill down','Correlation ≠ cause']},{t:'Predictive',items:['What will happen?','Forecast from patterns','Unreliable outside the data']},{t:'Prescriptive',items:['What should we do?','Prediction + goal','Human checks the action']},{t:'Lessons',items:['Value and difficulty rise','Google Flu Trends 2012–13','Keep humans in the loop']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Name the four levels of analytics and the question each answers.`,hint:`Descriptive what happened; diagnostic why; predictive what will happen; prescriptive what should we do.`},
-      {q:`Give one example of each level for a single organisation (e.g. a university or café).`,hint:`Same situation, four questions: count → cause → forecast → action.`},
+      {q:`Give one example of each level for a single organisation (e.g. a university library).`,hint:`Same situation, four questions: count → cause → forecast → action.`},
       {q:`Why is prescriptive analytics the most valuable and the most risky?`,hint:`It recommends action; depends on predictions and goals; can be wrong or unfair; needs human oversight.`},
       {q:`What can we learn from Google Flu Trends?`,hint:`Overestimated flu about 2× in 2012–13; search behaviour changed; patterns can break; check and update predictions.`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
     narration:[`<strong>This week's lab:</strong> <a href="lab-04.html">Lab 4 · Data Collection and Exporting →</a>`,`Six questions.`,`<strong>Before Week 5:</strong> read <em>Be Data Literate</em>, Chapter 5. The syllabus schedules an <strong>in-class quiz in Week 5</strong>: revise Weeks 1–4 using the Exam takeaways scenes.`],
     fig:{label:`Six questions`, build:el=>W.quiz(el,[
-      {q:`“Average sales were 56 per day last month” is…`,o:[`descriptive`,`diagnostic`,`predictive`,`prescriptive`],a:0,why:`A summary of what happened.`},
-      {q:`“Sales were higher on hotter days” mainly helps answer…`,o:[`what happened`,`why it happened`,`what to do`,`nothing`],a:1,why:`Finding a related factor is diagnostic.`},
+      {q:`“The building used 57 MWh a day on average last month” is…`,o:[`descriptive`,`diagnostic`,`predictive`,`prescriptive`],a:0,why:`A summary of what happened.`},
+      {q:`“Energy use was higher on hotter days” mainly helps answer…`,o:[`what happened`,`why it happened`,`what to do`,`nothing`],a:1,why:`Finding a related factor is diagnostic.`},
       {q:`Which level recommends an action?`,o:[`Descriptive`,`Diagnostic`,`Predictive`,`Prescriptive`],a:3,why:`Prescriptive = what should we do?`},
       {q:`Predictions are least reliable when…`,o:[`the input is inside the range of past data`,`the input is far outside the range of past data`,`the data has been cleaned`,`a chart is used`],a:1,why:`Patterns may not hold where we have no data.`},
       {q:`Google Flu Trends shows that…`,o:[`big data is always right`,`a past pattern can break when behaviour changes`,`flu cannot be measured`,`search data is illegal`],a:1,why:`Search behaviour changed, so the forecast drifted.`},

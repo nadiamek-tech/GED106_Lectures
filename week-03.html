@@ -76,21 +76,18 @@ Lecture.mount({
   meta:'Questback guide · Lecture',
   scenes:[
   { nav:'Start here', title:'How do you collect data you can trust?', minutes:5,
-    narration:[`Syllabus topics: <strong>Survey design, Choosing the right Questions for a A Survey; Data Cleaning Concept</strong>. CLO-3: Apply descriptive and diagnostic analytics to solve interdisciplinary problems.`],
+    narration:[`Syllabus topics: <strong>Survey design, Choosing the right Questions for a A Survey; Data Cleaning Concept</strong> · CLO-3`],
     src:`Reading: Questback. (n.d.). <em>A beginner's guide to successful online surveys.</em> Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").`,
-    notes:[`Collect two or three stories for the Think question; they are good material for the Question doctor activity.`],
     fig:{label:`Lecture · 85 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the famous wrong poll`,8,'a'],[`Survey design`,12,'l'],[`Sampling bias simulator`,12,'a'],[`Choosing the right questions`,10,'l'],[`Question doctor`,10,'a'],[`Data cleaning concept`,8,'l'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · The poll of 2.4 million people', kind:'activity', minutes:8,
     narration:[`In 1936 the <em>Literary Digest</em> mailed about 10 million ballots and received about 2.4 million replies. Predict how accurate its forecast was.`],
     src:`Case facts: DS100 course notes, <em>Sampling</em> (UC Berkeley); widely documented in statistics textbooks.`,
-    notes:[`Let students vote, then reveal. Keep the explanation short; the simulator in Scene 3 does the teaching.`],
     fig:{label:`Predict`, build:el=>W.poll(el,{q:`With 2.4 million answers, how accurate was the Literary Digest poll?`,opts:[`Almost perfect`,`A little off, by 1–2 points`,`It predicted the wrong winner`,`It was cancelled`],reveal:i=>(i===2?`<b>Correct.</b> `:`<b>Not quite.</b> `)+`The poll predicted that Alf Landon would win, with only about 43% for Franklin D. Roosevelt. Roosevelt won with about 61% of the vote. Only about a quarter of people replied, and Landon supporters replied more often: later research identifies this non-response bias as the main cause (Squire, 1988; Lusinchi, 2012). Gallup's much smaller sample came closer.`})} },
 
   { nav:'Survey design', title:'Survey design', minutes:12,
-    narration:[`A survey collects data from a <b>sample</b> in order to describe a <b>population</b>. Its quality depends on a clear objective, a sampling frame that covers the population, questions that measure what they intend to measure, and a pilot test before launch (Questback, n.d.).`],
+    narration:[`A survey studies a sample to describe a population. Quality depends on a clear objective, a frame that covers the population, neutral questions and a pilot test (Questback, n.d.).`],
     src:`Questback. (n.d.). <em>A beginner's guide to successful online surveys.</em>`,
-    notes:[`Press Play on the flow. Emphasise the pilot test: ask 3 friends to try it before sending.`],
     fig:{label:`Five steps of survey design`, flow:[
       {t:'Objective',s:'why?',d:'Write one sentence: what decision will this survey help with?'},
       {t:'Who',s:'population · sample',d:'Define the population. Plan how to reach a sample that represents it.'},
@@ -99,25 +96,18 @@ Lecture.mount({
       {t:'Collect',s:'send',d:'Share the link, explain the purpose, give a deadline, and protect privacy.'}]} },
 
   { nav:'Sampling bias', title:'Activity · Sampling bias simulator', kind:'activity', minutes:12, wide:true,
-    video:{id:'Rf-fIpB4D50',title:'Sampling Methods and Bias with Surveys: Crash Course Statistics #10',by:'CrashCourse',why:'A clear explanation of random sampling and the most common kinds of survey bias. Listen for “non-response bias”.'},
-    narration:[`The 1936 <em>Literary Digest</em> poll predicted a Landon victory, yet Roosevelt won about 61% of the vote. Later analyses of 1937 survey data found that <b>non-response bias</b>, Landon supporters returning ballots more often, explained most of the 19.6-point error, and the mailing list explained the rest (Squire, 1988; Lusinchi, 2012). A large sample did not correct either problem.`],
+    video:{id:'Rf-fIpB4D50',title:'Sampling Methods and Bias with Surveys: Crash Course Statistics #10',by:'CrashCourse'},
+    narration:[`The 1936 <em>Literary Digest</em> poll received 2.4 million replies yet predicted the wrong winner. Non-response bias explained most of the error (Squire, 1988; Lusinchi, 2012). Size does not correct bias.`],
     chart:{rows:[['Non-response bias',13.7],['Sampling-frame bias',5.9],['Total error',19.6]],unit:' pts',max:20,hl:0,note:'Error decomposition estimated by Lusinchi (2012).'}, litLabel:`Sources of the 19.6-point error`,
     src:`Squire, P. (1988). Why the 1936 Literary Digest poll failed. <em>Public Opinion Quarterly, 52</em>(1), 125–133. Lusinchi, D. (2012). “President” Landon and the 1936 Literary Digest poll: Were automobile and telephone owners to blame? <em>Social Science History, 36</em>(1), 23–54.`,
-    notes:[`The model is constructed to reproduce the published numbers (61% true, about 43–45% predicted); it is not the real ballot data.`,`Ask: what is the error with 200,000 biased answers? With 2,000 random ones?`],
     fig:{label:`Self-selected vs random replies · constructed model`, build:poll} },
 
   { nav:'Right questions', title:'Choosing the right questions for a survey', minutes:10,
-    narration:[`Question wording changes answers. Loftus and Palmer (1974) showed participants the same film of a car accident and asked how fast the cars were going when they “smashed”, “hit” or “contacted” each other. Estimates rose with the strength of the verb. Neutral, single-issue questions with clear time frames reduce this effect.`],
+    narration:[`Wording changes answers. Participants who heard “smashed” estimated higher speeds than those who heard “contacted”, for the same film (Loftus &amp; Palmer, 1974).`],
     chart:{rows:[['smashed',40.8],['collided',39.3],['bumped',38.1],['hit',34.0],['contacted',31.8]],unit:' mph',max:45,hl:0,note:'Mean speed estimates, Experiment 1 (n = 45).'}, litLabel:`Same film, different verb · Loftus & Palmer (1974)`,
     src:`Loftus, E. F., &amp; Palmer, J. C. (1974). Reconstruction of automobile destruction: An example of the interaction between language and memory. <em>Journal of Verbal Learning and Verbal Behavior, 13</em>(5), 585–589.`,
-    notes:[`Students often confuse leading and loaded. Leading pushes towards an answer; loaded assumes a fact that may not be true (“How often do you skip class?” assumes you do).`] ,
-    fig:{label:`Question types · when to use them`, html:`<table class="tbl"><thead><tr><th>Type</th><th>Example</th><th>Good for</th></tr></thead><tbody><tr><td>Closed (choice)</td><td>Which campus do you study at?</td><td>Counting, percentages</td></tr><tr><td>Rating / Likert</td><td>“The library hours meet my needs.” 1–5</td><td>Opinions you can average and compare</td></tr><tr><td>Numeric</td><td>How many hours did you study last week?</td><td>Averages, ranges</td></tr><tr><td>Open text</td><td>What one change would improve the library?</td><td>Reasons and new ideas</td></tr></tbody></table>`} },
-
-  { nav:'Question doctor', title:'Activity · Question doctor', kind:'activity', minutes:10,
-    narration:[`Diagnose each question, then compare with the suggested rewrite.`],
-    notes:[`Pairs. Ask each pair to rewrite one question and read it out.`],
     fig:{label:`Diagnose each question`, build:el=>W.sort(el,{buckets:['Leading','Double-barrelled','Loaded','Vague','Good'],items:[
-      {t:`“Don't you think online classes are less effective?”`,a:0,why:`Pushes towards “yes”. Better: “How effective are online classes for you? (1–5)”.`},
+      {t:`“Online classes are clearly less effective, aren't they?”`,a:0,why:`The tag question pushes towards agreement. Better: “How effective are online classes for you? (1–5)”.`},
       {t:`“How satisfied are you with the gym's equipment and opening hours?”`,a:1,why:`Two questions in one. Ask about equipment and hours separately.`},
       {t:`“How often do you use AI to write your assignments?”`,a:2,why:`Assumes you do. Better: first ask “Have you used AI for an assignment this semester?”, then ask how often.`},
       {t:`“Do you exercise regularly?”`,a:3,why:`“Regularly” means different things. Better: “How many days did you exercise last week? (0–7)”.`},
@@ -126,9 +116,8 @@ Lecture.mount({
       {t:`“How many hours did you sleep last night?”`,a:4,why:`Clear and specific, with a time frame.`}]})} },
 
   { nav:'Data cleaning concept', title:'The data cleaning concept', minutes:8,
-    narration:[`Data cleaning finds and corrects inconsistent labels, wrong formats, missing values, duplicates and impossible values before analysis. Wickham (2014) defines <b>tidy data</b>: each variable is a column, each observation is a row, and each type of observational unit is a table. Cleaning moves raw responses towards this form, and every change should be recorded.`],
+    narration:[`Cleaning fixes inconsistent labels, formats, missing values, duplicates and impossible values before analysis. The goal is tidy data: one variable per column, one observation per row (Wickham, 2014).`],
     src:`Wickham, H. (2014). Tidy data. <em>Journal of Statistical Software, 59</em>(10), 1–23.`,
-    notes:[`Answer: use a Number restriction on Text questions, or a Choice question for age bands.`],
     fig:{label:`Five responses · before and after`, build:cleanDemo} },
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 3', kind:'exam', minutes:8,
@@ -136,7 +125,7 @@ Lecture.mount({
     fig:{mindmap:{center:'Surveys',branches:[{t:'Design steps',items:['Objective','Population and sample','Questions → pilot → collect']},{t:'Sampling bias',items:['Literary Digest 1936','Non-response bias: main cause','Size does not fix bias']},{t:'Question faults',items:['Leading','Double-barrelled','Loaded','Vague']},{t:'Question types',items:['Closed and rating: count','Open: reasons','Numeric: averages']},{t:'Cleaning concept',items:['Labels, formats, blanks','Duplicates, outliers','Record every change']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain the difference between a population and a sample, with an example.`,hint:`Population = all CUD students; sample = the 120 who answered; sample should represent the population.`},
       {q:`What went wrong with the 1936 Literary Digest poll?`,hint:`Non-response bias: Landon supporters replied more often (main cause, Squire 1988; Lusinchi 2012); a biased mailing list added to the error; 2.4 million replies, still the wrong winner; size does not fix bias.`},
-      {q:`Rewrite this question: “Don't you agree that parking on campus is terrible and expensive?”`,hint:`Leading and double-barrelled; split into two neutral rating questions on availability and cost.`},
+      {q:`Rewrite this question: “How often do you skip breakfast before class?”`,hint:`Loaded: it assumes you skip breakfast. First ask “Do you usually eat breakfast before class? (Yes/No)”, then ask how often.`},
       {q:`What is data cleaning, and why is it an ethical as well as a technical task?`,hint:`Fix errors before analysis; judgement involved; never delete inconvenient answers; document changes.`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,

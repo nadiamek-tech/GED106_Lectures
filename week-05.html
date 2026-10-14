@@ -112,23 +112,20 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 5 · In-class quiz · Lecture',
   scenes:[
   { nav:'Start here', title:'Can you read a chart as carefully as a sentence?', minutes:5,
-    narration:[`Syllabus topics: <strong>Defining Reading data, Data fluency, The data dictionary</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
+    narration:[`Syllabus topics: <strong>Defining Reading data, Data fluency, The data dictionary</strong> · CLO-1`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 5. Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.`,
-    notes:[`Run the in-class quiz at the time you planned (Moodle or paper). The agenda reserves 15 minutes.`],
     fig:{label:`Lecture · 85 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the 2.5× chart`,8,'a'],[`Reading data`,10,'l'],[`Data fluency: key words`,8,'l'],[`Mean or median?`,10,'a'],[`The data dictionary`,10,'a'],[`In-class quiz`,15,'c'],[`Exam takeaways`,7,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · Is Cafeteria B really 2.5 times better?', kind:'activity', minutes:8,
-    video:{id:'E91bGT9BjYk',title:'How to spot a misleading graph',by:'Lea Gaslowitz · TED-Ed',why:'A short animated guide to the tricks used in charts, including the cut-off axis you just saw.'},
+    video:{id:'E91bGT9BjYk',title:'How to spot a misleading graph',by:'Lea Gaslowitz · TED-Ed'},
     narration:[`Compare the two cafeterias, then switch the axis.`],
-    notes:[`Most students say “B, by a lot”. After switching: B by 3 percentage points. Introduce the phrase “percentage points”.`],
     fig:{label:`Same data, two axes · fictional`, build:axis} },
 
   { nav:'Reading data', title:'Defining reading data', minutes:10,
-    video:{id:'Zwwanld4T1w',title:'3 ways to spot a bad statistic',by:'Mona Chalabi · TED',why:'A data journalist\'s three questions to ask before trusting a number. Compare them with the five checks on the right.'},
-    narration:[`Reading data means establishing what a chart or table says and what it does not say. Pandey et al. (2015) found that a truncated y-axis led participants to judge differences as substantially larger than they were, even when the axis labels were visible. Check the title, axes and units, scale, and source before interpreting the message.`],
+    video:{id:'Zwwanld4T1w',title:'3 ways to spot a bad statistic',by:'Mona Chalabi · TED'},
+    narration:[`A truncated y-axis makes differences look larger than they are (Pandey et al., 2015). Check title, axes, units, scale and source before interpreting a chart.`],
     lit:W.study({finding:'Participants who saw bar charts with a truncated y-axis rated the difference between bars as larger than participants who saw the same data from zero.',cite:'Pandey, A. V., Rall, K., Satterthwaite, M. L., Nov, O., &amp; Bertini, E. (2015). How deceptive are deceptive visualizations? <em>Proceedings of CHI 2015</em>, 1469–1478.'}), litLabel:`From the literature`,
     src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 5. Pandey et al. (2015).`,
-    notes:[`Press Play on the flow and apply each check to the cafeteria chart.`],
     fig:{label:`Five checks before you believe a chart`, flow:[
       {t:'Title',s:'what is it about?',d:'What exactly is measured, where and when?'},
       {t:'Axes and units',s:'what is counted?',d:'Percent or number? Per person or in total? Thousands or millions?'},
@@ -137,25 +134,21 @@ Lecture.mount({
       {t:'Message and limits',s:'what follows?',d:'State the main message in one sentence, then one thing the chart cannot tell you.'}]} },
 
   { nav:'Data fluency', title:'Data fluency · speaking the language of data', minutes:8, wide:true,
-    narration:[`Data fluency is the ability to discuss data using accurate terms: naming the measure used, the sample, and the uncertainty. Common confusions are mean and median, percent and percentage points, and correlation and causation (Morrow, 2024). Learn the terms on the right.`],
+    narration:[`Data fluency is using data terms accurately (Morrow, 2024). Common confusions: mean and median, percent and percentage points, correlation and causation.`],
     src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 5.`,
-    notes:[`Quick drill: say a term, students give the meaning; then reverse.`],
     fig:{label:`12 words of data fluency`, build:el=>W.flashcards(el,VOCAB)} },
 
   { nav:'Mean or median?', title:'Activity · Mean or median?', kind:'activity', minutes:10, wide:true,
     narration:[`Change the ninth salary and compare the mean with the median. For skewed data, the median better describes a typical value.`],
-    notes:[`Expected: Mean or median? Including the CEO? How many employees? Which roles?`],
     fig:{label:`Nine salaries · illustrative`, build:mm} },
 
   { nav:'Data dictionary', title:'The data dictionary', kind:'activity', minutes:10, wide:true,
-    narration:[`A data dictionary documents each field in a dataset: its name, data type, unit, allowed values, definition and source (Morrow, 2024). It prevents misinterpretation, such as reading 5 as the worst score on a scale where 5 means “strongly agree”.`],
+    narration:[`A data dictionary records each field's name, type, unit, allowed values, definition and source (Morrow, 2024).`],
     src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 5.`,
-    notes:[`Students complete three entries for their own survey; it goes into the final project report.`],
     fig:{label:`Data dictionary · Lab 4 survey file`, build:dict} },
 
   { nav:'In-class quiz', title:'In-class quiz', kind:'check', minutes:15,
     narration:[`Warm-up on Weeks 1–4. For full practice, see <a href="practice-quiz1.html">Practice Quiz 1</a>.`],
-    notes:[`Use the warm-up for 3 minutes, then open the graded quiz.`],
     fig:{label:`Warm-up · four questions`, build:el=>W.quiz(el,[
       {q:`Data → information → knowledge → …`,o:[`decision`,`database`,`chart`,`code`],a:0,why:`Week 1.`},
       {q:`Which is NOT one of the four pillars?`,o:[`Reading data`,`Working with data`,`Selling data`,`Communicating with data`],a:2,why:`Week 2.`},

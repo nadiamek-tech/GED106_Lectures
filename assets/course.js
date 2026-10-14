@@ -215,6 +215,7 @@
     const setLayout=l=>{ document.body.dataset.layout=l; store.set('ged102-layout',l); segBtns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l)); };
     segBtns.forEach(b=>b.addEventListener('click',()=>setLayout(b.dataset.l))); setLayout(document.body.dataset.layout);
     const teach=bar.querySelector('#teach');
+    if(!S.some(x=>x.notes)) teach.style.display='none';
     const syncTeach=()=>teach.setAttribute('aria-pressed',document.body.classList.contains('teacher'));
     teach.addEventListener('click',()=>{document.body.classList.toggle('teacher'); store.set('ged102-teacher',document.body.classList.contains('teacher')?'1':'0'); syncTeach();}); syncTeach();
     bar.querySelector('#theme').addEventListener('click',toggleTheme);

@@ -69,14 +69,12 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 1 · Lecture',
   scenes:[
   { nav:'Start here', title:'Why does everyone need to understand data now?', minutes:5,
-    narration:[`Syllabus topics: <strong>Introduction, Understanding the Digital Economy, Data Skills Gap</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
+    narration:[`Syllabus topics: <strong>Introduction, Understanding the Digital Economy, Data Skills Gap</strong> · CLO-1`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate: The data literacy skills everyone needs to succeed</em> (2nd ed.). Kogan Page. Chapter 1. Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").`,
-    notes:[`Collect students' guesses for the Think question; return to them in the “My data day” activity.`,`Explain the colour code once. It is the same in every week and on the midterm review page.`],
     fig:{label:`Lecture · 75 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: is this data?`,8,'a'],[`What is data?`,10,'l'],[`The digital economy`,12,'l'],[`My data day`,10,'a'],[`The data skills gap`,10,'l'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Is this data?', title:'Activity · Is this data?', kind:'activity', minutes:8,
     narration:[`Decide for each item whether it is data, then reveal the suggested answers.`],
-    notes:[`Pairs, 5 minutes. Then ask: what do all the “data” items have in common? Expected: they record a fact, an observation or a measurement that can be stored and analysed.`],
     fig:{label:`Sort the items`, build:el=>W.sort(el,{buckets:['Data','Not data'],items:[
       {t:`Your marks in last semester's courses`,a:0,why:`Numbers that record a result. Classic structured data.`},
       {t:`A photo you posted online`,a:0,why:`Images are data too: unstructured data. Apps can detect faces, places and objects in them.`},
@@ -87,10 +85,9 @@ Lecture.mount({
       {t:`A product review with five stars and a comment`,a:0,why:`Both: the stars are structured, the comment is unstructured text.`}]})} },
 
   { nav:'What is data?', title:'Introduction · What is data?', minutes:10,
-    narration:[`Data are recorded observations, such as numbers, text, images and sensor readings. Information science describes a hierarchy in which data, once organised and given context, become information, then knowledge that can guide a decision (Ackoff, 1989; Rowley, 2007). Data are <b>structured</b> when they fit rows and columns, and <b>unstructured</b> when they do not, such as free text or photographs.`],
+    narration:[`Data are recorded observations. Organised and placed in context, they become information, then knowledge that guides decisions (Rowley, 2007). Structured data fit rows and columns; unstructured data, such as text or images, do not.`],
     lit:W.study({stat:'DIKW',finding:'Rowley reviewed how textbooks define the data–information–knowledge–wisdom hierarchy and found broad agreement that each level is built from the one below it.',cite:'Rowley, J. (2007). The wisdom hierarchy: Representations of the DIKW hierarchy. <em>Journal of Information Science, 33</em>(2), 163–180.'}), litLabel:`From the literature`,
     src:`Ackoff, R. L. (1989). From data to wisdom. <em>Journal of Applied Systems Analysis, 16</em>, 3–9. Rowley (2007).`,
-    notes:[`Answer to Think: the messages are unstructured text, but each message has structured metadata: sender, time, group.`,`Press Play on the flow to walk through the temperature example.`],
     fig:{label:`From data to decision`, flow:[
       {t:'Data',s:'38 · 41 · 43',d:'Raw recorded values. On their own they say very little.'},
       {t:'Information',s:'organised',d:'The noon temperature rose three days in a row. Data with context and order.'},
@@ -98,11 +95,10 @@ Lecture.mount({
       {t:'Decision',s:'action',d:'Move the outdoor event to the evening. This is why we collect data at all.'}]} },
 
   { nav:'Digital economy', title:'Understanding the digital economy', minutes:12,
-    video:{id:'hVimVzgtD6w',title:`The best stats you've ever seen`,by:'Hans Rosling · TED',why:`A famous talk that shows how good data, shown well, can overturn what people “know” about the world. Watch how he turns a spreadsheet into a story.`},
-    narration:[`Bukht and Heeks (2017) define the digital economy in three scopes. The <b>core</b> is the digital sector itself (hardware, software, telecommunications). The <b>narrow</b> scope adds digital services and platforms. The <b>broad</b> scope, the digitalised economy, includes any activity that relies on data, such as e-commerce and precision agriculture.`],
+    video:{id:'hVimVzgtD6w',title:`The best stats you've ever seen`,by:'Hans Rosling · TED'},
+    narration:[`Bukht and Heeks (2017) define three nested scopes: the core digital sector, the narrow digital economy of digital services and platforms, and the broad digitalised economy, where any activity depends on data.`],
     lit:SCOPES, litLabel:`Three scopes of the digital economy · Bukht & Heeks (2017)`,
     src:`Bukht, R., &amp; Heeks, R. (2017). <em>Defining, conceptualising and measuring the digital economy</em> (Development Informatics Working Paper No. 68). University of Manchester.`,
-    notes:[`Keep the Think question quick; a few answers from the room. Expected: advertising, selling insights, improving the product so you stay.`,`If time is short, set the video as homework.`],
     fig:{label:`How data creates value`, flow:[
       {t:'Collect',s:'you use the app',d:'Every order, click and location is recorded.'},
       {t:'Store',s:'in the cloud',d:'Data is kept in large databases, often for years.'},
@@ -112,7 +108,6 @@ Lecture.mount({
 
   { nav:'My data day', title:'Activity · My data day', kind:'activity', minutes:10,
     narration:[`Open each moment of the day and note what is recorded, its type, and who holds it. Then complete the worksheet for your own day.`],
-    notes:[`The day on the right is illustrative, not a real person's data.`,`Ask two or three students to share their count; compare with their guesses from Start here.`],
     wide:true,
     fig:{label:`A student's day of data · illustrative`, build:el=>{ el.innerHTML='<div id="d1"></div><div id="d2" style="margin-top:18px"></div>'; dayTrail(el.querySelector('#d1')); W.worksheet(el.querySelector('#d2'),{id:'g106-w1-day',title:'GED 106 · Week 1 · My data day',fields:[
       {l:'Five moments today when I created data',hint:'Time and action',rows:4},
@@ -120,14 +115,12 @@ Lecture.mount({
       {l:'Which organisation holds the most data about me, and why?',rows:2}]}); }} },
 
   { nav:'Data skills gap', title:'The data skills gap', minutes:10,
-    narration:[`A skills gap is the difference between the skills employers need and those workers have. In the World Economic Forum's 2025 employer survey, analytical thinking was the core skill most often rated essential, and AI and big data was the fastest-growing skill expected to 2030 (World Economic Forum, 2025).`],
+    narration:[`A skills gap is the difference between the skills employers need and those workers have. Employers rank analytical thinking as the top core skill, and AI and big data as the fastest-growing (WEF, 2025).`],
     src:`World Economic Forum. (2025). <em>The future of jobs report 2025</em>, Chapter 3: Skills outlook.`,
-    notes:[`Link to the course: every lab builds a skill employers list (Excel, Forms, cleaning, charts, dashboards).`],
     fig:{label:`What employers say · WEF Future of Jobs Report 2025`, html:TILES, caption:`Source: World Economic Forum, Future of Jobs Report 2025, Skills outlook. Survey of employers worldwide.`} },
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 1', kind:'exam', minutes:8,
     narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
-    notes:[`Quick recall: ask students to explain the data-to-decision chain with their own example.`],
     fig:{mindmap:{center:'The world of data',branches:[{t:'What is data?',items:['Recorded facts or observations','Numbers, text, images, sound']},{t:'Two kinds',items:['Structured: rows and columns','Unstructured: photos, free text']},{t:'Data to decision',items:['Data → information','→ knowledge → decision']},{t:'Digital economy',items:['Collect → store → analyse','→ act → value','Free apps run on your data']},{t:'Skills gap',items:['Jobs need data skills','WEF 2025: analytical thinking #1','AI and big data growing fastest']},{t:'Course tools',items:['Forms collects','Excel analyses','OneDrive stores and shares']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Define data and give one example of structured and one of unstructured data.`,hint:`Recorded facts or observations; structured = marks table; unstructured = a photo or a written review.`},
       {q:`Explain the chain from data to decision with an everyday example.`,hint:`Data (raw values) → information (organised) → knowledge (understood) → decision (action); e.g. temperatures → heatwave → move the event.`},

@@ -71,9 +71,8 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 4 · Midterm week · 2-hour session',
   scenes:[
   { nav:'Start here', title:'How does data harm people when nobody means to?', minutes:4,
-    narration:[`Syllabus topic: <strong>Common Ethical Problems in Data</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>.`],
+    narration:[`Syllabus topic: <strong>Common Ethical Problems in Data</strong> · CLO-1`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4.`,
-    notes:[`The midterm is on Friday 23 October, 3 PM, so the second hour is midterm revision with the practice paper.`],
     fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,4,'l'],[`Hook`,4,'a'],[`Biased data`,8,'l'],[`Proxy variables`,10,'a'],[`Misleading presentation`,10,'a'],[`Privacy and security`,6,'l'],[`Ethics check for your project`,8,'a'],[`Exam takeaways`,5,'l'],[`Exit check`,5,'c'],[`Midterm revision · practice paper`,60,'a']])} },
 
   { nav:'Hook', title:'Activity · Can a computer be biased?', kind:'activity', minutes:4,
@@ -81,35 +80,30 @@ Lecture.mount({
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`A computer follows the data exactly. Can its decisions still be unfair?`,opts:[`No, computers are neutral`,`Yes, if the data is unfair`,`Only if someone programs it to be`,`Not sure`],reveal:i=>(i===1?`<b>Yes.</b> `:``)+`A system that learns from the past learns the past's unfairness too. And a fair-looking variable can carry unfairness in, as the next two scenes show.`})} },
 
   { nav:'Biased data', title:'Problem 1 · Biased data', minutes:8,
-    video:{id:'UG_X_7g63rY',title:`How I'm fighting bias in algorithms`,by:'Joy Buolamwini · TED',why:'A researcher finds that face-analysis software failed to detect her face until she wore a white mask. Listen for where the bias came from.'},
-    narration:[`Data are biased when they do not represent the people a system will serve. Buolamwini and Gebru (2018) evaluated three commercial gender-classification systems and found error rates of up to 34.7% for darker-skinned women, against at most 0.8% for lighter-skinned men. The training and benchmark data under-represented darker-skinned women.`],
+    video:{id:'UG_X_7g63rY',title:`How I'm fighting bias in algorithms`,by:'Joy Buolamwini · TED'},
+    narration:[`Biased data under-represent some groups. Commercial gender classifiers erred up to 34.7% for darker-skinned women but at most 0.8% for lighter-skinned men (Buolamwini &amp; Gebru, 2018).`],
     chart:{rows:[['Darker-skinned women',34.7],['Lighter-skinned men',0.8]],unit:'%',max:40,hl:0,note:'Maximum error rates across three commercial classifiers.'}, litLabel:`Error rates · Buolamwini & Gebru (2018)`,
-    src:`Buolamwini, J., &amp; Gebru, T. (2018). Gender shades: Intersectional accuracy disparities in commercial gender classification. <em>Proceedings of Machine Learning Research, 81</em>, 77–91.`,
-    notes:[`Connect to Week 3: biased data is often a sampling problem.`] },
+    src:`Buolamwini, J., &amp; Gebru, T. (2018). Gender shades: Intersectional accuracy disparities in commercial gender classification. <em>Proceedings of Machine Learning Research, 81</em>, 77–91.` },
 
   { nav:'Proxy variables', title:'Problem 2 · Proxy variables', kind:'activity', minutes:10, wide:true,
-    narration:[`A proxy variable stands in for the quantity of interest. Obermeyer et al. (2019) found that a widely used US health algorithm predicted healthcare <b>cost</b> as a proxy for health <b>need</b>. Because less was spent on Black patients with the same illness, they were under-selected; correcting the bias would raise their share of automatic referrals from 17.7% to 46.5%.`],
+    narration:[`A proxy stands in for what we want to measure. An algorithm used healthcare cost as a proxy for need, which under-selected Black patients (Obermeyer et al., 2019).`],
     chart:{rows:[['Algorithm as used',17.7],['Bias removed',46.5]],unit:'%',max:50,hl:1,note:'Share of Black patients among those automatically identified for extra care.'}, litLabel:`Obermeyer et al. (2019)`,
     src:`Obermeyer, Z., Powers, B., Vogeli, C., &amp; Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science, 366</em>(6464), 447–453.`,
-    notes:[`Emphasise: the model did not use race. The proxy (cost) carried the inequality.`],
     fig:{label:`Who gets the care places? · constructed data`, build:proxy} },
 
   { nav:'Misleading', title:'Problem 3 · Misleading presentation', kind:'activity', minutes:10, wide:true,
-    narration:[`True data can still mislead. Selecting a convenient time window (cherry-picking), truncating an axis, or omitting a comparison changes the impression a chart gives (Pandey et al., 2015). Choose a window on the right that reverses the overall trend.`],
+    narration:[`True numbers can mislead through a cherry-picked time window, a truncated axis or a missing comparison. Find a window on the right that reverses the trend.`],
     src:`Pandey et al. (2015). Morrow (2024), Chapter 4.`,
-    notes:[`Expected: falling windows include May–Jul Y1 and Feb–Jul Y2 (the default), against a two-year rise of about 56%.`],
     fig:{label:`Pick a window, write a headline · fictional data`, build:cherry} },
 
   { nav:'Privacy + security', title:'Problems 4 and 5 · Privacy, security and over-collection', minutes:6,
-    video:{id:'_2u_eHHzRto',title:'The era of blind faith in big data must end',by:`Cathy O'Neil · TED`,why:'A mathematician explains why algorithms built on data can harm people at scale, and why we must audit them.'},
-    narration:[`Privacy and security failures include leaks, files shared too widely and re-identification. Data minimisation, collecting only what a stated purpose requires, reduces both risks. The checks on the right summarise the five problems covered this week.`],
+    video:{id:'_2u_eHHzRto',title:'The era of blind faith in big data must end',by:`Cathy O'Neil · TED`},
+    narration:[`Collect only what the purpose requires and limit who can open the data. The table summarises this week's five problems.`],
     lit:FIVE, litLabel:`Five problems and their checks`,
-    src:`Morrow (2024), Chapter 4. O'Neil, C. (2016). <em>Weapons of math destruction</em>. Crown.`,
-    notes:[`Ask students to check their own OneDrive sharing settings for the GED106 folder.`] },
+    src:`Morrow (2024), Chapter 4. O'Neil, C. (2016). <em>Weapons of math destruction</em>. Crown.` },
 
   { nav:'Ethics check', title:'Activity · Ethics check for your project', kind:'activity', minutes:8,
     narration:[`Run the five checks on your group project survey.`],
-    notes:[`Collect one worksheet per group; it feeds the ethical reflection in the final project.`],
     fig:{label:`Five checks · one per problem`, build:el=>W.worksheet(el,{id:'g106-w8-ethics',title:'GED 106 · Week 8 · Project ethics check',fields:[
       {l:'1 · Biased data: who is missing from our sample?',rows:2},
       {l:'2 · Proxy: are we measuring what we really care about?',rows:2},
@@ -119,8 +113,8 @@ Lecture.mount({
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 8', kind:'exam', minutes:5,
     narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
-    fig:{mindmap:{center:'Data ethics 2',branches:[{t:'Biased data',items:['Repeats past unfairness','Amazon recruiting tool 2018']},{t:'Proxy variables',items:['Measure the wrong thing','Cost for need (2019)','Sensitive info sneaks back']},{t:'Misleading',items:['Cut axes','Cherry-picked periods','Missing comparisons']},{t:'Privacy, security',items:['Re-identification','Links open to anyone']},{t:'Over-collection',items:['Collect only what you need','Less to leak or misuse']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
-      {q:`Explain biased data with a real example.`,hint:`Data that misrepresents people or repeats past unfairness; Amazon tool trained on mostly male CVs, penalised “women's”.`},
+    fig:{mindmap:{center:'Data ethics 2',branches:[{t:'Biased data',items:['Repeats past unfairness','Gender Shades 2018']},{t:'Proxy variables',items:['Measure the wrong thing','Cost for need (2019)','Sensitive info sneaks back']},{t:'Misleading',items:['Cut axes','Cherry-picked periods','Missing comparisons']},{t:'Privacy, security',items:['Re-identification','Links open to anyone']},{t:'Over-collection',items:['Collect only what you need','Less to leak or misuse']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Explain biased data with a real example.`,hint:`Data that under-represent some groups; Buolamwini &amp; Gebru (2018): up to 34.7% error for darker-skinned women vs 0.8% for lighter-skinned men.`},
       {q:`What is a proxy variable, and why can it cause unfair results?`,hint:`Stand-in for the real target or a sensitive feature; cost for need (Obermeyer 2019); differs between groups.`},
       {q:`How can true numbers mislead? Give two techniques.`,hint:`Cherry-picking the time window; cut axis; missing comparison; fix by showing full range and context.`},
       {q:`Give three ethics checks you would run on a student survey project.`,hint:`Who is missing; identifying columns and sharing settings; delete unneeded questions; fair charts.`}])} },
@@ -130,7 +124,7 @@ Lecture.mount({
     fig:{label:`Four questions`, build:el=>W.quiz(el,[
       {q:`An algorithm uses past spending to decide who needs care. This is a problem of…`,o:[`a proxy variable`,`too little data`,`a pie chart`,`over-collection`],a:0,why:`Cost stood in for need.`},
       {q:`Showing only the two months when sales fell, from a year of growth, is…`,o:[`cherry-picking`,`data cleaning`,`a data dictionary`,`prescriptive analytics`],a:0,why:`True numbers, misleading selection.`},
-      {q:`The Amazon recruiting tool learned bias mainly from…`,o:[`its programmers' instructions`,`historical CVs mostly from men`,`a cut axis`,`missing values`],a:1,why:`The training data reflected the past.`},
+      {q:`In Gender Shades (2018), classifiers made the most errors for…`,o:[`lighter-skinned men`,`darker-skinned women`,`all groups equally`,`children`],a:1,why:`Up to 34.7% error, against at most 0.8% for lighter-skinned men.`},
       {q:`The best response to over-collection is to…`,o:[`collect only what you need`,`encrypt everything and keep it forever`,`publish it`,`add more questions`],a:0,why:`Less data means less risk.`}])} }
   ]
 });

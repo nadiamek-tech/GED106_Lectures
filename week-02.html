@@ -43,23 +43,23 @@
 <script>
 const {W,B}=Lecture;
 
-/* ---------- one dataset, four pillars (fictional campus café) ---------- */
+/* ---------- one dataset, four pillars (fictional library visits) ---------- */
 const DAYS=['Mon','Tue','Wed','Thu','Fri'];
-const ITEMS={'Karak tea':[64,58,31,60,72],'Iced coffee':[40,44,22,41,55],'Sandwich':[35,38,19,36,30]};
+const ITEMS={'Floor 1':[64,31,58,60,72],'Floor 2':[40,22,44,41,55],'Floor 3':[35,19,38,36,30]};
 function pillars(el){
   const P={
-   'Reading':{q:'What does the table say?',do:'Find one fact: the café sold <b>72 karak teas on Friday</b>, the highest of any item on any day.',hl:[['Karak tea',4]]},
+   'Reading':{q:'What does the table say?',do:'Find one fact: <b>72 visitors on Floor 1 on Friday</b>, the highest of any floor on any day.',hl:[['Floor 1',4]]},
    'Working with':{q:'Organise it so it is useful.',do:'Add a <b>daily total</b> row. Now each day can be compared in one number.',tot:true},
-   'Analysing':{q:'What pattern, and why?',do:'<b>Wednesday is low for every item</b> (72 items sold, against 137–157 on the other days). Possible reason to check: a campus event, a holiday, or the café closing early.',hl:[['Karak tea',2],['Iced coffee',2],['Sandwich',2]],tot:true},
-   'Communicating':{q:'Tell someone what matters.',do:'Show the daily totals as a simple chart, with one clear message for the café manager.',chart:true}};
+   'Analysing':{q:'What pattern, and why?',do:'<b>Tuesday is low on every floor</b> (72 visitors, against 137–157 on other days). Possible reasons to check: a holiday, a campus event, or shorter opening hours.',hl:[['Floor 1',1],['Floor 2',1],['Floor 3',1]],tot:true},
+   'Communicating':{q:'Tell someone what matters.',do:'Show the daily totals as a simple chart, with one clear message for the library manager.',chart:true}};
   el.innerHTML=`<div class="lens">${Object.keys(P).map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div><div class="out"></div>`;
   const out=el.querySelector('.out'), bs=el.querySelectorAll('.lens button');
   const tot=DAYS.map((_,d)=>Object.values(ITEMS).reduce((a,v)=>a+v[d],0));
   const show=k=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k)); const p=P[k];
     const isHl=(it,d)=>(p.hl||[]).some(([a,b])=>a===it&&b===d);
     let html=`<p class="ui" style="margin:0 0 8px"><span class="tag">${k}</span> <b>${p.q}</b> ${p.do}</p>`;
-    if(p.chart){ const mx=Math.max(...tot); html+=`<div class="bars">${DAYS.map((d,i)=>`<div><span>${d}</span><i class="${tot[i]<100?'lo':''}" style="width:${tot[i]/mx*100}%"></i><span class="mono">${tot[i]}</span></div>`).join('')}</div><div class="msg">Wednesday sales were about half of other days. Check why before ordering stock for next week.</div>`; }
-    else html+=`<div class="scroll"><table class="cafe"><thead><tr><th>Item</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${Object.entries(ITEMS).map(([it,v])=>`<tr><td>${it}</td>${v.map((x,d)=>`<td class="${isHl(it,d)?'hl':''}">${x}</td>`).join('')}</tr>`).join('')}${p.tot?`<tr class="tot"><td>Daily total</td>${tot.map(t=>`<td>${t}</td>`).join('')}</tr>`:''}</tbody></table></div>`;
+    if(p.chart){ const mx=Math.max(...tot); html+=`<div class="bars">${DAYS.map((d,i)=>`<div><span>${d}</span><i class="${tot[i]<100?'lo':''}" style="width:${tot[i]/mx*100}%"></i><span class="mono">${tot[i]}</span></div>`).join('')}</div><div class="msg">Tuesday visits were about half of other days. Check why before planning next week's staff rota.</div>`; }
+    else html+=`<div class="scroll"><table class="cafe"><thead><tr><th>Floor</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${Object.entries(ITEMS).map(([it,v])=>`<tr><td>${it}</td>${v.map((x,d)=>`<td class="${isHl(it,d)?'hl':''}">${x}</td>`).join('')}</tr>`).join('')}${p.tot?`<tr class="tot"><td>Daily total</td>${tot.map(t=>`<td>${t}</td>`).join('')}</tr>`:''}</tbody></table></div>`;
     out.innerHTML=html+`<p class="mono" style="color:var(--muted);margin:8px 0 0">Fictional data for teaching.</p>`; };
   bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.k))); show('Reading');
 }
@@ -100,20 +100,17 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 3 · Lecture',
   scenes:[
   { nav:'Start here', title:'What exactly does a data-literate person do?', minutes:5,
-    narration:[`Syllabus topics: <strong>Explaining the 4 Characteristic of Data literacy, reading data, working with data, analysing data , Communicating with data</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
+    narration:[`Syllabus topics: <strong>Explaining the 4 Characteristic of Data literacy, reading data, working with data, analysing data , Communicating with data</strong> · CLO-1`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 3. Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
-    notes:[`Hands up for each pillar: “I am confident at…”. Most students say reading; few say analysing. That is normal.`],
     fig:{label:`Lecture · 77 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which pillar?`,8,'a'],[`The four pillars`,10,'l'],[`One dataset, four pillars`,12,'a'],[`Communicating with data`,12,'l'],[`Sort the tasks`,10,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · Who is doing what?', kind:'activity', minutes:8,
     narration:[`Four students use the same grades spreadsheet in four different ways. Identify what Sara is doing.`],
-    notes:[`Use the poll as a warm-up. Every answer is “correct” in the sense that each describes one pillar; reveal the name.`],
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`Sara reads the sheet and says “My lowest mark is in statistics.” Which pillar is that?`,opts:[`Reading data`,`Working with data`,`Analysing data`,`Communicating with data`],reveal:i=>[`Yes. She understood what the numbers say. That is <b>reading data</b>.`,`Not quite. Working with data means organising it: sorting, cleaning, adding a column.`,`Not quite. Analysing would ask <em>why</em> statistics is lowest, or find a pattern.`,`Not quite. Communicating would be telling her advisor, perhaps with a chart.`][i]+` Now imagine Khalid sorts the sheet by mark (working with), Mariam finds that quiz marks predict final marks (analysing), and Yousef makes a chart for the class (communicating).`})} },
 
   { nav:'Four pillars', title:'The four pillars of data literacy', minutes:10,
-    narration:[`Morrow (2024) describes data literacy through four characteristics: <b>reading</b> data (understanding what it says), <b>working with</b> data (collecting, organising and cleaning it), <b>analysing</b> data (finding patterns and asking why), and <b>communicating with</b> data (explaining findings to others). Each builds on the one before.`],
+    narration:[`Morrow (2024) defines data literacy through four abilities: reading, working with, analysing and communicating with data. Each builds on the one before.`],
     src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 3.`,
-    notes:[`Answer: mainly reading, and some analysing if you compare the number of reviews or read the bad ones.`],
     fig:{label:`The four pillars in order`, flow:[
       {t:'Reading',s:'understand',d:'What does this table or chart say? What do the labels and units mean?'},
       {t:'Working with',s:'organise',d:'Collect, sort, filter, clean and store the data so it can be used.'},
@@ -121,20 +118,17 @@ Lecture.mount({
       {t:'Communicating',s:'share',d:'Tell others what matters, with a clear message and a fair chart.'}]} },
 
   { nav:'One dataset', title:'Activity · One dataset, four pillars', kind:'activity', minutes:12, wide:true,
-    narration:[`Apply each pillar in turn to one week of café sales. The data are fictional.`],
-    notes:[`Expected answers: campus calendar, weather, opening hours, staff rota, a public holiday.`],
-    fig:{label:`Campus café · one week · fictional`, build:pillars} },
+    narration:[`Apply each pillar to one week of library visits. The data are fictional.`],
+    fig:{label:`Campus library visits · one week · fictional`, build:pillars} },
 
   { nav:'Communicating', title:'Communicating with data', minutes:12,
-    video:{id:'5Zg-C8AAIGg',title:'The beauty of data visualization',by:'David McCandless · TED',why:'Watch how the same numbers become clear, or surprising, once they are drawn well. Note one design choice you would copy in your final project.'},
-    narration:[`Communication depends on how accurately people decode a chart. In controlled experiments, Cleveland and McGill (1984) found that readers judge <b>position on a common scale</b> most accurately, followed by length, then angle, and area least accurately. This is why a bar chart usually communicates a comparison better than a pie chart.`],
+    video:{id:'5Zg-C8AAIGg',title:'The beauty of data visualization',by:'David McCandless · TED'},
+    narration:[`Readers judge position on a common scale most accurately, then length, angle and area (Cleveland &amp; McGill, 1984). Bar charts therefore compare values better than pie charts.`],
     lit:RANK, litLabel:`Accuracy of visual judgements · Cleveland & McGill (1984)`,
-    src:`Cleveland, W. S., &amp; McGill, R. (1984). Graphical perception: Theory, experimentation, and application to the development of graphical methods. <em>Journal of the American Statistical Association, 79</em>(387), 531–554.`,
-    notes:[`Show 4–5 minutes of the video in class if time allows; otherwise set as homework.`] },
+    src:`Cleveland, W. S., &amp; McGill, R. (1984). Graphical perception: Theory, experimentation, and application to the development of graphical methods. <em>Journal of the American Statistical Association, 79</em>(387), 531–554.` },
 
   { nav:'Sort the tasks', title:'Activity · Which pillar is it?', kind:'activity', minutes:10,
     narration:[`Sort each task into its main pillar, then compare with the suggested answers.`],
-    notes:[`Pairs. Discuss the ones where students disagree; that is where learning happens.`],
     fig:{label:`Sort the tasks`, build:el=>W.sort(el,{buckets:['Reading','Working with','Analysing','Communicating'],items:[
       {t:`Checking what the units are on a chart's y-axis`,a:0,why:`Understanding what the chart shows.`},
       {t:`Removing duplicate survey responses`,a:1,why:`Cleaning and organising data.`},
@@ -147,10 +141,9 @@ Lecture.mount({
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 2', kind:'exam', minutes:8,
     narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
-    notes:[`Quick recall: give a task, students shout the pillar.`],
     fig:{mindmap:{center:'Four pillars',branches:[{t:'Reading',items:['Understand tables and charts','Check labels and units']},{t:'Working with',items:['Collect and organise','Clean and manage','Tidy tables']},{t:'Analysing',items:['Find patterns','Compare groups','Ask why']},{t:'Communicating',items:['One clear message','Right visual, right audience','Be fair, not misleading']},{t:'Excel structure',items:['Row = one record','Column = one variable','Cell = one value']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Name and define the four pillars of data literacy.`,hint:`Reading, working with, analysing, communicating with data; one line each.`},
-      {q:`Using one situation (e.g. café sales), give an example of each pillar.`,hint:`Read a value; add totals; find the Wednesday dip and ask why; chart plus a one-line message.`},
+      {q:`Using one situation (e.g. library visits), give an example of each pillar.`,hint:`Read a value; add totals; find the Tuesday dip and ask why; chart plus a one-line message.`},
       {q:`Why is communicating with data as important as analysing it?`,hint:`Findings only matter if people understand and act; clear message, right visual; risk of misleading charts.`},
       {q:`List three rules of a tidy Excel table and explain why each matters.`,hint:`One header row (sorting works), one value per cell (counting works), numbers without units (sums work).`}])} },
 
