@@ -184,19 +184,14 @@
     document.title = cfg.pageTitle || document.title;
     const S = cfg.scenes; let cur = 0;
     const seen = new Set(JSON.parse(store.get('ged102-seen-'+cfg.id)||'[]'));
-    document.body.dataset.layout = store.get('ged102-layout') || 'even';
-    if(store.get('ged102-teacher')==='1') document.body.classList.add('teacher');
+    document.body.dataset.layout = 'even';
+    
 
     const bar=h('header',{class:'bar'});
     bar.innerHTML=`<div class="bar-in">
       <a class="brand" href="index.html" title="Back to the course map"><b>${esc(cfg.course||'GED 102')}</b><span>← Course home · ${esc(cfg.short)}</span></a>
       <div class="controls">
-        <span class="seg-label">Layout</span>
-        <div class="seg" role="group" aria-label="Layout">
-          <button type="button" data-l="text">Text</button><button type="button" data-l="even">Even</button><button type="button" data-l="diagram">Diagram</button>
-        </div>
-        <button type="button" class="pill listen" id="listen" aria-pressed="false">▶ Listen</button>
-        <button type="button" class="pill" id="teach" aria-pressed="false" title="Show timings and facilitation notes">Teacher notes</button>
+        <button type="button" class="pill listen" id="listen" aria-pressed="false" title="Reads each scene aloud and moves on to the next; press again to pause">▶ Listen</button>
         <button type="button" class="pill" id="find" title="Search the course or ask a question">⌕ Search</button>
         <button type="button" class="pill" id="theme" title="Switch light or dark">◐ Theme</button>
       </div></div><div class="progress"><i></i></div>`;
@@ -214,20 +209,13 @@
 
     // controls
     const segBtns=bar.querySelectorAll('.seg button');
-    const setLayout=l=>{ document.body.dataset.layout=l; store.set('ged102-layout',l); segBtns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l)); };
-    segBtns.forEach(b=>b.addEventListener('click',()=>setLayout(b.dataset.l))); setLayout(document.body.dataset.layout);
-    const teach=bar.querySelector('#teach');
-    if(!S.some(x=>x.notes)) teach.style.display='none';
-    const syncTeach=()=>teach.setAttribute('aria-pressed',document.body.classList.contains('teacher'));
-    teach.addEventListener('click',()=>{document.body.classList.toggle('teacher'); store.set('ged102-teacher',document.body.classList.contains('teacher')?'1':'0'); syncTeach();}); syncTeach();
+    const setLayout=l=>{ document.body.dataset.layout=l; };
+    
+
     bar.querySelector('#theme').addEventListener('click',toggleTheme);
     bar.querySelector('#find').addEventListener('click',()=>CourseSearch.open());
     const listen=bar.querySelector('#listen');
     listen.addEventListener('click',()=>{ speaking?stop():speak(); });
-    // Continuous mode: when a scene's narration ends, move to the next scene and keep narrating.
-    const cont=h('button',{type:'button',class:'pill',id:'cont','aria-pressed':store.get('ged102-cont')==='1'?'true':'false',title:'Keep narrating scene after scene'},'Auto-continue');
-    listen.after(cont);
-    cont.addEventListener('click',()=>{ const on=cont.getAttribute('aria-pressed')!=='true'; cont.setAttribute('aria-pressed',on); store.set('ged102-cont',on?'1':'0'); });
 
     // Natural recorded narration (Kokoro TTS, pre-generated into audio/) with browser speech as fallback.
     const pageKey=(location.pathname.split('/').pop()||'index').replace(/\.html$/,'');
@@ -247,7 +235,7 @@
     }
     function finish(){
       clear();
-      if(cont.getAttribute('aria-pressed')==='true' && cur<S.length-1){ go(cur+1); setTimeout(speak,500); }
+      if(cur<S.length-1){ go(cur+1); setTimeout(speak,500); }
       else stop();
     }
     function nextRec(files){
