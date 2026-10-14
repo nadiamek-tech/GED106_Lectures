@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 6 · Data Cleaning and Preparation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#5F7A1E;--wk-soft:rgba(95,122,30,.11);--wk-d:#B8D67A;--wk-soft-d:rgba(184,214,122,.14)}
+.scroll{overflow-x:auto}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.cl{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.74rem}
+.cl th,.cl td{border:1px solid var(--line);padding:4px 6px;text-align:left;white-space:nowrap}
+.cl th{background:var(--sunk)}
+.cl td.bad{background:color-mix(in srgb,var(--bad) 16%,transparent)}
+.cl td.ok{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.cl td.flag{background:color-mix(in srgb,var(--warn) 18%,transparent)}
+.cl tr.gone td{text-decoration:line-through;opacity:.45}
+.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:10px 0}
+.tools button{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;cursor:pointer;font-family:var(--f-display);font-size:.84rem}
+.tools button small{display:block;font-family:var(--f-mono);font-size:.68rem;color:var(--muted)}
+.tools button:disabled{border-color:var(--good);background:color-mix(in srgb,var(--good) 10%,transparent);cursor:default}
+.meter{height:12px;background:var(--sunk);border-radius:6px;overflow:hidden;margin:6px 0}
+.meter i{display:block;height:100%;background:var(--good);transition:width .3s}
+.log{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);margin:6px 0 0;padding-left:1.1em}
+@media (max-width:560px){.tools{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- same data, four views (fictional) ---------- */
+const MODES=[['Car (driven by me)',38],['Metro',22],['Bus / shuttle',18],['Taxi or ride-hail',14],['Walk or bike',8]];
+function views(el){
+  const V=['Table','Bar chart','Pie chart','Icon array'];
+  el.innerHTML=`<div class="seg2">${V.map(v=>`<button type="button" data-v="${v}">${v}</button>`).join('')}</div><div class="vv"></div><div class="feedback" id="vf"></div><p class="mono" style="color:var(--muted)">How 100 students reach campus · fictional.</p>`;
+  const vv=el.querySelector('.vv'), bs=el.querySelectorAll('.seg2 button');
+  const notes={'Table':'Exact numbers, but you must read every row to see the pattern.','Bar chart':'Easiest to compare: you see at once that car is the biggest group.','Pie chart':'Shows parts of a whole. Hard to compare similar slices (bus vs taxi).','Icon array':'Makes “38 out of 100 people” feel human. Good for a general audience.'};
+  const show=v=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+    if(v==='Table') vv.innerHTML=`<table class="tbl"><thead><tr><th>Mode</th><th>Students</th></tr></thead><tbody>${MODES.map(m=>`<tr><td>${m[0]}</td><td>${m[1]}</td></tr>`).join('')}</tbody></table>`;
+    if(v==='Bar chart') vv.innerHTML=`<svg viewBox="0 0 520 200" role="img" aria-label="Horizontal bar chart of travel modes">${MODES.map((m,i)=>`<text x="150" y="${30+i*36}" text-anchor="end" font-size="12">${m[0]}</text><rect x="158" y="${17+i*36}" width="${m[1]*8.5}" height="20" rx="3" fill="var(--wk)"/><text x="${164+m[1]*8.5}" y="${32+i*36}" font-size="12" font-weight="700">${m[1]}</text>`).join('')}</svg>`;
+    if(v==='Pie chart'){ let a=-Math.PI/2; const op=[1,.8,.6,.42,.26]; let s=`<svg viewBox="0 0 520 220" role="img" aria-label="Pie chart of travel modes">`;
+      MODES.forEach((m,i)=>{ const b=a+m[1]/100*2*Math.PI, x1=110+90*Math.cos(a), y1=110+90*Math.sin(a), x2=110+90*Math.cos(b), y2=110+90*Math.sin(b); s+=`<path d="M110 110 L${x1} ${y1} A90 90 0 ${b-a>Math.PI?1:0} 1 ${x2} ${y2}Z" fill="var(--wk)" fill-opacity="${op[i]}" stroke="var(--surface)" stroke-width="2"/><rect x="240" y="${30+i*32}" width="14" height="14" fill="var(--wk)" fill-opacity="${op[i]}"/><text x="262" y="${42+i*32}" font-size="12">${m[0]} · ${m[1]}</text>`; a=b; });
+      vv.innerHTML=s+'</svg>'; }
+    if(v==='Icon array'){ let s=`<svg viewBox="0 0 520 230" role="img" aria-label="100 dots coloured by travel mode">`; let k=0; const op=[1,.8,.6,.42,.26];
+      MODES.forEach((m,i)=>{ for(let j=0;j<m[1];j++){ const c=k%20, r=Math.floor(k/20); s+=`<circle cx="${18+c*17}" cy="${18+r*19}" r="7" fill="var(--wk)" fill-opacity="${op[i]}"/>`; k++; } });
+      MODES.forEach((m,i)=>{ s+=`<circle cx="${380}" cy="${22+i*24}" r="7" fill="var(--wk)" fill-opacity="${op[i]}"/><text x="394" y="${26+i*24}" font-size="11">${m[0].split(' (')[0]}</text>`; });
+      vv.innerHTML=s+`<text x="10" y="128" font-size="11" class="t-muted t-mono">each dot = 1 student</text></svg>`; }
+    el.querySelector('#vf').textContent=notes[v]; };
+  bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.v))); show('Table');
+}
+
+/* ---------- Lab 6 cleaning game (fictional responses) ---------- */
+const RAW=[
+ {id:1,city:'Dubai',age:'19',major:'Business',hrs:'6'},
+ {id:2,city:'dubai ',age:'20',major:'Design',hrs:'10'},
+ {id:3,city:'DXB',age:'21',major:'bus.',hrs:'ten'},
+ {id:4,city:'Sharjah',age:'230',major:'Computing',hrs:'4'},
+ {id:5,city:'Dubai',age:'19',major:'Business',hrs:''},
+ {id:6,city:'SHARJAH',age:'22',major:'Media',hrs:'7'},
+ {id:7,city:'Ajman',age:'20',major:'Design',hrs:'9'},
+ {id:8,city:'dubai ',age:'20',major:'Design',hrs:'10'},
+ {id:9,city:'Abu Dhabi',age:'23',major:'Business',hrs:'60'},
+ {id:10,city:'Dubai',age:'18',major:'Computing',hrs:'5'}];
+const ACTIONS=[
+ {k:'trim',t:'Fix spaces and capitals in City',x:'=PROPER(TRIM(B2))',f:d=>{d.forEach(r=>{r.city=r.city.trim().toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()); if(r.city==='Dxb') r.city='DXB';}); return 'City: trimmed spaces and used Proper Case.';}},
+ {k:'code',t:'Replace the code DXB with Dubai',x:'Find & Replace (Ctrl+H)',f:d=>{d.forEach(r=>{ if(/^dxb$/i.test(r.city)) r.city='Dubai';}); return 'City: replaced DXB with Dubai.';}},
+ {k:'major',t:'Make Major labels consistent',x:'Find & Replace, or a drop-down list',f:d=>{d.forEach(r=>{ if(r.major==='bus.') r.major='Business';}); return 'Major: “bus.” → Business.';}},
+ {k:'num',t:'Turn text numbers into numbers',x:'Edit cell · VALUE()',f:d=>{d.forEach(r=>{ if(r.hrs==='ten') r.hrs='10';}); return 'Hours: “ten” → 10.';}},
+ {k:'dup',t:'Remove the exact duplicate row',x:'Data → Remove Duplicates',f:d=>{d.forEach(r=>{ if(r.id===8) r.gone=true;}); return 'Removed row 8 (same as row 2 in every field).';}},
+ {k:'miss',t:'Flag the missing value',x:'Filter (Blanks) · COUNTBLANK()',f:d=>{d.forEach(r=>{ if(r.hrs==='') r.flagHrs=true;}); return 'Hours: row 5 is blank. Flagged, not invented.';}},
+ {k:'out',t:'Flag impossible or extreme values',x:'Conditional Formatting · Sort',f:d=>{d.forEach(r=>{ if(+r.age>100) r.flagAge=true; if(+r.hrs>50) r.flagHrsHi=true;}); return 'Flagged age 230 (impossible) and 60 hours (possible but extreme: check with the respondent).';}}];
+function cleaner(el){
+  let D=JSON.parse(JSON.stringify(RAW)); const done=new Set(); const log=[];
+  const issues=r=>{ const c={}; c.city=/\s$|^[a-z]|^[A-Z]{2,}$/.test(r.city)&&r.city!=='DXB'?1:(r.city==='DXB'||r.city==='Dxb'?1:0); c.major=r.major==='bus.'?1:0; c.hrs=(r.hrs==='ten'||(r.hrs===''&&!r.flagHrs)||(+r.hrs>50&&!r.flagHrsHi))?1:0; c.age=(+r.age>100&&!r.flagAge)?1:0; return c; };
+  const total=()=>D.filter(r=>!r.gone).reduce((s,r)=>{const c=issues(r); return s+c.city+c.major+c.hrs+c.age;},0)+(D.find(r=>r.id===8&&!r.gone)?1:0);
+  const start=total();
+  el.innerHTML=`<div class="scroll"><table class="cl"><thead><tr><th>ID</th><th>City</th><th>Age</th><th>Major</th><th>Hours</th></tr></thead><tbody id="cb"></tbody></table></div>
+   <div class="ui"><span class="mono" id="cq"></span><div class="meter"><i id="cm"></i></div></div>
+   <div class="tools">${ACTIONS.map(a=>`<button type="button" data-k="${a.k}">${a.t}<small>Excel: ${a.x}</small></button>`).join('')}</div>
+   <button type="button" class="btn ghost" id="reset">Start again</button>
+   <ol class="log" id="cl"></ol><p class="mono" style="color:var(--muted)">Fictional survey responses. Red = problem · amber = flagged for a human decision · green = fixed.</p>`;
+  const draw=()=>{ el.querySelector('#cb').innerHTML=D.map(r=>{ const c=issues(r), raw=RAW.find(x=>x.id===r.id);
+      const cls=(f,bad,flag)=>flag?'flag':bad?'bad':(r[f]!==raw[f]?'ok':'');
+      const dupBad=r.id===8&&!done.has('dup');
+      return `<tr class="${r.gone?'gone':''}"><td class="${dupBad?'bad':''}">${r.id}</td><td class="${cls('city',c.city)}">${r.city.replace(/ $/,'␣')}</td><td class="${cls('age',c.age,r.flagAge)}">${r.age}</td><td class="${cls('major',c.major)}">${r.major}</td><td class="${cls('hrs',c.hrs,r.flagHrs||r.flagHrsHi)}">${r.hrs===''?'(blank)':r.hrs}</td></tr>`; }).join('');
+    const left=total(), pct=Math.round((1-left/start)*100);
+    el.querySelector('#cq').textContent=`Data quality: ${pct}% · ${left} problem${left===1?'':'s'} left`+(left===0?' · ready for analysis':'');
+    el.querySelector('#cm').style.width=pct+'%';
+    el.querySelector('#cl').innerHTML=log.map(l=>`<li>${l}</li>`).join('');
+    el.querySelectorAll('.tools button').forEach(b=>b.disabled=done.has(b.dataset.k)); };
+  el.querySelectorAll('.tools button').forEach(b=>b.addEventListener('click',()=>{ const a=ACTIONS.find(x=>x.k===b.dataset.k); log.push(a.f(D)); done.add(a.k); draw(); }));
+  el.querySelector('#reset').addEventListener('click',()=>{ D=JSON.parse(JSON.stringify(RAW)); done.clear(); log.length=0; draw(); });
+  draw();
+}
+
+Lecture.mount({
+  id:'g106-lab6', course:'GED 106', week:6, clo:'4, 2', short:'Lab 6 · Data Cleaning and Preparation',
+  title:'Lab 6 · Data Cleaning and Preparation',
+  meta:'Lab · Week 6',
+  scenes:[
+  { nav:'The lab · Cleaning', title:'Lab 6 · Data Cleaning and Preparation', kind:'activity', minutes:40, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Identify and address inconsistencies, missing values, and outliers to ensure data quality.</strong> (CLO4, CLO2)`,
+     `First clean the fictional responses on the right. Each button shows the Excel tool that does the same job. Then clean your own Lab 4 file in Excel, using the same steps.`,
+     `<ul><li>Work on a <b>copy</b>: keep the raw sheet untouched and clean in a new sheet called Clean.</li><li>Add a sheet called <b>Log</b> and write one line for every change.</li><li><b>Flag</b> values you are not sure about. Do not invent missing answers.</li></ul>`,
+     B.plain(`<b>The three Cs in cleaning:</b> curiosity (why is this age 230?), creativity (how can the form prevent this next time?), critical thinking (is 60 hours wrong, or just unusual?).`),
+     B.exam(`Five cleaning problems and their Excel tools: inconsistent text (TRIM, PROPER, Find &amp; Replace), wrong format (VALUE), duplicates (Remove Duplicates), missing values (filter blanks), outliers (sort, conditional formatting).`)],
+    src:`Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.`,
+    notes:[`The syllabus methodology lists a graded lab on data cleaning in Week 6. Collect the Clean sheet plus the Log sheet.`,`Discuss the 60-hour case: flag and check, not delete.`],
+    fig:{label:`Clean the data · fictional responses`, build:cleaner} },
+
+  { nav:'Submit', title:'Before you leave', kind:'check',
+    narration:[`<b>Submit on Moodle:</b><ul><li>Your file with a Clean sheet and a Log sheet (graded lab assignment)</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-06.html">Week 6</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    src:`Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.` }
+  ]
+});
+</script>
+</body>
+</html>

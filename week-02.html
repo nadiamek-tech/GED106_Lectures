@@ -89,7 +89,7 @@ function tidy(el){
 Lecture.mount({
   id:'g106-w2', course:'GED 106', week:2, clo:1, short:'Week 2 · The Four Pillars',
   title:'The Four Pillars of Data Literacy',
-  meta:'Be Data Literate, Chapter 3 · Lab 2 · 2-hour session',
+  meta:'Be Data Literate, Chapter 3 · Lecture',
   scenes:[
   { nav:'Start here', title:'What exactly does a data-literate person do?', minutes:5,
     narration:[
@@ -99,7 +99,7 @@ Lecture.mount({
     think:`Which of the four do you think you are best at already? Which one scares you most?`,
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 3. Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
     notes:[`Hands up for each pillar: “I am confident at…”. Most students say reading; few say analysing. That is normal.`],
-    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which pillar?`,8,'a'],[`The four pillars`,10,'l'],[`One dataset, four pillars`,12,'a'],[`Communicating with data`,12,'l'],[`Sort the tasks`,10,'a'],[`Break`,5,'b'],[`Lab 2: Forms and Excel`,38,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+    fig:{label:`Lecture · 77 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which pillar?`,8,'a'],[`The four pillars`,10,'l'],[`One dataset, four pillars`,12,'a'],[`Communicating with data`,12,'l'],[`Sort the tasks`,10,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · Who is doing what?', kind:'activity', minutes:8,
     narration:[
@@ -156,17 +156,6 @@ Lecture.mount({
       {t:`Presenting a dashboard to a manager`,a:3,why:`Communicating for a decision.`},
       {t:`Reading a weather app's chance-of-rain percentage`,a:0,why:`Interpreting a number correctly.`}]})} },
 
-  { nav:'Lab 2 · Forms and Excel', title:'Lab 2 · Fundamentals of Microsoft Forms and Excel', kind:'activity', minutes:38, wide:true,
-    narration:[
-     `Lab task from the syllabus: <strong>Explore interface features and core functionalities in Microsoft Forms (survey design) and Excel (data structures).</strong> (CLO4)`,
-     `<table class="tbl"><thead><tr><th></th><th>Microsoft Forms</th><th>Microsoft Excel</th></tr></thead><tbody><tr><td>Main job</td><td>Collect answers</td><td>Organise and analyse</td></tr><tr><td>Unit</td><td>One question</td><td>One cell (row × column)</td></tr><tr><td>Key features</td><td>Question types, required, branching, settings</td><td>Rows, columns, sheets, formulas, Table</td></tr><tr><td>Output</td><td>Responses → “Open results in Excel”</td><td>Charts, summaries, reports</td></tr></tbody></table>`,
-     B.plain(`<b>Excel data structure:</b> a <b>row</b> is one record (one person, one order). A <b>column</b> is one variable (name, age, fee). A <b>cell</b> holds one value. A tidy table follows the six rules on the right.`),
-     `<b>Your tasks:</b> (1) In Forms, open your test form and try four question types: Choice, Text, Rating and Date. Turn on “Required” for one. (2) In Excel, copy the messy table on the right into a sheet, then fix it so it follows all six rules. Save as Lab02_YourName in your Labs folder.`,
-     B.exam(`Be able to explain <b>row = record, column = variable, cell = one value</b>, and to spot why a table is not tidy.`)],
-    src:`Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
-    notes:[`Check the tidy versions: Fee as numbers, one header row, Major spelled consistently, no blank or TOTAL rows.`,`Lina's fee “free?” is a judgement call: some students will put 0, others leave it blank and flag it. Discuss: blank means unknown, 0 means free.`],
-    fig:{label:`Messy vs tidy · six rules`, build:tidy} },
-
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 2', kind:'exam', minutes:8,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Data literacy</b> has four pillars.</li><li><b>Reading:</b> understand what data and charts say.</li><li><b>Working with:</b> collect, organise, clean, manage.</li><li><b>Analysing:</b> find patterns and ask why.</li><li><b>Communicating:</b> one clear message, the right visual, the right audience.</li><li><b>Tidy table:</b> row = record, column = variable, one value per cell.</li></ul>`),
@@ -179,7 +168,7 @@ Lecture.mount({
       {q:`List three rules of a tidy Excel table and explain why each matters.`,hint:`One header row (sorting works), one value per cell (counting works), numbers without units (sums work).`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
-    narration:[`Six questions.`,`<strong>Before Week 3:</strong> read Questback, <em>A beginner's guide to successful online surveys</em>. Think of a topic you would like to survey your classmates about.`],
+    narration:[`<strong>This week's lab:</strong> <a href="lab-02.html">Lab 2 · Fundamentals of Microsoft Forms and Excel →</a>`,`Six questions.`,`<strong>Before Week 3:</strong> read Questback, <em>A beginner's guide to successful online surveys</em>. Think of a topic you would like to survey your classmates about.`],
     fig:{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`Cleaning duplicate rows belongs to which pillar?`,o:[`Reading`,`Working with`,`Analysing`,`Communicating`],a:1,why:`Organising and cleaning data is working with it.`},
       {q:`“Why did sales fall in March?” is mainly…`,o:[`reading`,`working with`,`analysing`,`communicating`],a:2,why:`Explaining a pattern is analysis.`},

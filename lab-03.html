@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 3 · Survey Design Using Microsoft Forms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#B4562F;--wk-soft:rgba(180,86,47,.10);--wk-d:#F2A07E;--wk-soft-d:rgba(242,160,126,.14)}
+.scroll{overflow-x:auto}
+.seg2{display:flex;flex-wrap:wrap;gap:6px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.res div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);font-family:var(--f-display);font-size:.84rem}
+.res b{display:block;font-size:1.6rem;line-height:1.1}
+.clean{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.76rem}
+.clean td,.clean th{border:1px solid var(--line);padding:4px 6px;text-align:left}
+.clean th{background:var(--sunk)}
+.clean td.fx{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.clean td.bd{background:color-mix(in srgb,var(--bad) 14%,transparent)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- 1936-style sampling bias simulation (constructed model) ---------- */
+/* Model: 30% of voters are on phone-book / club lists and 40% of them support Roosevelt;
+   70% are not on the lists and 70% of them support Roosevelt. Population support = 61%. */
+function rng(seed){ let s=seed>>>0; return ()=>{ s=(s*1664525+1013904223)>>>0; return s/4294967296; }; }
+function poll(el){
+  el.innerHTML=`<div class="ui stack">
+   <div><span class="mono" style="color:var(--muted)">HOW THE SAMPLE IS CHOSEN</span><div class="seg2" id="mode"><button type="button" data-m="list" aria-pressed="true">From phone books and club lists</button><button type="button" data-m="rand" aria-pressed="false">Random from all voters</button></div></div>
+   <label for="n">Sample size: <b id="nv"></b></label><input type="range" id="n" min="0" max="5" step="1" value="2">
+   <button type="button" class="btn" id="go">Run the poll again</button>
+   <div class="res"><div><span class="mono">POLL SAYS ROOSEVELT</span><b id="p"></b></div><div><span class="mono">TRUE RESULT</span><b>61%</b></div></div>
+   <div class="feedback" id="fb"></div>
+   <p class="mono" style="color:var(--muted);margin:0">Constructed model based on the 1936 case: 30% of voters on the lists (40% for Roosevelt), 70% not on the lists (70% for Roosevelt).</p></div>`;
+  const NS=[100,500,2000,10000,50000,200000]; let mode='list', seed=7;
+  const run=()=>{ const n=NS[+el.querySelector('#n').value]; el.querySelector('#nv').textContent=n.toLocaleString('en');
+    const r=rng(seed); let yes=0;
+    for(let i=0;i<n;i++){ const onList = mode==='list' ? (r()<0.85) : (r()<0.30); const p=onList?0.40:0.70; if(r()<p) yes++; }
+    const pct=yes/n*100; el.querySelector('#p').textContent=pct.toFixed(1)+'%';
+    const err=Math.abs(pct-61);
+    el.querySelector('#fb').innerHTML= mode==='list'
+      ? `<b>Off by ${err.toFixed(1)} points.</b> ${n>=10000?'A huge sample, and still wrong. More of the wrong people does not fix bias.':'Try a bigger sample. Does the error go away?'}`
+      : `<b>Off by ${err.toFixed(1)} points.</b> ${n<=500?'Small random samples wobble, but they are not pushed in one direction.':'A random sample of this size lands close to the truth.'}`; };
+  el.querySelectorAll('#mode button').forEach(b=>b.addEventListener('click',()=>{ mode=b.dataset.m; el.querySelectorAll('#mode button').forEach(x=>x.setAttribute('aria-pressed',x===b)); run(); }));
+  el.querySelector('#n').addEventListener('input',run);
+  el.querySelector('#go').addEventListener('click',()=>{ seed=(seed*31+17)>>>0; run(); });
+  run();
+}
+
+/* ---------- data cleaning preview ---------- */
+const RAW=[['Dubai','19','Business'],['dubai ','nineteen','business'],['DXB','20',''],['Sharjah','230','Design'],['Dubai','19','Business']];
+const FIX=[['Dubai','19','Business',''],['Dubai','19','Business','same as row 1? check'],['Dubai','20','(missing)','follow up or leave blank'],['Sharjah','?','Design','230 is impossible: check'],['—','—','—','exact duplicate: remove']];
+function cleanDemo(el){
+  el.innerHTML=`<div class="seg2" style="margin-bottom:10px"><button type="button" data-v="r" aria-pressed="true">Raw responses</button><button type="button" data-v="c" aria-pressed="false">After cleaning</button></div><div class="cv scroll"></div>`;
+  const cv=el.querySelector('.cv'), bs=el.querySelectorAll('.seg2 button');
+  const set=v=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+    cv.innerHTML= v==='r'
+     ? `<table class="clean"><tr><th>#</th><th>City</th><th>Age</th><th>Major</th></tr>${RAW.map((r,i)=>`<tr><td>${i+1}</td>${r.map((c,j)=>`<td class="${(i===1)||(i===2&&(j===0||j===2))||(i===3&&j===1)||(i===4)?'bd':''}">${c===''?'&nbsp;':c.replace(/ $/,'␣')}</td>`).join('')}</tr>`).join('')}</table><p class="mono" style="color:var(--muted)">␣ = an invisible extra space. Red = a problem.</p>`
+     : `<table class="clean"><tr><th>#</th><th>City</th><th>Age</th><th>Major</th><th>Action</th></tr>${FIX.map((r,i)=>`<tr><td>${i+1}</td>${r.map((c,j)=>`<td class="${j<3&&RAW[i][j]!==c?'fx':''}">${c}</td>`).join('')}</tr>`).join('')}</table><p class="mono" style="color:var(--muted)">Green = changed. Some problems need a human decision, not a formula.</p>`; };
+  bs.forEach(b=>b.addEventListener('click',()=>set(b.dataset.v))); set('r');
+}
+
+Lecture.mount({
+  id:'g106-lab3', course:'GED 106', week:3, clo:'3', short:'Lab 3 · Survey Design Using Microsoft Forms',
+  title:'Lab 3 · Survey Design Using Microsoft Forms',
+  meta:'Lab · Week 3',
+  scenes:[
+  { nav:'The lab · Survey in Forms', title:'Lab 3 · Survey Design Using Microsoft Forms', kind:'activity', minutes:30, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Construct a basic survey instrument targeting specific data collection objectives.</strong> (CLO3)`,
+     `Work in your project group. Plan first in the worksheet, then build it in Forms. Next week you will collect and export the responses.`,
+     `<ul><li>6 to 10 questions, all linked to your objective.</li><li>At least one Choice, one Rating or Likert, one Number, and one Text question.</li><li>Use “Required” on key questions and number restrictions where possible.</li><li>An introduction line: who you are, why you ask, that answers are anonymous.</li><li>Pilot it with one other group and fix one problem they find.</li></ul>`,
+     B.exam(`Lab work is graded. Keep your form: it becomes the dataset for Labs 4–7.`)],
+    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").`,
+    notes:[`Suggest safe topics: study habits, campus food, transport to campus, sleep before exams. Avoid sensitive topics unless anonymous and justified.`,`Check every group's objective sentence before they open Forms.`],
+    fig:{label:`Build it in Forms`, flow:[
+      {t:'New form',s:'Forms',d:'Create a new form in your CUD account. Give it a clear title and a one-line description.'},
+      {t:'Add questions',s:'+ Add new',d:'Choose the type for each question: Choice, Text, Rating, Date, Likert.'},
+      {t:'Settings',s:'… menu',d:'For Text questions use Restrictions → Number. Mark key questions Required. Decide who can respond.'},
+      {t:'Preview',s:'test it',d:'Use Preview on computer and mobile. Read every question as a stranger would.'},
+      {t:'Pilot',s:'swap groups',d:'Send the link to another group. Fix one thing they found confusing.'}],
+      build:el=>W.worksheet(el,{id:'g106-w3-lab',title:'GED 106 · Lab 3 · Survey plan',fields:[
+        {l:'Objective: what decision will this survey support?',rows:2},
+        {l:'Population and how we will reach a fair sample',rows:2},
+        {l:'Our questions (number them and note the type)',rows:6},
+        {l:'Pilot feedback and the change we made',rows:2}]})} },
+
+  { nav:'Submit', title:'Before you leave', kind:'check',
+    narration:[`<b>Submit on Moodle:</b><ul><li>Survey plan (worksheet) copied to Moodle</li><li>Link to your group's survey in Forms</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-03.html">Week 3</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").` }
+  ]
+});
+</script>
+</body>
+</html>

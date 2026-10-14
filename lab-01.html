@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 1 · Introduction to Course Tools and Platforms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#1F6F8B;--wk-soft:rgba(31,111,139,.10);--wk-d:#7CC4DE;--wk-soft-d:rgba(124,196,222,.14)}
+.day{display:grid;gap:6px}
+.day button{display:grid;grid-template-columns:62px minmax(0,1fr);gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;cursor:pointer;font-family:var(--f-display);font-size:.9rem}
+.day button .tm{font-family:var(--f-mono);font-size:.74rem;color:var(--muted)}
+.day button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.day button.seen .tm::after{content:" ✓";color:var(--wk)}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tiles div{border:1px solid var(--line);border-top:4px solid var(--wk);border-radius:10px;padding:12px;background:var(--bg);font-family:var(--f-display);font-size:.86rem}
+.tiles b{display:block;font-size:1.9rem;line-height:1.05;margin-bottom:4px;color:var(--wk)}
+.counter{font-family:var(--f-display);font-weight:700;margin-top:10px}
+@media (max-width:560px){.tiles{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- a day of data (illustrative) ---------- */
+const DAY=[
+ ['07:10','Phone alarm and screen unlock','Your phone logs when you wake up and how long you use each app.','Structured: time stamps and minutes per app.','You and your phone maker'],
+ ['07:45','Tap your metro card','The gate records the station, the time and the card number.','Structured: one row per tap.','The transport operator'],
+ ['08:30','Swipe your student ID at the campus gate','Entry time and gate are recorded.','Structured: student ID, gate, time.','The university'],
+ ['10:15','Like a post and watch a short video','The app records what you watched, for how long, and what you skipped.','Mixed: numbers plus video and text.','The social media company'],
+ ['13:00','Order lunch on a delivery app','Your order, address, payment method, rating and delivery time are stored.','Structured: order records. Unstructured: your written review.','The app and the restaurant'],
+ ['15:40','Submit an assignment on Moodle','Submission time, file and grade are stored.','Structured: time and grade. Unstructured: your document.','The university'],
+ ['18:20','Buy groceries with a loyalty card','Every item, price and time is linked to your loyalty number.','Structured: a basket of rows.','The supermarket'],
+ ['21:30','Ask a chatbot for help','Your question and the answer may be stored, depending on the settings.','Unstructured: free text.','The AI company']];
+function dayTrail(el){
+  el.innerHTML=`<div class="day">${DAY.map((d,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><span class="tm">${d[0]}</span><span>${d[1]}</span></button>`).join('')}</div><div class="pick-detail">Select a moment of the day.</div><div class="counter"></div>`;
+  const bs=[...el.querySelectorAll('.day button')], d=el.querySelector('.pick-detail'), c=el.querySelector('.counter'); const seen=new Set();
+  bs.forEach(b=>b.addEventListener('click',()=>{ const i=+b.dataset.i; seen.add(i); b.classList.add('seen'); bs.forEach(x=>x.setAttribute('aria-pressed',x===b)); const [t,a,what,type,who]=DAY[i];
+    d.innerHTML=`<b>${t} · ${a}</b><p>${what}</p><p><span class="tag">Type</span> ${type}</p><p><span class="tag">Who holds it</span> ${who}</p>`;
+    c.textContent=`Data trails opened: ${seen.size} of ${DAY.length}`+(seen.size===DAY.length?' · and this was an ordinary day.':''); }));
+  bs[0].click();
+}
+
+const TILES=`<div class="tiles">
+ <div><b>70%</b>of employers in the WEF survey call <em>analytical thinking</em> an essential core skill, the top skill on the list.</div>
+ <div><b>#1</b><em>AI and big data</em> is the fastest-growing skill employers expect to need by 2030.</div>
+ <div><b>39%</b>of workers' core skills are expected to change by 2030.</div></div>`;
+
+Lecture.mount({
+  id:'g106-lab1', course:'GED 106', week:1, clo:'4', short:'Lab 1 · Introduction to Course Tools and Platforms',
+  title:'Lab 1 · Introduction to Course Tools and Platforms',
+  meta:'Lab · Week 1',
+  scenes:[
+  { nav:'The lab · Tools', title:'Lab 1 · Introduction to Course Tools and Platforms', kind:'activity', minutes:40, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Set up Microsoft 365 environment. Navigate and familiarize with Microsoft Excel, Forms, and OneDrive.</strong> (CLO4)`,
+     B.plain(`<b>Three tools, three jobs.</b> <b>Forms</b> collects data (surveys). <b>Excel</b> organises and analyses it. <b>OneDrive</b> stores your files in the cloud so you can open them from any device and share them with your group.`),
+     `Follow the five steps on the right. Press Play, or click each step. Tick each item in the checklist as you go.`,
+     B.exam(`For the lab work grade, you must be able to find, save and share your files in OneDrive. Every later lab builds on this folder.`)],
+    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").`,
+    notes:[`Walk around and check that every student can sign in. Common problem: students signed into a personal Microsoft account instead of the CUD one.`,`Students keep the same GED106 folder for the whole semester.`],
+    fig:{label:`Five set-up steps · then the checklist`, flow:[
+      {t:'Sign in',s:'CUD account',d:'Go to microsoft365.com and sign in with your CUD email, not a personal account.'},
+      {t:'OneDrive',s:'make a folder',d:'Open OneDrive and create a folder called GED106. Inside it, make a folder called Labs.'},
+      {t:'Excel',s:'new workbook',d:'Create a blank Excel workbook in the Labs folder. Name it Lab01_YourName. Find the Home, Insert and Data tabs.'},
+      {t:'Forms',s:'new form',d:'Open Forms and create a blank form titled “Test form”. Add one Choice question. You will design a real survey in Week 3.'},
+      {t:'Share',s:'link to the group',d:'In OneDrive, share the GED106 folder with your group partner. Choose “can view” or “can edit” on purpose.'}],
+      build:el=>W.worksheet(el,{id:'g106-w1-lab',title:'GED 106 · Lab 1 · Set-up checklist',fields:[
+        {l:'1. Signed in with my CUD account (write the account you used)',rows:1},
+        {l:'2. Folder path of my Labs folder in OneDrive',ph:'e.g. My files / GED106 / Labs',rows:1},
+        {l:'3. Three things I found on the Excel ribbon',rows:2},
+        {l:'4. The question type I added in Forms',rows:1},
+        {l:'5. Who I shared the folder with, and with which permission',rows:1}]})} },
+
+  { nav:'Submit', title:'Before you leave', kind:'check',
+    narration:[`<b>Submit on Moodle:</b><ul><li>GED106 folder in OneDrive, with a Labs subfolder</li><li>Folder shared with your partner</li><li>Set-up checklist copied to Moodle</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-01.html">Week 1</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").` }
+  ]
+});
+</script>
+</body>
+</html>

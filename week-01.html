@@ -54,7 +54,7 @@ const TILES=`<div class="tiles">
 Lecture.mount({
   id:'g106-w1', course:'GED 106', week:1, clo:1, short:'Week 1 · The World of Data',
   title:'The World of Data',
-  meta:'Be Data Literate, Chapter 1 · Lab 1 · 2-hour session',
+  meta:'Be Data Literate, Chapter 1 · Lecture',
   scenes:[
   { nav:'Start here', title:'Why does everyone need to understand data now?', minutes:5,
     narration:[
@@ -65,7 +65,7 @@ Lecture.mount({
     think:`Before we start: how many times do you think you created data today, before this class?`,
     src:`Reading: Morrow, J. (2024). <em>Be data literate: The data literacy skills everyone needs to succeed</em> (2nd ed.). Kogan Page. Chapter 1. Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").`,
     notes:[`Collect students' guesses for the Think question; return to them in the “My data day” activity.`,`Explain the colour code once. It is the same in every week and on the midterm review page.`],
-    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: is this data?`,8,'a'],[`What is data?`,10,'l'],[`The digital economy`,12,'l'],[`My data day`,10,'a'],[`The data skills gap`,10,'l'],[`Break`,5,'b'],[`Lab 1: course tools`,40,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+    fig:{label:`Lecture · 75 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: is this data?`,8,'a'],[`What is data?`,10,'l'],[`The digital economy`,12,'l'],[`My data day`,10,'a'],[`The data skills gap`,10,'l'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Is this data?', title:'Activity · Is this data?', kind:'activity', minutes:8,
     narration:[
@@ -137,27 +137,6 @@ Lecture.mount({
     notes:[`Link to the course: every lab builds a skill employers list (Excel, Forms, cleaning, charts, dashboards).`],
     fig:{label:`What employers say · WEF Future of Jobs Report 2025`, html:TILES, caption:`Source: World Economic Forum, Future of Jobs Report 2025, Skills outlook. Survey of employers worldwide.`} },
 
-  { nav:'Lab 1 · Tools', title:'Lab 1 · Introduction to Course Tools and Platforms', kind:'activity', minutes:40, wide:true,
-    narration:[
-     `Lab task from the syllabus: <strong>Set up Microsoft 365 environment. Navigate and familiarize with Microsoft Excel, Forms, and OneDrive.</strong> (CLO4)`,
-     B.plain(`<b>Three tools, three jobs.</b> <b>Forms</b> collects data (surveys). <b>Excel</b> organises and analyses it. <b>OneDrive</b> stores your files in the cloud so you can open them from any device and share them with your group.`),
-     `Follow the five steps on the right. Press Play, or click each step. Tick each item in the checklist as you go.`,
-     B.exam(`For the lab work grade, you must be able to find, save and share your files in OneDrive. Every later lab builds on this folder.`)],
-    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 2 – "Foundations of Data Literacy").`,
-    notes:[`Walk around and check that every student can sign in. Common problem: students signed into a personal Microsoft account instead of the CUD one.`,`Students keep the same GED106 folder for the whole semester.`],
-    fig:{label:`Five set-up steps · then the checklist`, flow:[
-      {t:'Sign in',s:'CUD account',d:'Go to microsoft365.com and sign in with your CUD email, not a personal account.'},
-      {t:'OneDrive',s:'make a folder',d:'Open OneDrive and create a folder called GED106. Inside it, make a folder called Labs.'},
-      {t:'Excel',s:'new workbook',d:'Create a blank Excel workbook in the Labs folder. Name it Lab01_YourName. Find the Home, Insert and Data tabs.'},
-      {t:'Forms',s:'new form',d:'Open Forms and create a blank form titled “Test form”. Add one Choice question. You will design a real survey in Week 3.'},
-      {t:'Share',s:'link to the group',d:'In OneDrive, share the GED106 folder with your group partner. Choose “can view” or “can edit” on purpose.'}],
-      build:el=>W.worksheet(el,{id:'g106-w1-lab',title:'GED 106 · Lab 1 · Set-up checklist',fields:[
-        {l:'1. Signed in with my CUD account (write the account you used)',rows:1},
-        {l:'2. Folder path of my Labs folder in OneDrive',ph:'e.g. My files / GED106 / Labs',rows:1},
-        {l:'3. Three things I found on the Excel ribbon',rows:2},
-        {l:'4. The question type I added in Forms',rows:1},
-        {l:'5. Who I shared the folder with, and with which permission',rows:1}]})} },
-
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 1', kind:'exam', minutes:8,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Data</b> = recorded facts or observations: numbers, text, images, sound, clicks.</li><li><b>Structured</b> (rows and columns) vs <b>unstructured</b> (photos, free text).</li><li><b>Data → information → knowledge → decision.</b></li><li><b>Digital economy:</b> data is collected, stored, analysed and acted on to create value.</li><li><b>Data skills gap:</b> jobs need data skills that many workers lack (WEF 2025: analytical thinking is the top core skill).</li><li><b>Tools:</b> Forms collects, Excel analyses, OneDrive stores and shares.</li></ul>`),
@@ -170,7 +149,7 @@ Lecture.mount({
       {q:`What is the data skills gap, and why does it matter for students from every major?`,hint:`Difference between required and actual data skills; evidence from WEF 2025; every sector uses data; people without skills are easier to mislead.`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
-    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 2:</strong> read <em>Be Data Literate</em>, Chapter 3. Make sure your GED106 folder is in OneDrive and shared with your partner.`],
+    narration:[`<strong>This week's lab:</strong> <a href="lab-01.html">Lab 1 · Introduction to Course Tools and Platforms →</a>`,`Six questions. Feedback appears after each answer.`,`<strong>Before Week 2:</strong> read <em>Be Data Literate</em>, Chapter 3. Make sure your GED106 folder is in OneDrive and shared with your partner.`],
     fig:{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`Which of these is unstructured data?`,o:[`A table of exam marks`,`A voice note`,`A list of prices`,`Dates of birth in a spreadsheet`],a:1,why:`Audio does not fit naturally into rows and columns.`},
       {q:`“The noon temperature rose three days in a row” is an example of…`,o:[`raw data`,`information`,`a decision`,`unstructured data`],a:1,why:`It is data organised with context.`},

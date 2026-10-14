@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 7 · Basic Analytical Functions in Excel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#7A4FB8;--wk-soft:rgba(122,79,184,.10);--wk-d:#C3A6F2;--wk-soft-d:rgba(195,166,242,.14)}
+.scroll{overflow-x:auto}
+.chk{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chk label{display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-family:var(--f-display);font-size:.86rem;cursor:pointer;background:var(--bg)}
+.chk label:has(input:checked){border-color:var(--wk);background:var(--wk-soft)}
+.big{font-family:var(--f-display);font-weight:800;font-size:2.4rem;line-height:1;color:var(--wk)}
+.bar2{height:16px;border-radius:8px;background:var(--sunk);overflow:hidden;margin:8px 0}
+.bar2 i{display:block;height:100%;background:var(--bad);transition:width .3s}
+.fx{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem}
+.fx th,.fx td{border:1px solid var(--line);padding:4px 7px;text-align:left;white-space:nowrap}
+.fx th{background:var(--sunk);font-family:var(--f-mono);font-size:.72rem;font-weight:600}
+.fx td.new{background:var(--wk-soft);font-weight:600}
+.fbar{font-family:var(--f-mono);font-size:.8rem;border:1px solid var(--line);border-radius:6px;padding:6px 9px;background:var(--surface);margin:8px 0;overflow-x:auto;white-space:nowrap}
+.fbar b{color:var(--wk)}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-mono);font-weight:600;font-size:.8rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+select{font:inherit;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.dl{display:inline-flex;align-items:center;gap:8px;background:var(--wk);color:var(--on-wk);text-decoration:none;font-family:var(--f-display);font-weight:700;padding:10px 16px;border-radius:10px}
+.syn{font-family:var(--f-mono);font-size:.95rem;border:1px solid var(--line);border-left:4px solid var(--wk);border-radius:6px;padding:8px 12px;background:var(--surface);overflow-x:auto;white-space:nowrap}
+.err{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.88rem}
+.err td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top}
+.err td:first-child{font-family:var(--f-mono);font-weight:700;color:var(--bad);white-space:nowrap}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+const ROWS=[['Aisha','Business',78,6],['Omar','Design',85,10],['Lina','Computing',52,4],['Yousef','Business',91,12],['Mariam','Media',66,7],['Khalid','Computing',48,3],['Sara','Design',88,9],['Hamdan','Business',59,5]];
+const LOOK=[['Business','BUS'],['Computing','CSC'],['Design','DES'],['Media','MED']];
+function fx(el){
+  const F=['AVERAGE','COUNTIF','IF','VLOOKUP'];
+  el.innerHTML=`<div class="seg2">${F.map(f=>`<button type="button" data-f="${f}">${f}</button>`).join('')}</div><div id="opt" class="ui"></div><div class="fbar" id="fb"></div><div class="scroll" id="tb"></div><div class="feedback" id="fr" style="margin-top:8px"></div>
+   <p class="mono" style="color:var(--muted)">Fictional data. Lookup table (fictional) in F2:G5: ${LOOK.map(l=>l[0]+' → '+l[1]).join(' · ')}.</p>`;
+  let fn='AVERAGE';
+  const table=(extra,hdr,hlCol)=>`<table class="fx"><thead><tr><th></th><th>A Name</th><th>B Major</th><th>C Quiz</th><th>D Hours</th>${extra?`<th>E ${hdr}</th>`:''}</tr></thead><tbody>${ROWS.map((r,i)=>`<tr><th>${i+2}</th>${r.map((v,j)=>`<td class="${hlCol&&hlCol(i,j)?'new':''}">${v}</td>`).join('')}${extra?`<td class="new">${extra(r)}</td>`:''}</tr>`).join('')}</tbody></table>`;
+  const draw=()=>{ el.querySelectorAll('.seg2 button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===fn)); const opt=el.querySelector('#opt'); const fb=el.querySelector('#fb'), tb=el.querySelector('#tb'), fr=el.querySelector('#fr');
+    if(fn==='AVERAGE'){ if(!opt.dataset.k||opt.dataset.k!==fn){ opt.innerHTML=`<label>Column: <select id="ac"><option value="2">C Quiz</option><option value="3">D Hours</option></select></label>`; opt.dataset.k=fn; opt.querySelector('#ac').addEventListener('change',draw);} const c=+opt.querySelector('#ac').value, L='ABCD'[c];
+      const v=ROWS.reduce((a,r)=>a+r[c],0)/ROWS.length; fb.innerHTML=`<b>=AVERAGE(${L}2:${L}9)</b>`; tb.innerHTML=table(null,null,(i,j)=>j===c); fr.innerHTML=`Result: <b>${v.toFixed(2)}</b>. AVERAGE adds the 8 values and divides by 8 (the mean, Week 5).`; }
+    if(fn==='COUNTIF'){ if(opt.dataset.k!==fn){ opt.innerHTML=`<label>Count rows where <select id="cc"><option value="b">Major is…</option><option value="q">Quiz is at least…</option></select></label> <select id="cv"></select>`; opt.dataset.k=fn;
+        const fill=()=>{ const t=opt.querySelector('#cc').value; opt.querySelector('#cv').innerHTML=t==='b'?[...new Set(ROWS.map(r=>r[1]))].map(m=>`<option>${m}</option>`).join(''):[50,60,70,80,90].map(n=>`<option>${n}</option>`).join(''); };
+        fill(); opt.querySelector('#cc').addEventListener('change',()=>{fill();draw();}); opt.querySelector('#cv').addEventListener('change',draw); }
+      const t=opt.querySelector('#cc').value, v=opt.querySelector('#cv').value;
+      const hit=r=>t==='b'?r[1]===v:r[2]>=+v; const n=ROWS.filter(hit).length;
+      fb.innerHTML= t==='b'?`<b>=COUNTIF(B2:B9,"${v}")</b>`:`<b>=COUNTIF(C2:C9,"&gt;=${v}")</b>`; tb.innerHTML=table(null,null,(i,j)=>hit(ROWS[i])&&j===(t==='b'?1:2)); fr.innerHTML=`Result: <b>${n}</b>. COUNTIF counts the cells in a range that meet one condition.`; }
+    if(fn==='IF'){ if(opt.dataset.k!==fn){ opt.innerHTML=`<label>Pass mark: <b id="pv"></b> <input type="range" id="pm" min="40" max="90" value="60" style="width:150px;vertical-align:middle"></label>`; opt.dataset.k=fn; opt.querySelector('#pm').addEventListener('input',draw); }
+      const p=+opt.querySelector('#pm').value; opt.querySelector('#pv').textContent=p;
+      fb.innerHTML=`<b>=IF(C2&gt;=${p},"Pass","Fail")</b> <span style="color:var(--muted)">then fill down to E9</span>`; tb.innerHTML=table(r=>r[2]>=p?'Pass':'Fail','Result'); const n=ROWS.filter(r=>r[2]>=p).length; fr.innerHTML=`<b>${n}</b> Pass, <b>${8-n}</b> Fail. IF tests a condition and returns one value if true, another if false.`; }
+    if(fn==='VLOOKUP'){ opt.innerHTML=''; opt.dataset.k=fn;
+      fb.innerHTML=`<b>=VLOOKUP(B2,$F$2:$G$5,2,FALSE)</b> <span style="color:var(--muted)">then fill down</span>`; tb.innerHTML=table(r=>{ const f=LOOK.find(l=>l[0]===r[1]); return f?f[1]:'#N/A'; },'Code');
+      fr.innerHTML=`VLOOKUP finds the Major in the first column of the lookup table and returns the value from column 2. <b>FALSE</b> means exact match. A value not in the table gives <b>#N/A</b>: a useful warning when cleaning data. (Newer Excel also has XLOOKUP.)`; }
+  };
+  el.querySelectorAll('.seg2 button').forEach(b=>b.addEventListener('click',()=>{ fn=b.dataset.f; draw(); })); draw();
+}
+const show=(fn)=>el=>{ fx(el); el.querySelector(`[data-f="${fn}"]`).click(); };
+const FILE=`<p><a class="dl" href="assets/lab07/Lab07_Excel_Functions.xlsx" download>⬇ Download Lab07_Excel_Functions.xlsx</a></p>
+<p class="ui" style="color:var(--muted);margin:0">Open it in Excel (desktop or Excel for the web with your CUD account). Save a copy as <b>Lab07_YourName.xlsx</b> in OneDrive › GED106 › Labs.</p>
+<table class="tbl" style="margin-top:12px"><thead><tr><th>Sheet</th><th>What it holds</th></tr></thead><tbody>
+<tr><td>Tasks</td><td>Questions A1–E1. Type your formulas in the <b>yellow</b> cells.</td></tr>
+<tr><td>Data</td><td>40 students (fictional), rows 2–41. Columns H–J are for you to fill.</td></tr>
+<tr><td>Ratings</td><td>Lookup table for Part D. Do not edit.</td></tr></tbody></table>`;
+const ERRS=`<table class="err"><tbody>
+<tr><td>#DIV/0!</td><td>AVERAGE found no numbers. Check the range, or numbers stored as text.</td></tr>
+<tr><td>#N/A</td><td>VLOOKUP found no match. Check spelling and use FALSE.</td></tr>
+<tr><td>#NAME?</td><td>Typo in the function name, or text without quotes.</td></tr>
+<tr><td>Wrong after fill down</td><td>Lock the lookup range with $: <span class="mono">$A$2:$B$6</span>.</td></tr></tbody></table>`;
+
+Lecture.mount({
+  id:'g106-lab7', course:'GED 106', week:7, clo:'4, 3', short:'Lab 7 · Basic Analytical Functions in Excel',
+  title:'Lab 7 · Basic Analytical Functions in Excel',
+  meta:'Lab · Week 7 · Lab work',
+  scenes:[
+  { nav:'Start here', title:'Lab 7 · Basic Analytical Functions in Excel', kind:'activity', minutes:5,
+    narration:[
+     `<strong>Use built-in Excel formulas (e.g., AVERAGE, COUNTIF, IF, VLOOKUP) for basic data computation and logical operations.</strong> (CLO4, CLO3)`,
+     FILE],
+    src:`Lab reading: Microsoft Forms + Excel, Be Data Literate Ch. 6.`,
+    notes:[`Answer key is in the separate Lab07_Answer_Key.xlsx (not on this site).`,`Check every student has a copy saved in OneDrive before Part A.`],
+    fig:{label:`Lab plan · 60 minutes`, build:el=>W.agenda(el,[[`Download and save`,5,'l'],[`Part A · AVERAGE`,8,'a'],[`Part B · COUNTIF`,10,'a'],[`Part C · IF`,15,'a'],[`Part D · VLOOKUP`,15,'a'],[`Part E · Interpret and submit`,7,'c']])} },
+
+  { nav:'A · AVERAGE', title:'Part A · AVERAGE', kind:'activity', minutes:8, wide:true,
+    narration:[
+     `<div class="syn">=AVERAGE(range)</div>`,
+     B.plain(`Adds the numbers in a range and divides by how many there are: the <b>mean</b> (Week 5).`),
+     `<b>Tasks</b><ul><li><b>A1</b> is done for you: <span class="mono">=AVERAGE(Data!E2:E41)</span> → 68.9. Click it and read the formula.</li><li><b>A2</b> Average Study_Hours (column D).</li><li><b>A3</b> Average Satisfaction (column F).</li></ul>`],
+    notes:[`Show how to select a range on another sheet by clicking, instead of typing.`],
+    fig:{label:`Try it · 8 sample rows`, build:show('AVERAGE')} },
+
+  { nav:'B · COUNTIF', title:'Part B · COUNTIF', kind:'activity', minutes:10, wide:true,
+    narration:[
+     `<div class="syn">=COUNTIF(range, criteria)</div>`,
+     B.plain(`Counts the cells that meet <b>one</b> condition. Text and conditions go in quotes: <span class="mono">"Business"</span>, <span class="mono">"&gt;=70"</span>.`),
+     `<b>Tasks</b><ul><li><b>B1</b> Business students (column B).</li><li><b>B2</b> Quiz_Score of 70 or more (column E).</li><li><b>B3</b> Fewer than 5 study hours (column D).</li></ul>`],
+    fig:{label:`Try it · change the condition`, build:show('COUNTIF')} },
+
+  { nav:'C · IF', title:'Part C · IF', kind:'activity', minutes:15, wide:true,
+    narration:[
+     `<div class="syn">=IF(test, value_if_true, value_if_false)</div>`,
+     B.plain(`Checks a condition and returns one of two results. Write it once in row 2, then <b>fill down</b> (double-click the small square at the cell's corner).`),
+     `<b>Tasks</b> (on the Data sheet)<ul><li><b>C1</b> H2: “Pass” if Quiz_Score ≥ 60, else “Fail”. Fill down.</li><li><b>C2</b> I2: “High” if Study_Hours ≥ 10, else “Low”. Fill down.</li></ul><b>Then on Tasks</b><ul><li><b>C3</b> Count the passes (COUNTIF on column H).</li><li><b>C4</b> Percentage who passed: C3 ÷ number of students. Format as %.</li></ul>`],
+    fig:{label:`Try it · move the pass mark`, build:show('IF')} },
+
+  { nav:'D · VLOOKUP', title:'Part D · VLOOKUP', kind:'activity', minutes:15, wide:true,
+    narration:[
+     `<div class="syn">=VLOOKUP(value, table, column, FALSE)</div>`,
+     B.plain(`Finds a value in the <b>first column</b> of a table and returns the value from another column. <b>FALSE</b> = exact match. Lock the table with <b>$</b> before filling down.`),
+     `<b>Tasks</b><ul><li><b>D1</b> Data!J2: look up Satisfaction (F2) in <span class="mono">Ratings!$A$2:$B$6</span>, return column 2. Fill down.</li><li><b>D2</b> On Tasks: count “Very satisfied” labels.</li></ul>`],
+    fig:{label:`Try it · lookup table on the right`, build:show('VLOOKUP')} },
+
+  { nav:'E · Interpret', title:'Part E · Interpret and submit', kind:'check', minutes:7,
+    narration:[
+     `<b>E1</b> Write two sentences: what do your results show? Use at least two numbers.`,
+     B.exam(`Say “linked to”, not “causes” (Week 6).`),
+     `<b>Submit on Moodle:</b> <b>Lab07_YourName.xlsx</b>, with every yellow cell filled.`],
+    fig:{label:`Common errors`, html:ERRS} }
+  ]
+});
+</script>
+</body>
+</html>

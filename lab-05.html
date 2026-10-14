@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 5 · Sorting and Filtering Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#9C3D6E;--wk-soft:rgba(156,61,110,.10);--wk-d:#EE9CC4;--wk-soft-d:rgba(238,156,196,.14)}
+.scroll{overflow-x:auto}
+.seg2{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.seg2 button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.86rem}
+.seg2 button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.dd{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem}
+.dd th,.dd td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+.dd th{background:var(--sunk)}
+.hdr{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.hdr button{font-family:var(--f-mono);font-size:.76rem;border:1px solid var(--line);background:var(--sunk);border-radius:4px;padding:5px 8px;cursor:pointer}
+.hdr button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.xl{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem}
+.xl th,.xl td{border:1px solid var(--line);padding:4px 7px;text-align:left}
+.xl th{background:var(--sunk);white-space:nowrap}
+.xl th button{border:0;background:none;cursor:pointer;font:inherit;font-weight:700;padding:0}
+.xl td.num{text-align:right;font-variant-numeric:tabular-nums}
+.xl td.low{background:color-mix(in srgb,var(--bad) 18%,transparent)}
+.xl td.high{background:color-mix(in srgb,var(--good) 18%,transparent)}
+.ctrls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:8px;font-family:var(--f-display);font-size:.86rem}
+select{font:inherit;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- truncated axis hook (fictional numbers) ---------- */
+function axis(el){
+  el.innerHTML=`<div class="seg2"><button type="button" data-z="70" aria-pressed="true">Axis starts at 70%</button><button type="button" data-z="0" aria-pressed="false">Axis starts at 0%</button></div><div class="ch"></div><div class="feedback" id="af"></div>`;
+  const ch=el.querySelector('.ch'), bs=el.querySelectorAll('.seg2 button');
+  const draw=z=>{ bs.forEach(b=>b.setAttribute('aria-pressed',+b.dataset.z===z)); const H=200, y=v=>230-(v-z)/(80-z)*H;
+    ch.innerHTML=`<svg viewBox="0 0 420 260" role="img" aria-label="Bar chart comparing satisfaction for two cafeterias"><line x1="50" y1="230" x2="400" y2="230" stroke="var(--muted)"/>
+    ${[z,(z+80)/2,80].map(v=>`<text x="44" y="${y(v)+4}" text-anchor="end" font-size="11" class="t-muted t-mono">${Math.round(v)}%</text><line x1="50" x2="400" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-dasharray="2 4"/>`).join('')}
+    <rect x="100" y="${y(72)}" width="90" height="${230-y(72)}" fill="var(--muted)"/><rect x="250" y="${y(75)}" width="90" height="${230-y(75)}" fill="var(--wk)"/>
+    <text x="145" y="${y(72)-6}" text-anchor="middle" font-size="12" font-weight="700">72%</text><text x="295" y="${y(75)-6}" text-anchor="middle" font-size="12" font-weight="700">75%</text>
+    <text x="145" y="250" text-anchor="middle" font-size="11">Cafeteria A</text><text x="295" y="250" text-anchor="middle" font-size="11">Cafeteria B</text>
+    <text x="225" y="18" text-anchor="middle" font-size="11" class="t-muted t-mono">STUDENTS SATISFIED · FICTIONAL</text></svg>`;
+    el.querySelector('#af').innerHTML= z===70?`B looks about <b>2.5 times</b> better than A. Read the axis: it starts at 70%.`:`Same numbers. A 3-point difference now looks like what it is: small.`; };
+  bs.forEach(b=>b.addEventListener('click',()=>draw(+b.dataset.z))); draw(70);
+}
+
+/* ---------- mean vs median tool (illustrative salaries) ---------- */
+const SAL=[9,10,11,12,12,13,14,15];
+function mm(el){
+  el.innerHTML=`<div class="ui stack"><label for="ot">Ninth graduate's monthly salary: <b id="ov"></b></label><input type="range" id="ot" min="12" max="120" value="14"><div id="mmc"></div><div class="feedback" id="mmf"></div><p class="mono" style="color:var(--muted);margin:0">Illustrative salaries in thousand AED per month, not real survey data.</p></div>`;
+  const draw=()=>{ const o=+el.querySelector('#ot').value, d=[...SAL,o].sort((a,b)=>a-b), mean=d.reduce((a,b)=>a+b,0)/d.length, med=d[4];
+    el.querySelector('#ov').textContent=o+'k AED';
+    const X=v=>30+(v-5)/(120-5)*520;
+    el.querySelector('#mmc').innerHTML=`<svg viewBox="0 0 580 130" role="img" aria-label="Dot plot of nine salaries with mean and median markers"><line x1="30" y1="80" x2="550" y2="80" stroke="var(--muted)"/>
+     ${[10,40,70,100].map(v=>`<text x="${X(v)}" y="100" text-anchor="middle" font-size="10" class="t-muted t-mono">${v}k</text>`).join('')}
+     ${d.map((v,i)=>`<circle cx="${X(v)}" cy="${72-(d.slice(0,i).filter(x=>Math.abs(x-v)<1.5).length*12)}" r="6" fill="var(--muted)"/>`).join('')}
+     <line x1="${X(med)}" x2="${X(med)}" y1="20" y2="80" stroke="var(--good)" stroke-width="3"/><text x="${X(med)}" y="14" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--good)">median ${med}k</text>
+     <line x1="${X(mean)}" x2="${X(mean)}" y1="30" y2="80" stroke="var(--wk)" stroke-width="3" stroke-dasharray="5 3"/><text x="${X(mean)}" y="122" text-anchor="middle" font-size="11" font-weight="700" style="fill:var(--wk)">mean ${mean.toFixed(1)}k</text></svg>`;
+    el.querySelector('#mmf').innerHTML= o>40?`One very high salary pulled the <b>mean</b> up to ${mean.toFixed(1)}k, above what 8 of the 9 people earn. The <b>median</b> stayed at ${med}k. With outliers, the median describes a “typical” person better.`:`With no extreme values, mean (${mean.toFixed(1)}k) and median (${med}k) are close. Drag the slider right.`; };
+  el.querySelector('#ot').addEventListener('input',draw); draw();
+}
+
+/* ---------- data dictionary ---------- */
+const DICT={
+ 'Major':['Text (categorical)','—','Business, Design, Engineering, Computing, Media, Other','Student\'s declared major, chosen from a list in the survey','Q1'],
+ 'Hours_studied':['Whole number','hours per week','0 to 80','Self-reported hours of study last week; values above 80 are checked','Q2'],
+ 'Rating':['Whole number (ordinal)','scale 1–5','1, 2, 3, 4, 5','“The library hours meet my needs.” 1 = strongly disagree, 5 = strongly agree','Q3'],
+ 'Completion_time':['Date and time','—','Semester dates only','When the response was submitted, added automatically by Forms','auto']};
+function dict(el){
+  el.innerHTML=`<p class="ui" style="margin:0 0 6px">Click a column header from the Lab 4 survey file.</p><div class="hdr">${Object.keys(DICT).map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div><div class="scroll"><table class="dd"><tbody id="ddb"></tbody></table></div><div id="ws" style="margin-top:16px"></div>`;
+  const bs=el.querySelectorAll('.hdr button');
+  const show=k=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k)); const [t,u,v,d,s]=DICT[k];
+    el.querySelector('#ddb').innerHTML=`<tr><th>Field name</th><td><b>${k}</b></td></tr><tr><th>Data type</th><td>${t}</td></tr><tr><th>Unit</th><td>${u}</td></tr><tr><th>Allowed values</th><td>${v}</td></tr><tr><th>Description</th><td>${d}</td></tr><tr><th>Source</th><td>Survey ${s==='auto'?'(automatic)':'question '+s}</td></tr>`; };
+  bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.k))); show('Major');
+  W.worksheet(el.querySelector('#ws'),{id:'g106-w5-dict',title:'GED 106 · Week 5 · Data dictionary for our survey',fields:[
+    {l:'Field 1: name · type · unit · allowed values · description',rows:2},
+    {l:'Field 2: name · type · unit · allowed values · description',rows:2},
+    {l:'Field 3: name · type · unit · allowed values · description',rows:2}]});
+}
+
+/* ---------- lab 5: sort, filter, conditional format (fictional) ---------- */
+const STU=[['Aisha','Business',2,6,78],['Omar','Design',1,10,85],['Lina','Computing',3,4,52],['Yousef','Business',1,12,91],['Mariam','Media',2,7,66],['Khalid','Computing',2,3,48],['Sara','Design',3,9,88],['Hamdan','Business',4,5,59],['Noor','Media',1,11,81],['Rami','Engineering',2,8,73],['Fatima','Engineering',3,6,69],['Zayed','Design',2,2,41]];
+const COLS=['Name','Major','Year','Hours','Quiz'];
+function lab5(el){
+  el.innerHTML=`<div class="ctrls"><label>Filter Major: <select id="fm"><option value="">(All)</option>${[...new Set(STU.map(s=>s[1]))].sort().map(m=>`<option>${m}</option>`).join('')}</select></label>
+   <label>Highlight Quiz below <b id="thv"></b><input type="range" id="th" min="40" max="90" value="60" style="width:140px;vertical-align:middle"></label>
+   <label><input type="checkbox" id="hi"> and green for 85+</label></div>
+   <div class="scroll"><table class="xl"><thead><tr>${COLS.map((c,i)=>`<th><button type="button" data-c="${i}">${c} ↕</button></th>`).join('')}</tr></thead><tbody id="xb"></tbody></table></div>
+   <div class="feedback" id="xf" style="margin-top:8px"></div><p class="mono" style="color:var(--muted)">Fictional class data. Click a header to sort; click again to reverse.</p>`;
+  let sc=-1, dir=1;
+  const draw=()=>{ const m=el.querySelector('#fm').value, th=+el.querySelector('#th').value, hi=el.querySelector('#hi').checked; el.querySelector('#thv').textContent=th;
+    let rows=STU.filter(r=>!m||r[1]===m); if(sc>=0) rows=[...rows].sort((a,b)=>(a[sc]>b[sc]?1:a[sc]<b[sc]?-1:0)*dir);
+    el.querySelector('#xb').innerHTML=rows.map(r=>`<tr>${r.map((v,i)=>`<td class="${i>=2?'num':''} ${i===4&&v<th?'low':''} ${i===4&&hi&&v>=85?'high':''}">${v}</td>`).join('')}</tr>`).join('');
+    const low=rows.filter(r=>r[4]<th).length;
+    el.querySelector('#xf').innerHTML=`Showing <b>${rows.length}</b> of ${STU.length} students${m?` (filter: ${m})`:''}${sc>=0?`, sorted by ${COLS[sc]} ${dir>0?'A→Z / low→high':'Z→A / high→low'}`:''}. <b>${low}</b> highlighted below ${th}.`; };
+  el.querySelectorAll('th button').forEach(b=>b.addEventListener('click',()=>{ const c=+b.dataset.c; dir=(sc===c)?-dir:1; sc=c; draw(); }));
+  el.querySelector('#fm').addEventListener('change',draw); el.querySelector('#th').addEventListener('input',draw); el.querySelector('#hi').addEventListener('change',draw); draw();
+}
+
+const VOCAB=[['Variable','A characteristic that can change: age, major, rating (a column)'],['Observation','One record: one person or event (a row)'],['Categorical','Values are groups or labels: major, city'],['Numerical','Values are numbers you can calculate with: hours, price'],['Mean','Add all values and divide by how many'],['Median','The middle value when sorted'],['Mode','The most common value'],['Range','Largest minus smallest'],['Outlier','A value far from the others'],['Percentage points','The difference between two percentages: 40% → 50% is +10 points (+25%)'],['Correlation','Two variables move together'],['Causation','One variable actually changes the other']];
+
+Lecture.mount({
+  id:'g106-lab5', course:'GED 106', week:5, clo:'4', short:'Lab 5 · Sorting and Filtering Data',
+  title:'Lab 5 · Sorting and Filtering Data',
+  meta:'Lab · Week 5',
+  scenes:[
+  { nav:'The lab · Sort and filter', title:'Lab 5 · Sorting and Filtering Data', kind:'activity', minutes:30, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Apply Excel's sorting, filtering, and conditional formatting tools to explore and manage datasets.</strong> (CLO4)`,
+     `Practise on the table on the right first: sort by Quiz, filter one major, then change the highlight threshold. Then do the same in Excel on your Lab 4 file.`,
+     `<ul><li><b>Sort:</b> click in the table → <b>Data → Sort</b>, or use the header arrow. Sort by more than one level (Major, then Quiz).</li><li><b>Filter:</b> header arrow → tick the values to show. Filtering hides rows; it does not delete them.</li><li><b>Conditional formatting:</b> select a column → <b>Home → Conditional Formatting → Highlight Cells Rules → Less Than</b>.</li><li>Write three sentences about what you found, using correct data words.</li></ul>`,
+     B.exam(`Know the difference: <b>sort</b> changes the order, <b>filter</b> hides rows that do not match, <b>conditional formatting</b> changes how cells look based on a rule.`)],
+    src:`Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.`,
+    notes:[`Common error: sorting one column only, which breaks the rows. Always sort the whole table.`],
+    fig:{label:`Practise · sort, filter, highlight`, build:lab5} },
+
+  { nav:'Submit', title:'Before you leave', kind:'check',
+    narration:[`<b>Submit on Moodle:</b><ul><li>Lab05_YourName.xlsx with a sort, a filter and a conditional-formatting rule</li><li>Three sentences on what you found</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-05.html">Week 5</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    src:`Lab reading: Microsoft Excel guides, Data Literacy in Practice Ch. 4.` }
+  ]
+});
+</script>
+</body>
+</html>

@@ -72,7 +72,7 @@ function cleanDemo(el){
 Lecture.mount({
   id:'g106-w3', course:'GED 106', week:3, clo:3, short:'Week 3 · Data Collection & Surveys',
   title:'Data Collection & Surveys',
-  meta:'Questback guide · Lab 3 · 2-hour session',
+  meta:'Questback guide · Lecture',
   scenes:[
   { nav:'Start here', title:'How do you collect data you can trust?', minutes:5,
     narration:[
@@ -82,7 +82,7 @@ Lecture.mount({
     think:`Have you ever answered a survey question you could not answer honestly? What was wrong with it?`,
     src:`Reading: Questback. (n.d.). <em>A beginner's guide to successful online surveys.</em> Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").`,
     notes:[`Collect two or three stories for the Think question; they are good material for the Question doctor activity.`],
-    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the famous wrong poll`,8,'a'],[`Survey design`,12,'l'],[`Sampling bias simulator`,12,'a'],[`Choosing the right questions`,10,'l'],[`Question doctor`,10,'a'],[`Data cleaning concept`,8,'l'],[`Break`,5,'b'],[`Lab 3: survey in Forms`,30,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+    fig:{label:`Lecture · 85 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the famous wrong poll`,8,'a'],[`Survey design`,12,'l'],[`Sampling bias simulator`,12,'a'],[`Choosing the right questions`,10,'l'],[`Question doctor`,10,'a'],[`Data cleaning concept`,8,'l'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · The poll of 2.4 million people', kind:'activity', minutes:8,
     narration:[
@@ -151,26 +151,6 @@ Lecture.mount({
     notes:[`Answer: use a Number restriction on Text questions, or a Choice question for age bands.`],
     fig:{label:`Five responses · before and after`, build:cleanDemo} },
 
-  { nav:'Lab 3 · Survey in Forms', title:'Lab 3 · Survey Design Using Microsoft Forms', kind:'activity', minutes:30, wide:true,
-    narration:[
-     `Lab task from the syllabus: <strong>Construct a basic survey instrument targeting specific data collection objectives.</strong> (CLO3)`,
-     `Work in your project group. Plan first in the worksheet, then build it in Forms. Next week you will collect and export the responses.`,
-     `<ul><li>6 to 10 questions, all linked to your objective.</li><li>At least one Choice, one Rating or Likert, one Number, and one Text question.</li><li>Use “Required” on key questions and number restrictions where possible.</li><li>An introduction line: who you are, why you ask, that answers are anonymous.</li><li>Pilot it with one other group and fix one problem they find.</li></ul>`,
-     B.exam(`Lab work is graded. Keep your form: it becomes the dataset for Labs 4–7.`)],
-    src:`Lab reading: Data Literacy in Practice (Klidas &amp; Hanegan, Ch. 6 – "From Collection to Insight").`,
-    notes:[`Suggest safe topics: study habits, campus food, transport to campus, sleep before exams. Avoid sensitive topics unless anonymous and justified.`,`Check every group's objective sentence before they open Forms.`],
-    fig:{label:`Build it in Forms`, flow:[
-      {t:'New form',s:'Forms',d:'Create a new form in your CUD account. Give it a clear title and a one-line description.'},
-      {t:'Add questions',s:'+ Add new',d:'Choose the type for each question: Choice, Text, Rating, Date, Likert.'},
-      {t:'Settings',s:'… menu',d:'For Text questions use Restrictions → Number. Mark key questions Required. Decide who can respond.'},
-      {t:'Preview',s:'test it',d:'Use Preview on computer and mobile. Read every question as a stranger would.'},
-      {t:'Pilot',s:'swap groups',d:'Send the link to another group. Fix one thing they found confusing.'}],
-      build:el=>W.worksheet(el,{id:'g106-w3-lab',title:'GED 106 · Lab 3 · Survey plan',fields:[
-        {l:'Objective: what decision will this survey support?',rows:2},
-        {l:'Population and how we will reach a fair sample',rows:2},
-        {l:'Our questions (number them and note the type)',rows:6},
-        {l:'Pilot feedback and the change we made',rows:2}]})} },
-
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 3', kind:'exam', minutes:8,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Survey design:</b> objective → who → questions → pilot → collect.</li><li><b>Population</b> = everyone you care about; <b>sample</b> = who you ask.</li><li><b>Sampling bias:</b> a bigger biased sample is still biased (Literary Digest, 1936).</li><li><b>Question faults:</b> leading, double-barrelled, loaded, vague.</li><li><b>Question types:</b> closed, rating/Likert, numeric, open.</li><li><b>Data cleaning:</b> fix labels, formats, missing values, duplicates, outliers, and record changes.</li></ul>`),
@@ -182,7 +162,7 @@ Lecture.mount({
       {q:`What is data cleaning, and why is it an ethical as well as a technical task?`,hint:`Fix errors before analysis; judgement involved; never delete inconvenient answers; document changes.`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
-    narration:[`Six questions.`,`<strong>Before Week 4:</strong> read <em>Be Data Literate</em>, Chapter 2. Make sure your group's survey is ready to send.`],
+    narration:[`<strong>This week's lab:</strong> <a href="lab-03.html">Lab 3 · Survey Design Using Microsoft Forms →</a>`,`Six questions.`,`<strong>Before Week 4:</strong> read <em>Be Data Literate</em>, Chapter 2. Make sure your group's survey is ready to send.`],
     fig:{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`A survey sent only to students in the library at 9 pm has…`,o:[`no bias`,`sampling bias`,`a leading question`,`too many questions`],a:1,why:`Late-night library users are not representative of all students.`},
       {q:`Increasing a biased sample from 10,000 to 1,000,000…`,o:[`removes the bias`,`does not remove the bias`,`always doubles accuracy`,`makes it random`],a:1,why:`More of the wrong people still gives the wrong answer.`},

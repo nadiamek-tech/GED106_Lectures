@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 2 · Fundamentals of Microsoft Forms and Excel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#2E7D5B;--wk-soft:rgba(46,125,91,.10);--wk-d:#7FD3AA;--wk-soft-d:rgba(127,211,170,.14)}
+.scroll{overflow-x:auto}
+.lens{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.lens button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+.lens button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk);color:var(--on-wk)}
+.cafe{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.86rem}
+.cafe th,.cafe td{border:1px solid var(--line);padding:5px 7px;text-align:right}
+.cafe th:first-child,.cafe td:first-child{text-align:left}
+.cafe th{background:var(--sunk);font-weight:600}
+.cafe td.hl{background:var(--wk-soft);outline:2px solid var(--wk);outline-offset:-2px;font-weight:700}
+.cafe tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+.bars{display:grid;gap:5px;margin-top:8px;font-family:var(--f-display);font-size:.84rem}
+.bars div{display:grid;grid-template-columns:44px minmax(0,1fr) 36px;gap:8px;align-items:center}
+.bars i{display:block;height:14px;background:var(--wk);border-radius:3px}
+.bars i.lo{background:var(--muted)}
+.msg{margin-top:10px;font-family:var(--f-display);font-weight:700;border-left:4px solid var(--wk);padding:6px 10px;background:var(--wk-soft);border-radius:0 8px 8px 0}
+.grid{width:100%;border-collapse:collapse;font-family:var(--f-mono);font-size:.74rem}
+.grid td,.grid th{border:1px solid var(--line);padding:4px 6px;text-align:left;white-space:nowrap}
+.grid th{background:var(--sunk);font-weight:600}
+.grid .bad{background:color-mix(in srgb,var(--bad) 16%,transparent)}
+.grid .rh{color:var(--muted);background:var(--sunk);text-align:center}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- one dataset, four pillars (fictional campus café) ---------- */
+const DAYS=['Mon','Tue','Wed','Thu','Fri'];
+const ITEMS={'Karak tea':[64,58,31,60,72],'Iced coffee':[40,44,22,41,55],'Sandwich':[35,38,19,36,30]};
+function pillars(el){
+  const P={
+   'Reading':{q:'What does the table say?',do:'Find one fact: the café sold <b>72 karak teas on Friday</b>, the highest of any item on any day.',hl:[['Karak tea',4]]},
+   'Working with':{q:'Organise it so it is useful.',do:'Add a <b>daily total</b> row. Now each day can be compared in one number.',tot:true},
+   'Analysing':{q:'What pattern, and why?',do:'<b>Wednesday is low for every item</b> (72 items sold, against 137–157 on the other days). Possible reason to check: a campus event, a holiday, or the café closing early.',hl:[['Karak tea',2],['Iced coffee',2],['Sandwich',2]],tot:true},
+   'Communicating':{q:'Tell someone what matters.',do:'Show the daily totals as a simple chart, with one clear message for the café manager.',chart:true}};
+  el.innerHTML=`<div class="lens">${Object.keys(P).map(k=>`<button type="button" data-k="${k}">${k}</button>`).join('')}</div><div class="out"></div>`;
+  const out=el.querySelector('.out'), bs=el.querySelectorAll('.lens button');
+  const tot=DAYS.map((_,d)=>Object.values(ITEMS).reduce((a,v)=>a+v[d],0));
+  const show=k=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k)); const p=P[k];
+    const isHl=(it,d)=>(p.hl||[]).some(([a,b])=>a===it&&b===d);
+    let html=`<p class="ui" style="margin:0 0 8px"><span class="tag">${k}</span> <b>${p.q}</b> ${p.do}</p>`;
+    if(p.chart){ const mx=Math.max(...tot); html+=`<div class="bars">${DAYS.map((d,i)=>`<div><span>${d}</span><i class="${tot[i]<100?'lo':''}" style="width:${tot[i]/mx*100}%"></i><span class="mono">${tot[i]}</span></div>`).join('')}</div><div class="msg">Wednesday sales were about half of other days. Check why before ordering stock for next week.</div>`; }
+    else html+=`<div class="scroll"><table class="cafe"><thead><tr><th>Item</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>${Object.entries(ITEMS).map(([it,v])=>`<tr><td>${it}</td>${v.map((x,d)=>`<td class="${isHl(it,d)?'hl':''}">${x}</td>`).join('')}</tr>`).join('')}${p.tot?`<tr class="tot"><td>Daily total</td>${tot.map(t=>`<td>${t}</td>`).join('')}</tr>`:''}</tbody></table></div>`;
+    out.innerHTML=html+`<p class="mono" style="color:var(--muted);margin:8px 0 0">Fictional data for teaching.</p>`; };
+  bs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.k))); show('Reading');
+}
+
+/* ---------- lab: messy vs tidy table ---------- */
+const MESSY=`<div class="scroll"><table class="grid"><tr><th class="rh"></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td class="rh">1</td><td colspan="4" class="bad">CLUB MEMBERS SPRING (merged)</td></tr>
+<tr><td class="rh">2</td><td>Name</td><td>Major</td><td>Fee</td><td>Events</td></tr>
+<tr><td class="rh">3</td><td>Aisha</td><td>Business</td><td class="bad">50 AED</td><td class="bad">Hike, Quiz night</td></tr>
+<tr><td class="rh">4</td><td class="bad"></td><td class="bad"></td><td class="bad"></td><td class="bad"></td></tr>
+<tr><td class="rh">5</td><td>Omar</td><td class="bad">bus.</td><td>50</td><td>Quiz night</td></tr>
+<tr><td class="rh">6</td><td class="bad">TOTAL</td><td></td><td class="bad">100</td><td></td></tr>
+<tr><td class="rh">7</td><td>Lina</td><td>Design</td><td>free?</td><td>Hike</td></tr></table></div>`;
+const TIDY=`<div class="scroll"><table class="grid"><tr><th class="rh"></th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+<tr><td class="rh">1</td><td>MemberName</td><td>Major</td><td>Fee_AED</td><td>EventCount</td></tr>
+<tr><td class="rh">2</td><td>Aisha</td><td>Business</td><td>50</td><td>2</td></tr>
+<tr><td class="rh">3</td><td>Omar</td><td>Business</td><td>50</td><td>1</td></tr>
+<tr><td class="rh">4</td><td>Lina</td><td>Design</td><td>0</td><td>1</td></tr></table></div>`;
+function tidy(el){
+  el.innerHTML=`<div class="lens"><button type="button" data-v="m" aria-pressed="true">Messy sheet</button><button type="button" data-v="t" aria-pressed="false">Tidy sheet</button></div><div class="tv"></div><div id="rules" style="margin-top:12px"></div>`;
+  const tv=el.querySelector('.tv'); const bs=el.querySelectorAll('.lens button');
+  const set=v=>{ bs.forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v)); tv.innerHTML=v==='m'?MESSY+'<p class="mono" style="color:var(--bad);margin:6px 0 0">Red cells break a tidy-table rule.</p>':TIDY+'<p class="mono" style="color:var(--good);margin:6px 0 0">One header row · one row per member · one value per cell · numbers only in number columns.</p>'; };
+  bs.forEach(b=>b.addEventListener('click',()=>set(b.dataset.v))); set('m');
+  W.accordion(el.querySelector('#rules'),[
+   {t:'Rule 1 · One header row, no merged cells',d:'Put the title in the file name, not in a merged cell above the table. Excel sorting and filtering break on merged cells.'},
+   {t:'Rule 2 · One row = one record',d:'Each member, order or survey response gets exactly one row. No blank rows in the middle.'},
+   {t:'Rule 3 · One column = one variable',d:'“Events” held two values in one cell. Store a count, or one row per member per event.'},
+   {t:'Rule 4 · Numbers stay numbers',d:'“50 AED” is text to Excel, so it cannot be added. Put the unit in the header: Fee_AED.'},
+   {t:'Rule 5 · Same spelling every time',d:'“Business” and “bus.” look like two majors to Excel. Choose one label.'},
+   {t:'Rule 6 · No totals inside the data',d:'A TOTAL row in the middle will be counted as a member. Calculate totals below or on another sheet.'}]);
+}
+
+Lecture.mount({
+  id:'g106-lab2', course:'GED 106', week:2, clo:'4', short:'Lab 2 · Fundamentals of Microsoft Forms and Excel',
+  title:'Lab 2 · Fundamentals of Microsoft Forms and Excel',
+  meta:'Lab · Week 2',
+  scenes:[
+  { nav:'The lab · Forms and Excel', title:'Lab 2 · Fundamentals of Microsoft Forms and Excel', kind:'activity', minutes:38, wide:true,
+    narration:[
+     `Lab task from the syllabus: <strong>Explore interface features and core functionalities in Microsoft Forms (survey design) and Excel (data structures).</strong> (CLO4)`,
+     `<table class="tbl"><thead><tr><th></th><th>Microsoft Forms</th><th>Microsoft Excel</th></tr></thead><tbody><tr><td>Main job</td><td>Collect answers</td><td>Organise and analyse</td></tr><tr><td>Unit</td><td>One question</td><td>One cell (row × column)</td></tr><tr><td>Key features</td><td>Question types, required, branching, settings</td><td>Rows, columns, sheets, formulas, Table</td></tr><tr><td>Output</td><td>Responses → “Open results in Excel”</td><td>Charts, summaries, reports</td></tr></tbody></table>`,
+     B.plain(`<b>Excel data structure:</b> a <b>row</b> is one record (one person, one order). A <b>column</b> is one variable (name, age, fee). A <b>cell</b> holds one value. A tidy table follows the six rules on the right.`),
+     `<b>Your tasks:</b> (1) In Forms, open your test form and try four question types: Choice, Text, Rating and Date. Turn on “Required” for one. (2) In Excel, copy the messy table on the right into a sheet, then fix it so it follows all six rules. Save as Lab02_YourName in your Labs folder.`,
+     B.exam(`Be able to explain <b>row = record, column = variable, cell = one value</b>, and to spot why a table is not tidy.`)],
+    src:`Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
+    notes:[`Check the tidy versions: Fee as numbers, one header row, Major spelled consistently, no blank or TOTAL rows.`,`Lina's fee “free?” is a judgement call: some students will put 0, others leave it blank and flag it. Discuss: blank means unknown, 0 means free.`],
+    fig:{label:`Messy vs tidy · six rules`, build:tidy} },
+
+  { nav:'Submit', title:'Before you leave', kind:'check',
+    narration:[`<b>Submit on Moodle:</b><ul><li>Test form with Choice, Text, Rating and Date questions</li><li>Lab02_YourName.xlsx: the messy table, fixed so it follows all six rules</li></ul>`,`Save everything in <b>OneDrive › GED106 › Labs</b>.`,`Lecture: <a href="week-02.html">Week 2</a> · All labs: <a href="index.html#labs">Labs</a>`],
+    src:`Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).` }
+  ]
+});
+</script>
+</body>
+</html>

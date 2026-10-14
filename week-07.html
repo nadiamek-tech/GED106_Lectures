@@ -91,7 +91,7 @@ function fx(el){
 Lecture.mount({
   id:'g106-w7', course:'GED 106', week:7, clo:1, short:'Week 7 · Data Ethics 1',
   title:'Data Ethics -1',
-  meta:'Be Data Literate, Chapter 4 · Cote (2021) · Lab 7 · 2-hour session',
+  meta:'Be Data Literate, Chapter 4 · Cote (2021) · Lecture',
   scenes:[
   { nav:'Start here', title:'Just because we can collect it, should we?', minutes:5,
     narration:[
@@ -100,7 +100,7 @@ Lecture.mount({
      B.plain(`<b>Key idea:</b> data ethics asks whether data use is fair and respectful to the people behind the data. Five principles guide it: <b>ownership, transparency, privacy, intention, outcomes</b>. In the UAE, the law also sets rules (Federal Decree-Law No. 45 of 2021).`)],
     think:`Which app on your phone do you trust least with your data? Why?`,
     src:`Readings: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4. Cote, C. (2021, March 16). 5 principles of data ethics for business professionals. Harvard Business School Online. Lab reading: Microsoft Forms + Excel, Be Data Literate Ch. 6.`,
-    fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: free coffee`,6,'a'],[`Five principles`,8,'l'],[`Ownership and transparency`,10,'l'],[`Privacy: is it anonymous?`,12,'a'],[`Intention and outcomes`,8,'l'],[`UAE data protection law`,7,'l'],[`Case matcher`,8,'a'],[`Break`,5,'b'],[`Lab 7: Excel functions`,31,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
+    fig:{label:`Lecture · 84 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: free coffee`,6,'a'],[`Five principles`,8,'l'],[`Ownership and transparency`,10,'l'],[`Privacy: is it anonymous?`,12,'a'],[`Intention and outcomes`,8,'l'],[`UAE data protection law`,7,'l'],[`Case matcher`,8,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · A free coffee for your location?', kind:'activity', minutes:6,
     narration:[`A café app offers you a free coffee every week if you turn on location “always”. What do you do?`],
@@ -172,17 +172,6 @@ Lecture.mount({
       {t:`A scholarship model, built in good faith, rejects far more students from one area.`,a:4,why:`Good intentions, unfair results. Check outcomes (Week 8).`},
       {t:`A survey says answers are anonymous, but it records email addresses automatically.`,a:1,why:`What people were told does not match what happens.`}]})} },
 
-  { nav:'Lab 7 · Functions', title:'Lab 7 · Basic Analytical Functions in Excel', kind:'activity', minutes:31, wide:true,
-    narration:[
-     `Lab task from the syllabus: <strong>Use built-in Excel formulas (e.g., AVERAGE, COUNTIF, IF, VLOOKUP) for basic data computation and logical operations.</strong> (CLO4, CLO3)`,
-     `Try each function on the right, then use all four on your cleaned Lab 6 file:`,
-     `<ul><li><b>AVERAGE</b> of one numeric question.</li><li><b>COUNTIF</b> for how many respondents chose each option of one question.</li><li><b>IF</b> to create a new column, e.g. “High” if hours ≥ 10, else “Low”.</li><li><b>VLOOKUP</b> to add a label from a small lookup table you create (e.g. rating number → word).</li><li>Write two sentences interpreting your results.</li></ul>`,
-     B.plain(`<b>Ethics in the lab:</b> before sharing your file with the class, delete any column that could identify a respondent.`),
-     B.exam(`Know what each function does and read a formula such as <b>=COUNTIF(B2:B9,"Business")</b> aloud in words.`)],
-    src:`Lab reading: Microsoft Forms + Excel, Be Data Literate Ch. 6.`,
-    notes:[`The syllabus lab schedule lists Assignment 2 and the Midterm against this week; confirm the brief and due date with students.`,`Common errors: forgetting $ in the VLOOKUP range before filling down; text numbers making AVERAGE return #DIV/0!.`],
-    fig:{label:`Function sandbox · fictional data`, build:fx} },
-
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 7', kind:'exam', minutes:8,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Five principles:</b> ownership, transparency, privacy, intention, outcomes.</li><li><b>Ownership + transparency:</b> clear consent, plain explanations (Cambridge Analytica, 2018).</li><li><b>Privacy:</b> “no names” ≠ anonymous (Sweeney, 2000: about 87%).</li><li><b>Intention vs outcomes:</b> why you collect vs what actually happens.</li><li><b>UAE law:</b> Federal Decree-Law No. 45 of 2021; consent is the default; rights to access, correct, erase, object.</li><li><b>Excel:</b> AVERAGE, COUNTIF, IF, VLOOKUP.</li></ul>`),
@@ -194,7 +183,7 @@ Lecture.mount({
       {q:`What does the UAE Personal Data Protection Law require, in brief?`,hint:`Decree-Law 45/2021; consent default; rights to access, correct, erase, object; separate regimes in DIFC/ADGM.`}])} },
 
   { nav:'Exit check', title:'Exit check', kind:'check', minutes:12,
-    narration:[`Six questions.`,`<strong>Before Week 8:</strong> re-read <em>Be Data Literate</em>, Chapter 4. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>: use the <a href="review.html">midterm review page</a>.`],
+    narration:[`<strong>This week's lab:</strong> <a href="lab-07.html">Lab 7 · Basic Analytical Functions in Excel →</a>`,`Six questions.`,`<strong>Before Week 8:</strong> re-read <em>Be Data Literate</em>, Chapter 4. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>: use the <a href="review.html">midterm review page</a>.`],
     fig:{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`A pre-ticked “send me offers” box breaks which principle?`,o:[`Ownership (consent)`,`Outcomes`,`Creativity`,`Prescriptive analytics`],a:0,why:`Consent must be an active choice.`},
       {q:`Which is the best summary of “transparency”?`,o:[`Data is encrypted`,`People are told clearly how their data will be used`,`Data is deleted`,`Charts are clear`],a:1,why:`People must know what they agree to.`},
