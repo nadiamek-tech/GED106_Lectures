@@ -101,33 +101,27 @@ function cleaner(el){
   draw();
 }
 
+const QTABLE=`<table class="tbl"><thead><tr><th>Ask</th><th>Why</th></tr></thead><tbody><tr><td>Who collected it, and why?</td><td>Motive can shape the data</td></tr><tr><td>How many, and who?</td><td>Small or biased samples</td></tr><tr><td>Compared with what?</td><td>A number alone means little</td></tr><tr><td>Correlation or cause?</td><td>A third factor may drive both</td></tr><tr><td>What is missing?</td><td>Hidden groups, years or variables</td></tr></tbody></table>`;
+
 Lecture.mount({
   id:'g106-w6', course:'GED 106', week:6, clo:1, short:'Week 6 · The Three Cs',
   title:'The Three Cs of Data Literacy',
   meta:'Be Data Literate, Chapter 8 · Lecture',
   scenes:[
   { nav:'Start here', title:'What kind of thinker does good data need?', minutes:5,
-    narration:[
-     `Tools and formulas are only half of data literacy. The other half is a way of thinking. This week names three habits of mind that every good data user has.`,
-     `This week's syllabus topics: <strong>Curiosity, Creativity, and Critical thinking</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
-     B.plain(`<b>Key idea:</b> <b>curiosity</b> asks the question, <b>creativity</b> finds new ways to answer and show it, and <b>critical thinking</b> checks whether the answer is true.`)],
-    think:`Think of someone you know who is very good at “figuring things out”. Which of the three Cs do they have most?`,
+    narration:[`Syllabus topics: <strong>Curiosity, Creativity, and Critical thinking</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 8. Lab reading: Microsoft Forms tutorials, Be Data Literate Ch. 5.`,
     fig:{label:`Lecture · 75 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: the front-row claim`,8,'a'],[`Curiosity`,10,'l'],[`Creativity`,10,'a'],[`Critical thinking`,10,'l'],[`Claim checker`,12,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · “Sit in the front row, get better grades”', kind:'activity', minutes:8,
-    narration:[`A blog post says: “Students who sit in the front row get higher grades. So move to the front!” What is your first reaction?`],
+    narration:[`Read the claim and choose your first reaction.`],
     notes:[`There is no wrong answer here; the point is to show all three Cs in one discussion.`],
     fig:{label:`Your first reaction`, build:el=>W.poll(el,{q:`“Front-row students get higher grades, so move to the front.”`,opts:[`Great, I'll move`,`Interesting, I wonder why`,`Could we show this a better way?`,`Is it the seat, or the kind of student who chooses it?`],reveal:i=>[`Acting on a claim without checking it. Many people do this with headlines.`,`That is <b>curiosity</b>: wanting to know more.`,`That is <b>creativity</b>: thinking about new ways to look at the data.`,`That is <b>critical thinking</b>: motivated students may choose the front row and also study more. The seat may not be the cause.`][i]+` Good data users use all three.`})} },
 
   { nav:'Curiosity', title:'Curiosity', minutes:10,
     video:{id:'Z8t4k0Q8e8Y',title:'Hans Rosling: 200 years in 4 minutes',by:'BBC News',why:'Rosling\'s curiosity about health and wealth turned 120,000 numbers into one moving chart. Notice the questions he asks the data.'},
-    narration:[
-     B.plain(`<b>Curiosity</b> = the habit of asking questions about data: what, why, how, who is missing, what if? Curious people do not stop at the first number.`),
-     B.ex(`In London in 1854, the physician John Snow mapped deaths from a cholera outbreak in Soho. The cases clustered around one water pump on Broad Street. His question, “why here?”, supported the idea that cholera spread through water, and the pump handle was removed.`),
-     B.plain(`<b>Risks and ethics:</b> curiosity about people's data needs limits. Asking “what else can we find out about this person?” can become surveillance.`),
-     B.exam(`Curiosity = asking good questions. Example: <b>John Snow's 1854 cholera map</b>.`)],
-    think:`Look at your Lab 4 survey file. Write one “why” question and one “who is missing?” question about it.`,
+    narration:[`Curiosity is the habit of questioning data. During the 1854 cholera outbreak in Soho, London, John Snow mapped deaths and found them clustered around the Broad Street water pump. His question, “why here?”, supported the hypothesis that cholera is transmitted through water (Snow, 1855).`],
+    src:`Snow, J. (1855). <em>On the mode of communication of cholera</em> (2nd ed.). John Churchill. Morrow (2024), Chapter 8.`,
     notes:[`Keep the Snow story brief; the point is the question “why here?”.`],
     fig:{label:`How a curious mind works`, flow:[
       {t:'Notice',s:'something odd',d:'Many deaths in one small area.'},
@@ -137,26 +131,19 @@ Lecture.mount({
       {t:'Act',s:'remove handle',d:'Stop people using the pump, and keep watching the numbers.'}]} },
 
   { nav:'Creativity', title:'Creativity', kind:'activity', minutes:10, wide:true,
-    narration:[
-     B.plain(`<b>Creativity</b> = finding new ways to explore, combine and present data, so that others can see what you see.`),
-     B.ex(`Florence Nightingale used a new kind of diagram, published in 1858, to show that most British soldiers in the Crimean War died from preventable diseases rather than battle wounds. The picture helped persuade leaders to improve hospital sanitation.`),
-     `Try it on the right: the same fictional data, four ways. Which view would you use for a manager, for a poster, and for an exam answer?`,
-     B.plain(`<b>Risks and ethics:</b> creative is not the same as decorative. A beautiful chart that hides the truth fails.`),
-     B.exam(`Creativity = new ways to explore and show data. Example: <b>Nightingale's 1858 diagram</b>. Match the view to the audience.`)],
+    narration:[`Creativity is finding new ways to explore and present data. Florence Nightingale's 1858 diagrams of mortality in the Crimean War showed that most soldiers died of preventable disease rather than wounds, and supported reforms in hospital sanitation. Compare four views of the same data on the right.`],
+    src:`Nightingale, F. (1858). <em>Notes on matters affecting the health, efficiency, and hospital administration of the British Army</em>. Harrison and Sons. Morrow (2024), Chapter 8.`,
     notes:[`Expected: bar chart for a manager (comparison), icon array for a poster (human scale), table for exact values.`],
     fig:{label:`Same data, four views · fictional`, build:views} },
 
   { nav:'Critical thinking', title:'Critical thinking', minutes:10,
-    narration:[
-     B.plain(`<b>Critical thinking</b> = checking whether a claim from data is true and fair before you accept it or share it.`),
-     `<table class="tbl"><thead><tr><th>Ask</th><th>Why</th></tr></thead><tbody><tr><td>Who collected it, and why?</td><td>Motive can shape the data</td></tr><tr><td>How many, and who?</td><td>Small or biased samples (Week 3)</td></tr><tr><td>Compared with what?</td><td>A number alone means little</td></tr><tr><td>Correlation or cause?</td><td>Two things can move together for another reason</td></tr><tr><td>What is missing?</td><td>Hidden groups, years or variables</td></tr></tbody></table>`,
-     B.ex(`“Students who use the gym have higher grades.” Critical question: do organised, motivated students both go to the gym and study more? A third factor can explain both.`),
-     B.exam(`Critical thinking = five questions: <b>who, how many, compared with what, cause or correlation, what is missing</b>.`)],
-    think:`Which of the five questions do you forget most often when you see a headline?`,
+    narration:[`Critical thinking tests a claim before accepting it. Messerli (2012) reported a strong correlation between national chocolate consumption and Nobel laureates per capita across 23 countries. The paper is widely used to show that correlation alone does not establish causation, since national wealth may drive both.`],
+    lit:W.study({stat:'r = 0.79',finding:'Chocolate consumption and Nobel laureates per 10 million people, 23 countries (p &lt; 0.0001).',cite:'Messerli, F. H. (2012). Chocolate consumption, cognitive function, and Nobel laureates. <em>New England Journal of Medicine, 367</em>(16), 1562–1564.'})+QTABLE, litLabel:`From the literature`,
+    src:`Messerli (2012). Morrow (2024), Chapter 8.`,
     notes:[`Name the “third factor” idea: a confounding variable. Students do not need the term for the exam, but it helps.`] },
 
   { nav:'Claim checker', title:'Activity · Claim checker', kind:'activity', minutes:12,
-    narration:[`Each claim is constructed for practice. Decide what to do with it: accept it, question it, or reject it. Then compare with the suggested answers.`],
+    narration:[`Decide whether to accept, question or reject each constructed claim.`],
     notes:[`Groups of three: one person plays curious, one creative, one critical for each claim.`],
     fig:{label:`Accept, question or reject?`, build:el=>W.sort(el,{buckets:['Accept','Question it','Reject'],items:[
       {t:`“9 out of 10 users love our app” (survey of 10 people who left 5-star reviews)`,a:2,why:`Tiny, hand-picked sample. It says nothing about all users.`},
@@ -167,9 +154,7 @@ Lecture.mount({
       {t:`A chart with no title, no units and no source`,a:2,why:`You cannot read it, so you cannot trust it.`}]})} },
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 6', kind:'exam', minutes:8,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Curiosity:</b> ask what, why, who is missing (John Snow, 1854).</li><li><b>Creativity:</b> new ways to explore and show data (Nightingale, 1858).</li><li><b>Critical thinking:</b> who, how many, compared with what, cause or correlation, what is missing.</li><li><b>Correlation ≠ causation:</b> look for a third factor.</li><li><b>Cleaning:</b> work on a copy, log every change, flag rather than invent.</li><li><b>Excel tools:</b> TRIM, PROPER, Find &amp; Replace, Remove Duplicates, filters, conditional formatting.</li></ul>`),
-     `Try the likely exam questions on the right.`],
+    narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
     fig:{mindmap:{center:'Three Cs',branches:[{t:'Curiosity',items:['Ask what, why, who is missing','John Snow 1854 cholera map']},{t:'Creativity',items:['New ways to explore and show','Nightingale 1858 diagram','Match view to audience']},{t:'Critical thinking',items:['Who and how many?','Compared with what?','Cause or correlation?']},{t:'Data cleaning',items:['Inconsistent text, formats','Duplicates, missing values','Outliers: flag and check']},{t:'Good habits',items:['Work on a copy','Log every change','Never invent data']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Name the three Cs of data literacy and give an example of each.`,hint:`Curiosity (Snow's “why here?”), creativity (Nightingale's diagram), critical thinking (checking a claim).`},
       {q:`“Ice cream sales cause sunburn.” Use critical thinking to respond.`,hint:`Correlation not causation; third factor (hot weather) causes both.`},

@@ -30,6 +30,12 @@
 .grid th{background:var(--sunk);font-weight:600}
 .grid .bad{background:color-mix(in srgb,var(--bad) 16%,transparent)}
 .grid .rh{color:var(--muted);background:var(--sunk);text-align:center}
+.rank{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:r}
+.rank li{counter-increment:r;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;align-items:center;font-family:var(--f-display);font-size:.88rem}
+.rank li::before{content:counter(r);font-family:var(--f-mono);font-weight:700;color:var(--wk);text-align:right}
+.rank li span{display:flex;justify-content:space-between;gap:8px;width:var(--w);min-width:60%;background:var(--wk-soft);border-left:4px solid var(--wk);border-radius:4px;padding:6px 10px}
+.rank li small{color:var(--muted);font-family:var(--f-mono);font-size:.72rem;align-self:center}
+@media (max-width:560px){.rank li span{width:100%;flex-direction:column;gap:2px}}
 </style>
 </head>
 <body>
@@ -86,35 +92,27 @@ function tidy(el){
    {t:'Rule 6 · No totals inside the data',d:'A TOTAL row in the middle will be counted as a member. Calculate totals below or on another sheet.'}]);
 }
 
+const RANK=`<ol class="rank">${[['Position on a common scale','bar chart, dot plot'],['Position on non-aligned scales','small multiples'],['Length · direction · angle','pie chart (angle)'],['Area','bubble chart'],['Volume · curvature','3-D charts'],['Shading · colour saturation','heat map']].map(([a,b],i)=>`<li style="--w:${100-i*14}%"><span><b>${a}</b><small>${b}</small></span></li>`).join('')}</ol><p class="mono" style="color:var(--muted);margin:6px 0 0">Most accurate at the top.</p>`;
+
 Lecture.mount({
   id:'g106-w2', course:'GED 106', week:2, clo:1, short:'Week 2 · The Four Pillars',
   title:'The Four Pillars of Data Literacy',
   meta:'Be Data Literate, Chapter 3 · Lecture',
   scenes:[
   { nav:'Start here', title:'What exactly does a data-literate person do?', minutes:5,
-    narration:[
-     `Last week we saw that data is everywhere. This week we ask what skills you need to deal with it. The answer comes in four parts, called the four pillars.`,
-     `This week's syllabus topics: <strong>Explaining the 4 Characteristic of Data literacy, reading data, working with data, analysing data , Communicating with data</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
-     B.plain(`<b>Key idea:</b> data literacy is not one skill. It is four: <b>reading</b> data, <b>working with</b> data, <b>analysing</b> data, and <b>communicating with</b> data. You need all four, but not at expert level.`)],
-    think:`Which of the four do you think you are best at already? Which one scares you most?`,
+    narration:[`Syllabus topics: <strong>Explaining the 4 Characteristic of Data literacy, reading data, working with data, analysing data , Communicating with data</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 3. Lab reading: Be Data Literate (Morrow, Ch. 1 – "What Is Data Literacy?"; Microsoft Learn: Intro to Excel).`,
     notes:[`Hands up for each pillar: “I am confident at…”. Most students say reading; few say analysing. That is normal.`],
     fig:{label:`Lecture · 77 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which pillar?`,8,'a'],[`The four pillars`,10,'l'],[`One dataset, four pillars`,12,'a'],[`Communicating with data`,12,'l'],[`Sort the tasks`,10,'a'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · Who is doing what?', kind:'activity', minutes:8,
-    narration:[
-     `Four students look at the same grades spreadsheet. Each one does something different. Before we name the pillars, guess what each student is doing.`],
+    narration:[`Four students use the same grades spreadsheet in four different ways. Identify what Sara is doing.`],
     notes:[`Use the poll as a warm-up. Every answer is “correct” in the sense that each describes one pillar; reveal the name.`],
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`Sara reads the sheet and says “My lowest mark is in statistics.” Which pillar is that?`,opts:[`Reading data`,`Working with data`,`Analysing data`,`Communicating with data`],reveal:i=>[`Yes. She understood what the numbers say. That is <b>reading data</b>.`,`Not quite. Working with data means organising it: sorting, cleaning, adding a column.`,`Not quite. Analysing would ask <em>why</em> statistics is lowest, or find a pattern.`,`Not quite. Communicating would be telling her advisor, perhaps with a chart.`][i]+` Now imagine Khalid sorts the sheet by mark (working with), Mariam finds that quiz marks predict final marks (analysing), and Yousef makes a chart for the class (communicating).`})} },
 
   { nav:'Four pillars', title:'The four pillars of data literacy', minutes:10,
-    narration:[
-     `The four pillars build on each other, from understanding data to sharing what it means.`,
-     B.plain(`<ul><li><b>Reading data:</b> understand what data, tables and charts say.</li><li><b>Working with data:</b> collect, organise, clean and manage data.</li><li><b>Analysing data:</b> ask questions, find patterns, compare and explain.</li><li><b>Communicating with data:</b> share findings so others can understand and act.</li></ul>`),
-     B.ex(`A health app shows your average sleep is 6 hours (reading). You export a month of nights into Excel (working with). You notice you sleep less before exams (analysing). You show a chart to your study group to argue for earlier study sessions (communicating).`),
-     B.plain(`<b>Risks and ethics:</b> each pillar can go wrong. Misread a chart, delete the wrong rows, see a pattern that is not there, or present data in a misleading way. Data literacy means checking yourself at each step.`),
-     B.exam(`Name and define the <b>four pillars</b>: reading, working with, analysing, communicating with data. Give one example of each from the same situation.`)],
-    think:`Which pillar do you use when you check a restaurant's star ratings before ordering?`,
+    narration:[`Morrow (2024) describes data literacy through four characteristics: <b>reading</b> data (understanding what it says), <b>working with</b> data (collecting, organising and cleaning it), <b>analysing</b> data (finding patterns and asking why), and <b>communicating with</b> data (explaining findings to others). Each builds on the one before.`],
+    src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 3.`,
     notes:[`Answer: mainly reading, and some analysing if you compare the number of reviews or read the bad ones.`],
     fig:{label:`The four pillars in order`, flow:[
       {t:'Reading',s:'understand',d:'What does this table or chart say? What do the labels and units mean?'},
@@ -123,28 +121,19 @@ Lecture.mount({
       {t:'Communicating',s:'share',d:'Tell others what matters, with a clear message and a fair chart.'}]} },
 
   { nav:'One dataset', title:'Activity · One dataset, four pillars', kind:'activity', minutes:12, wide:true,
-    narration:[
-     `Here is one week of sales from a campus café. The data is fictional. Click each pillar and watch how the same table is used in a different way.`,
-     `Notice that analysing produced a question, not an answer: <em>why</em> was Wednesday low? Good analysis often ends with a better question.`,
-     B.exam(`The pillars are not separate jobs: one small task like this uses all four, one after another.`)],
-    think:`What extra data would you need to explain the Wednesday dip?`,
+    narration:[`Apply each pillar in turn to one week of café sales. The data are fictional.`],
     notes:[`Expected answers: campus calendar, weather, opening hours, staff rota, a public holiday.`],
     fig:{label:`Campus café · one week · fictional`, build:pillars} },
 
   { nav:'Communicating', title:'Communicating with data', minutes:12,
     video:{id:'5Zg-C8AAIGg',title:'The beauty of data visualization',by:'David McCandless · TED',why:'Watch how the same numbers become clear, or surprising, once they are drawn well. Note one design choice you would copy in your final project.'},
-    narration:[
-     `The fourth pillar is where data meets people. A correct analysis that nobody understands changes nothing.`,
-     B.plain(`<b>Communicating with data</b> means choosing a clear message, the right chart, and plain words for your audience. Start with the point, then show the evidence.`),
-     B.ex(`Weak: “Here is the sales table.” Strong: “Wednesday sales were about half of other days. Check why before ordering stock for next week.” Same data, but the second one leads to action.`),
-     B.plain(`<b>Risks and ethics:</b> you can mislead without lying: cut the axis, hide a bad month, or choose a scary colour. Fair communication shows the whole picture.`),
-     B.exam(`Good data communication = <b>one clear message + the right visual + the right audience</b>. Charts and storytelling return in Weeks 10 and 11.`)],
-    think:`Think of a chart you saw on social media this month. Was its message clear? Was it fair?`,
-    src:`Video: David McCandless, TED.`,
+    narration:[`Communication depends on how accurately people decode a chart. In controlled experiments, Cleveland and McGill (1984) found that readers judge <b>position on a common scale</b> most accurately, followed by length, then angle, and area least accurately. This is why a bar chart usually communicates a comparison better than a pie chart.`],
+    lit:RANK, litLabel:`Accuracy of visual judgements · Cleveland & McGill (1984)`,
+    src:`Cleveland, W. S., &amp; McGill, R. (1984). Graphical perception: Theory, experimentation, and application to the development of graphical methods. <em>Journal of the American Statistical Association, 79</em>(387), 531–554.`,
     notes:[`Show 4–5 minutes of the video in class if time allows; otherwise set as homework.`] },
 
   { nav:'Sort the tasks', title:'Activity · Which pillar is it?', kind:'activity', minutes:10,
-    narration:[`Sort each task into one pillar. Some could fit two; choose the main one, then compare with the suggested answers.`],
+    narration:[`Sort each task into its main pillar, then compare with the suggested answers.`],
     notes:[`Pairs. Discuss the ones where students disagree; that is where learning happens.`],
     fig:{label:`Sort the tasks`, build:el=>W.sort(el,{buckets:['Reading','Working with','Analysing','Communicating'],items:[
       {t:`Checking what the units are on a chart's y-axis`,a:0,why:`Understanding what the chart shows.`},
@@ -157,9 +146,7 @@ Lecture.mount({
       {t:`Reading a weather app's chance-of-rain percentage`,a:0,why:`Interpreting a number correctly.`}]})} },
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 2', kind:'exam', minutes:8,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Data literacy</b> has four pillars.</li><li><b>Reading:</b> understand what data and charts say.</li><li><b>Working with:</b> collect, organise, clean, manage.</li><li><b>Analysing:</b> find patterns and ask why.</li><li><b>Communicating:</b> one clear message, the right visual, the right audience.</li><li><b>Tidy table:</b> row = record, column = variable, one value per cell.</li></ul>`),
-     `Try the likely exam questions on the right.`],
+    narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
     notes:[`Quick recall: give a task, students shout the pillar.`],
     fig:{mindmap:{center:'Four pillars',branches:[{t:'Reading',items:['Understand tables and charts','Check labels and units']},{t:'Working with',items:['Collect and organise','Clean and manage','Tidy tables']},{t:'Analysing',items:['Find patterns','Compare groups','Ask why']},{t:'Communicating',items:['One clear message','Right visual, right audience','Be fair, not misleading']},{t:'Excel structure',items:['Row = one record','Column = one variable','Cell = one value']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Name and define the four pillars of data literacy.`,hint:`Reading, working with, analysing, communicating with data; one line each.`},

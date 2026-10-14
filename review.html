@@ -39,17 +39,11 @@ const CARDS=[
 Lecture.mount({
   id:'g106-rev', course:'GED 106', week:'1–8', clo:'1–4', short:'Midterm review · Weeks 1–8',
   title:'Midterm Review',
-  meta:'Weeks 1–8 · Midterm Examination 20%',
+  meta:'Weeks 1–8 · Midterm · Fri 23 Oct, 3 PM',
   scenes:[
-  { nav:'How to revise', title:'How to revise for the midterm', kind:'review',
-    narration:[
-     `The midterm is worth <strong>20%</strong> of your grade. It takes place on <strong>Friday 23 October, 3 PM</strong>. This page covers Weeks 1 to 8.`,
-     `The syllabus says the midterm tests your ability to <strong>interpret data, apply descriptive/diagnostic analytics, and demonstrate literacy with Microsoft-based tools</strong>.`,
-     B.exam(`<b>The answer formula</b> for most questions: define the term, give a real example, name a benefit, name a risk, and finish with how a person checks it.`),
-     `<b>Practise with last year's papers</b>, with model answers: <a href="practice-quiz1.html">Quiz 1 (Fall 2025)</a> and <a href="practice-midterm.html">Midterm (Fall 2025)</a>.`,
-     `<ul><li><b>Revise</b> each week's Exam takeaways scene and the two tables here.</li><li><b>Self-test</b> with the flashcards.</li><li><b>Practise</b> the questions aloud with a partner, then check the hints.</li><li><b>Redo</b> the lab skills in Excel: sort, filter, clean, AVERAGE, COUNTIF, IF, VLOOKUP.</li></ul>`],
-    notes:[`Midterm: Friday 23 October, 3 PM.`],
-    fig:{label:`The answer formula`, html:FORMULA+`<p class="ui" style="margin:14px 0 0;color:var(--muted)">Example: “What is sampling bias?” Define (some groups more likely to be asked) → example (Literary Digest 1936) → why it matters (wrong winner) → risk (decisions based on the wrong people) → check (random sampling, compare sample with population).</p>`} },
+  { nav:'Midterm topics', title:'Midterm · Friday 23 October, 3:00–4:30 PM', kind:'review',
+    narration:[`Hub Zones · 90 minutes · closed book · 20 marks. Three sections: <b>A</b> analytics for decisions (7), <b>B</b> reading and interpreting data (7), <b>C</b> data ethics and governance (6). Practise with the <a href="practice-midterm.html">Fall 2025 midterm</a>.`],
+    fig:{label:`What to revise`, html:`<table class="tbl"><thead><tr><th>Section</th><th>Topics</th></tr></thead><tbody><tr><td>A · Analytics</td><td>Descriptive, diagnostic, predictive, prescriptive; reading a data table (<a href="week-04.html">Week 4</a>)</td></tr><tr><td>B · Reading data</td><td>Values and trends in charts; correlation; y-axis start; choosing a chart type (<a href="week-05.html">Week 5</a>)</td></tr><tr><td>C · Ethics</td><td>Five principles; UAE PDPL; data minimisation; algorithmic bias; survey questions (<a href="week-07.html">Weeks 7</a>–<a href="week-08.html">8</a>)</td></tr></tbody></table>`} },
 
   { nav:'Weeks 1–4', title:'Weeks 1–4 in one table', kind:'review', wide:true,
     narration:[`Cover a column and test yourself. If you can rebuild the table from memory, you are ready for these weeks.`],
@@ -77,7 +71,7 @@ Lecture.mount({
       {type:'short',q:`Define data and explain the chain from data to decision.`,hint:`Recorded facts; data → information → knowledge → decision, with an example.`},
       {type:'short',q:`What is the data skills gap? Give one piece of evidence.`,hint:`Required vs actual skills; WEF 2025: analytical thinking top core skill, AI and big data fastest growing.`},
       {type:'short',q:`Name the four pillars of data literacy with an example of each.`,hint:`Reading, working with, analysing, communicating; same situation for all four.`},
-      {type:'short',q:`Explain sampling bias using the 1936 Literary Digest poll.`,hint:`Phone books and clubs (wealthier), low response; 2.4 million answers, wrong winner; size does not fix bias.`},
+      {type:'short',q:`Explain sampling bias using the 1936 Literary Digest poll.`,hint:`Non-response bias (Landon supporters replied more often) plus a biased mailing list; 2.4 million replies, wrong winner; size does not fix bias (Squire, 1988; Lusinchi, 2012).`},
       {type:'apply',q:`Rewrite: “Don't you agree the library is too noisy and too small?”`,hint:`Leading and double-barrelled; two neutral 1–5 rating questions.`},
       {type:'apply',q:`For a campus café, give one question at each level of analytics.`,hint:`How many sold? Why did Wednesday fall? How many tomorrow? How many to prepare?`},
       {type:'discuss',q:`Why are predictions risky? Use Google Flu Trends.`,hint:`Patterns can change; about 2× overestimate in 2012–13; check and update; human oversight.`}])} },
@@ -107,7 +101,7 @@ Lecture.mount({
     fig:{label:`Ten questions`, build:el=>W.quiz(el,[
       {q:`A voice note is…`,o:[`structured data`,`unstructured data`,`not data`,`a variable`],a:1,why:`Week 1.`},
       {q:`Organising and cleaning data is which pillar?`,o:[`Reading`,`Working with`,`Analysing`,`Communicating`],a:1,why:`Week 2.`},
-      {q:`The Literary Digest poll was wrong mainly because of…`,o:[`a small sample`,`a biased sample`,`bad maths`,`late printing`],a:1,why:`Week 3.`},
+      {q:`The Literary Digest poll was wrong mainly because of…`,o:[`a small sample`,`non-response bias`,`bad maths`,`late printing`],a:1,why:`Week 3: Landon supporters replied more often (Squire, 1988; Lusinchi, 2012).`},
       {q:`“Why did sales fall?” is…`,o:[`descriptive`,`diagnostic`,`predictive`,`prescriptive`],a:1,why:`Week 4.`},
       {q:`From 40% to 50% is…`,o:[`+10%`,`+10 percentage points`,`+50%`,`+40 points`],a:1,why:`Week 5.`},
       {q:`A third factor causing two things to rise together shows…`,o:[`causation`,`correlation without causation`,`a duplicate`,`a proxy`],a:1,why:`Week 6.`},

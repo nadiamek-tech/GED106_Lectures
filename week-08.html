@@ -63,67 +63,52 @@ function cherry(el){
   el.querySelector('#cs').addEventListener('input',draw); el.querySelector('#ce').addEventListener('input',draw); draw();
 }
 
+const FIVE=`<table class="tbl"><thead><tr><th>Problem</th><th>Check</th></tr></thead><tbody><tr><td>Biased data</td><td>Who is missing from the data?</td></tr><tr><td>Proxy variable</td><td>Are we measuring what we care about?</td></tr><tr><td>Misleading presentation</td><td>Full range, honest axis, a comparison</td></tr><tr><td>Privacy and security</td><td>Who can identify or open the data?</td></tr><tr><td>Over-collection</td><td>Is every field needed?</td></tr></tbody></table>`;
+
 Lecture.mount({
   id:'g106-w8', course:'GED 106', week:8, clo:1, short:'Week 8 · Data Ethics 2',
   title:'Data Ethics -2',
   meta:'Be Data Literate, Chapter 4 · Midterm week · 2-hour session',
   scenes:[
   { nav:'Start here', title:'How does data harm people when nobody means to?', minutes:4,
-    narration:[
-     `Last week we learned the five principles. This week we look at the problems that appear again and again in real data projects, often without anyone intending harm.`,
-     `This week's syllabus topic: <strong>Common Ethical Problems in Data</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>.`,
-     B.plain(`<b>Key idea:</b> five problems cause most data harm: <b>biased data</b>, <b>proxy variables</b>, <b>misleading presentation</b>, <b>privacy and security failures</b>, and <b>over-collection</b>. Each one has a check you can run.`)],
+    narration:[`Syllabus topic: <strong>Common Ethical Problems in Data</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors. The <strong>Midterm</strong> is on <strong>Friday 23 October, 3 PM</strong>.`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 4.`,
     notes:[`The midterm is on Friday 23 October, 3 PM, so the second hour is midterm revision with the practice paper.`],
     fig:{label:`Today's session · 120 minutes`, build:el=>W.agenda(el,[[`Start here`,4,'l'],[`Hook`,4,'a'],[`Biased data`,8,'l'],[`Proxy variables`,10,'a'],[`Misleading presentation`,10,'a'],[`Privacy and security`,6,'l'],[`Ethics check for your project`,8,'a'],[`Exam takeaways`,5,'l'],[`Exit check`,5,'c'],[`Midterm revision · practice paper`,60,'a']])} },
 
   { nav:'Hook', title:'Activity · Can a computer be biased?', kind:'activity', minutes:4,
+    narration:[`Decide whether a system that follows its data exactly can still produce unfair results.`],
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`A computer follows the data exactly. Can its decisions still be unfair?`,opts:[`No, computers are neutral`,`Yes, if the data is unfair`,`Only if someone programs it to be`,`Not sure`],reveal:i=>(i===1?`<b>Yes.</b> `:``)+`A system that learns from the past learns the past's unfairness too. And a fair-looking variable can carry unfairness in, as the next two scenes show.`})} },
 
   { nav:'Biased data', title:'Problem 1 · Biased data', minutes:8,
     video:{id:'UG_X_7g63rY',title:`How I'm fighting bias in algorithms`,by:'Joy Buolamwini · TED',why:'A researcher finds that face-analysis software failed to detect her face until she wore a white mask. Listen for where the bias came from.'},
-    narration:[
-     B.plain(`<b>Biased data</b> = data that does not fairly represent the people or situations it will be used for, often because it reflects past unfairness or leaves groups out.`),
-     B.ex(`In 2018, Reuters reported that Amazon had stopped using an experimental recruiting tool. It had learned from ten years of CVs, mostly from men, and it marked down CVs that included the word “women's”, as in “women's chess club captain”.`),
-     B.plain(`<b>Check:</b> who is in the data, who is missing, and does the past we are learning from contain unfairness we do not want to repeat?`),
-     B.exam(`Biased data example: <b>Amazon recruiting tool (Reuters, 2018)</b>. Cause: training data from a male-dominated past.`)],
-    src:`Dastin, J. (2018, October 10). Amazon scraps secret AI recruiting tool that showed bias against women. <em>Reuters</em>.`,
+    narration:[`Data are biased when they do not represent the people a system will serve. Buolamwini and Gebru (2018) evaluated three commercial gender-classification systems and found error rates of up to 34.7% for darker-skinned women, against at most 0.8% for lighter-skinned men. The training and benchmark data under-represented darker-skinned women.`],
+    chart:{rows:[['Darker-skinned women',34.7],['Lighter-skinned men',0.8]],unit:'%',max:40,hl:0,note:'Maximum error rates across three commercial classifiers.'}, litLabel:`Error rates · Buolamwini & Gebru (2018)`,
+    src:`Buolamwini, J., &amp; Gebru, T. (2018). Gender shades: Intersectional accuracy disparities in commercial gender classification. <em>Proceedings of Machine Learning Research, 81</em>, 77–91.`,
     notes:[`Connect to Week 3: biased data is often a sampling problem.`] },
 
   { nav:'Proxy variables', title:'Problem 2 · Proxy variables', kind:'activity', minutes:10, wide:true,
-    narration:[
-     B.plain(`<b>Proxy variable</b> = a variable used in place of the thing you really care about, or a “neutral” variable that stands in for a sensitive one. If the proxy differs between groups, it can carry unfairness into the result.`),
-     B.ex(`Obermeyer and colleagues (2019, <em>Science</em>) studied a widely used US health algorithm. It used past healthcare <b>cost</b> as a proxy for health <b>need</b>. Because less money had been spent on Black patients with the same level of illness, the algorithm judged them healthier than they were, and fewer were referred for extra care.`),
-     `Try the constructed version on the right. Switch from “past cost” to “actual need”.`,
-     B.exam(`Proxy problem = measuring the wrong thing. Example: <b>cost used for health need</b> (Obermeyer et al., 2019). Removing a sensitive column does not remove bias if a proxy remains.`)],
-    think:`In a university, what could be a proxy for family wealth? (Hint: postcode, school attended, phone model.)`,
-    src:`Obermeyer, Z., Powers, B., Vogeli, C., &amp; Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science</em>, 366(6464), 447–453.`,
+    narration:[`A proxy variable stands in for the quantity of interest. Obermeyer et al. (2019) found that a widely used US health algorithm predicted healthcare <b>cost</b> as a proxy for health <b>need</b>. Because less was spent on Black patients with the same illness, they were under-selected; correcting the bias would raise their share of automatic referrals from 17.7% to 46.5%.`],
+    chart:{rows:[['Algorithm as used',17.7],['Bias removed',46.5]],unit:'%',max:50,hl:1,note:'Share of Black patients among those automatically identified for extra care.'}, litLabel:`Obermeyer et al. (2019)`,
+    src:`Obermeyer, Z., Powers, B., Vogeli, C., &amp; Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science, 366</em>(6464), 447–453.`,
     notes:[`Emphasise: the model did not use race. The proxy (cost) carried the inequality.`],
     fig:{label:`Who gets the care places? · constructed data`, build:proxy} },
 
   { nav:'Misleading', title:'Problem 3 · Misleading presentation', kind:'activity', minutes:10, wide:true,
-    narration:[
-     B.plain(`<b>Misleading presentation</b> = true data shown in a way that creates a false impression: cutting the axis (Week 5), choosing only the time period that supports your story (<b>cherry-picking</b>), or leaving out the comparison.`),
-     `Use the sliders to pick a start and end month. Can you write a headline saying gym visits fell, using real numbers from a period when they rose overall?`,
-     B.ex(`Misinformation online often uses real numbers in a misleading frame. Checking the full time range and the source is part of detecting it.`),
-     B.exam(`Cherry-picking: every number is true, but the selection misleads. Fix: <b>show the full range</b> and say why you chose your period.`)],
-    think:`Who benefits from the “falling” headline? Who benefits from the “rising” one?`,
+    narration:[`True data can still mislead. Selecting a convenient time window (cherry-picking), truncating an axis, or omitting a comparison changes the impression a chart gives (Pandey et al., 2015). Choose a window on the right that reverses the overall trend.`],
+    src:`Pandey et al. (2015). Morrow (2024), Chapter 4.`,
     notes:[`Expected: falling windows include May–Jul Y1 and Feb–Jul Y2 (the default), against a two-year rise of about 56%.`],
     fig:{label:`Pick a window, write a headline · fictional data`, build:cherry} },
 
   { nav:'Privacy + security', title:'Problems 4 and 5 · Privacy, security and over-collection', minutes:6,
     video:{id:'_2u_eHHzRto',title:'The era of blind faith in big data must end',by:`Cathy O'Neil · TED`,why:'A mathematician explains why algorithms built on data can harm people at scale, and why we must audit them.'},
-    narration:[
-     B.plain(`<b>Privacy and security failures:</b> data leaks, weak passwords, files shared too widely, or “anonymous” data that can be re-identified (Week 7). <b>Over-collection:</b> collecting more than you need, “just in case”, so there is more to leak or misuse.`),
-     B.ex(`A student club keeps a shared spreadsheet with members' phone numbers and ID numbers, open to “anyone with the link”. One forwarded link exposes everyone.`),
-     B.exam(`Collect less, protect what you keep, share only with the right people, delete when done.`)],
-    src:`Video: Cathy O'Neil, TED. See also O'Neil, C. (2016). <em>Weapons of Math Destruction</em>. Crown (syllabus supplemental reading).`,
+    narration:[`Privacy and security failures include leaks, files shared too widely and re-identification. Data minimisation, collecting only what a stated purpose requires, reduces both risks. The checks on the right summarise the five problems covered this week.`],
+    lit:FIVE, litLabel:`Five problems and their checks`,
+    src:`Morrow (2024), Chapter 4. O'Neil, C. (2016). <em>Weapons of math destruction</em>. Crown.`,
     notes:[`Ask students to check their own OneDrive sharing settings for the GED106 folder.`] },
 
   { nav:'Ethics check', title:'Activity · Ethics check for your project', kind:'activity', minutes:8,
-    narration:[
-     `Your group will build a dashboard from real data later this semester. Run this ethics check on your survey now, while it is easy to change.`,
-     B.exam(`For the project report you will need a short ethical reflection. This worksheet is its first draft.`)],
+    narration:[`Run the five checks on your group project survey.`],
     notes:[`Collect one worksheet per group; it feeds the ethical reflection in the final project.`],
     fig:{label:`Five checks · one per problem`, build:el=>W.worksheet(el,{id:'g106-w8-ethics',title:'GED 106 · Week 8 · Project ethics check',fields:[
       {l:'1 · Biased data: who is missing from our sample?',rows:2},
@@ -133,9 +118,7 @@ Lecture.mount({
       {l:'5 · Over-collection: which question could we delete?',rows:2}]})} },
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 8', kind:'exam', minutes:5,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Biased data</b> repeats past unfairness (Amazon recruiting tool, 2018).</li><li><b>Proxy variables</b> measure the wrong thing (cost for need: Obermeyer et al., 2019).</li><li><b>Removing a sensitive column</b> does not remove bias if a proxy remains.</li><li><b>Misleading presentation:</b> cut axes, cherry-picked periods, missing comparisons.</li><li><b>Privacy and security:</b> protect, limit sharing, delete when done.</li><li><b>Over-collection:</b> collect only what you need.</li></ul>`),
-     `Practice questions on the right. For the full midterm revision, open the <a href="review.html">midterm review page</a>.`],
+    narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
     fig:{mindmap:{center:'Data ethics 2',branches:[{t:'Biased data',items:['Repeats past unfairness','Amazon recruiting tool 2018']},{t:'Proxy variables',items:['Measure the wrong thing','Cost for need (2019)','Sensitive info sneaks back']},{t:'Misleading',items:['Cut axes','Cherry-picked periods','Missing comparisons']},{t:'Privacy, security',items:['Re-identification','Links open to anyone']},{t:'Over-collection',items:['Collect only what you need','Less to leak or misuse']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain biased data with a real example.`,hint:`Data that misrepresents people or repeats past unfairness; Amazon tool trained on mostly male CVs, penalised “women's”.`},
       {q:`What is a proxy variable, and why can it cause unfair results?`,hint:`Stand-in for the real target or a sensitive feature; cost for need (Obermeyer 2019); differs between groups.`},

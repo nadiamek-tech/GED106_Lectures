@@ -95,42 +95,28 @@ Lecture.mount({
   meta:'Be Data Literate, Chapter 2 · Lecture',
   scenes:[
   { nav:'Start here', title:'From “what happened?” to “what should we do?”', minutes:5,
-    narration:[
-     `Every data question you will ever ask fits on a ladder with four steps. The higher you climb, the more useful the answer, and the harder it is to get right.`,
-     `This week's syllabus topics: <strong>Descriptive analytics; Diagnostic analytics; Predictive analytics; Prescriptive analytics</strong>. The week builds <strong>CLO-1</strong>: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`,
-     B.plain(`<b>Key idea:</b> analytics answers four questions in order: <b>What happened? Why? What will happen? What should we do?</b> Each level builds on the one below.`)],
-    think:`Your phone shows your weekly screen time. Which of the four questions does it answer?`,
+    narration:[`Syllabus topics: <strong>Descriptive analytics; Diagnostic analytics; Predictive analytics; Prescriptive analytics</strong>. CLO-1: Explain the core principles of data literacy, including ethical use, governance, and regulatory impact in various sectors.`],
     src:`Reading: Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 2. Lab reading: Microsoft official tutorials, Data Literacy in Practice Ch. 4.`,
     notes:[`Answer: descriptive (what happened). If it compares with last week and says why, it starts to be diagnostic.`],
     fig:{label:`Lecture · 80 minutes`, build:el=>W.agenda(el,[[`Start here`,5,'l'],[`Hook: which question?`,8,'a'],[`The four levels`,12,'l'],[`Café analytics tool`,18,'a'],[`Sort the questions`,10,'a'],[`When analytics goes wrong`,7,'l'],[`Exam takeaways`,8,'l'],[`Exit check`,12,'c']])} },
 
   { nav:'Hook', title:'Activity · What is the manager really asking?', kind:'activity', minutes:8,
-    narration:[`A gym manager looks at membership data. Read her question and decide what kind of question it is.`],
+    narration:[`A gym manager asks a question about next month. Identify which kind of question it is.`],
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`“How many new members should we target next month, and what offer should we run?”`,opts:[`What happened?`,`Why did it happen?`,`What will happen?`,`What should we do?`],reveal:i=>(i===3?`<b>Yes.</b> `:`<b>Look again.</b> `)+`She wants a recommendation for action. That is the top of the ladder, <b>prescriptive</b> analytics. To answer it, she first needs the three levels below: last month's numbers (descriptive), why sign-ups changed (diagnostic) and a forecast (predictive).`})} },
 
   { nav:'Four levels', title:'The four levels of analytics', minutes:12,
-    narration:[
-     B.plain(`<ul><li><b>Descriptive analytics:</b> what happened? Summaries, totals, averages, charts.</li><li><b>Diagnostic analytics:</b> why did it happen? Compare, drill down, look for related factors.</li><li><b>Predictive analytics:</b> what is likely to happen? Use past patterns to forecast.</li><li><b>Prescriptive analytics:</b> what should we do? Recommend an action, often weighing options and costs.</li></ul>`),
-     B.ex(`A university looks at grades. Descriptive: “Average in statistics fell from 74 to 68.” Diagnostic: “The fall is mostly among students who missed more than 3 labs.” Predictive: “Students who miss 3 labs by Week 6 are likely to fail.” Prescriptive: “Send an advisor message after the second missed lab.”`),
-     B.plain(`<b>Risks and ethics:</b> higher levels make decisions about people. A prediction can be wrong, and a recommendation can treat people unfairly. Humans must check them.`),
-     B.exam(`Learn the four <b>questions</b> and give a one-line <b>example</b> of each from the same situation. Value and difficulty both rise as you climb.`)],
-    think:`Which level do most student projects reach? Which level do banks and airlines use every day?`,
-    src:`Diagram adapted from the widely used Gartner analytic ascendancy model; drawn for this course.`,
+    narration:[`Analytics is commonly divided into four levels. <b>Descriptive</b> analytics reports what happened, <b>diagnostic</b> explains why, <b>predictive</b> estimates what is likely to happen, and <b>prescriptive</b> recommends an action. Lepenioti et al. (2020) note that prescriptive analytics is the least mature level, because it depends on accurate predictions and explicit goals.`],
+    src:`Morrow, J. (2024). <em>Be data literate</em> (2nd ed.). Kogan Page. Chapter 2. Lepenioti, K., Bousdekis, A., Apostolou, D., &amp; Mentzas, G. (2020). Prescriptive analytics: Literature review and research challenges. <em>International Journal of Information Management, 50</em>, 57–70.`,
     notes:[`Students' final projects will mostly be descriptive and diagnostic; that is fine for GE level.`],
     fig:{label:`The analytics ladder`, html:LADDER} },
 
   { nav:'Café tool', title:'Activity · One café, four levels', kind:'activity', minutes:18, wide:true,
-    narration:[
-     `Here are 14 days of iced coffee sales from a fictional campus café, and the noon temperature on each day. Climb the ladder: open each level in order.`,
-     `In <b>Predictive</b>, move the slider to a very hot day such as 46°C. Notice the warning. Predictions are least reliable outside the range of data you have.`,
-     `In <b>Prescriptive</b>, switch between “Running out is worse” and “Waste is worse”. The data is the same, but the best action depends on what the business values.`,
-     B.exam(`Prescriptive analytics needs <b>a prediction plus a goal</b>. Change the goal and the recommended action changes.`)],
-    think:`What other factor, apart from temperature, might explain the sales? How would you test it?`,
+    narration:[`Open each level in order on 14 days of fictional café data. In Predictive, try a temperature outside the data range.`],
     notes:[`Expected: exam weeks, campus events, weekday vs weekend, price changes. Testing it = diagnostic analytics with more data.`,`r ≈ 0.95 here because the data is constructed; real data is usually messier.`],
     fig:{label:`Campus café · 14 days · fictional`, build:cafe} },
 
   { nav:'Sort the questions', title:'Activity · Which level is it?', kind:'activity', minutes:10,
-    narration:[`Sort each question into the level of analytics it needs.`],
+    narration:[`Sort each question into the level of analytics it requires.`],
     fig:{label:`Sort the questions`, build:el=>W.sort(el,{buckets:['Descriptive','Diagnostic','Predictive','Prescriptive'],items:[
       {t:`How many students registered for GED 106 this semester?`,a:0,why:`A count of what happened.`},
       {t:`Why did more students drop the course this year?`,a:1,why:`Looking for the cause.`},
@@ -142,12 +128,9 @@ Lecture.mount({
       {t:`Did the price rise cause the drop in sales, or the summer break?`,a:1,why:`Comparing possible causes.`}]})} },
 
   { nav:'When it goes wrong', title:'When analytics goes wrong', minutes:7,
-    narration:[
-     `Predictions can fail, even with huge amounts of data. A famous example is Google Flu Trends, which used search terms to estimate flu levels in the United States.`,
-     B.ex(`For the 2012–13 flu season, Google Flu Trends estimated about twice as many doctor visits for flu-like illness as the US Centers for Disease Control and Prevention later reported. Researchers said one cause was changes in how people searched, not changes in flu.`),
-     B.plain(`<b>Lessons:</b> a pattern from the past may not hold in the future; correlation is not cause; and predictions must be checked against reality and updated.`),
-     B.exam(`Use <b>Google Flu Trends</b> as an example of predictive analytics going wrong: big data, wrong forecast, because the pattern changed.`)],
-    src:`Lazer, D., Kennedy, R., King, G., &amp; Vespignani, A. (2014). The parable of Google Flu: Traps in big data analysis. <em>Science</em>, 343(6176), 1203–1205. Butler, D. (2013). When Google got flu wrong. <em>Nature</em>, 494, 155–156.`,
+    narration:[`Google Flu Trends estimated influenza levels from search queries. In the 2012–13 season it estimated more than double the doctor visits for influenza-like illness later reported by the US Centers for Disease Control and Prevention. Lazer et al. (2014) attributed the failure partly to changes in search behaviour: the pattern the model learned no longer held.`],
+    lit:W.study({stat:'> 2×',finding:'Google Flu Trends’ peak estimate for 2012–13 was more than double the CDC figure.',cite:'Butler, D. (2013). When Google got flu wrong. <em>Nature, 494</em>, 155–156.'}), litLabel:`From the literature`,
+    src:`Lazer, D., Kennedy, R., King, G., &amp; Vespignani, A. (2014). The parable of Google Flu: Traps in big data analysis. <em>Science, 343</em>(6176), 1203–1205.`,
     notes:[`Keep this short and neutral. The point is not “Google is bad” but “predictions need checking”.`],
     fig:{label:`Why predictions fail`, flow:[
       {t:'Past pattern',s:'searches ↔ flu',d:'Searches for flu symptoms matched flu levels in past years.'},
@@ -157,9 +140,7 @@ Lecture.mount({
       {t:'Lesson',s:'check and update',d:'Compare predictions with reality and keep humans in the loop.'}]} },
 
   { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 4', kind:'exam', minutes:8,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Descriptive:</b> what happened?</li><li><b>Diagnostic:</b> why did it happen?</li><li><b>Predictive:</b> what will happen?</li><li><b>Prescriptive:</b> what should we do?</li><li>Value and difficulty <b>rise</b> up the ladder; each level needs the ones below.</li><li>Predictions can fail when the world changes (<b>Google Flu Trends</b>); humans check.</li></ul>`),
-     `Try the likely exam questions on the right.`],
+    narration:[`Revise the mind map, then answer the likely exam questions before opening the hints.`],
     fig:{mindmap:{center:'Four levels',branches:[{t:'Descriptive',items:['What happened?','Totals, averages, charts']},{t:'Diagnostic',items:['Why did it happen?','Compare, drill down','Correlation ≠ cause']},{t:'Predictive',items:['What will happen?','Forecast from patterns','Unreliable outside the data']},{t:'Prescriptive',items:['What should we do?','Prediction + goal','Human checks the action']},{t:'Lessons',items:['Value and difficulty rise','Google Flu Trends 2012–13','Keep humans in the loop']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Name the four levels of analytics and the question each answers.`,hint:`Descriptive what happened; diagnostic why; predictive what will happen; prescriptive what should we do.`},
       {q:`Give one example of each level for a single organisation (e.g. a university or café).`,hint:`Same situation, four questions: count → cause → forecast → action.`},

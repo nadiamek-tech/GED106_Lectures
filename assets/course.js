@@ -152,6 +152,15 @@
       };
       draw(); requestAnimationFrame(draw); let rt; addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{ if(document.body.contains(wrap)) draw(); },150); });
     },
+    /* Horizontal bar chart drawn to scale: rows [[label, value]], optional hl (index), unit, max */
+    bars(el, {rows, unit='', max, hl=-1, note}){
+      const m=max||Math.max(...rows.map(r=>r[1]));
+      el.insertAdjacentHTML('beforeend',`<div class="hbars ui">${rows.map(([l,v],i)=>`<div class="hb${i===hl?' on':''}"><span class="hl">${l}</span><span class="ht"><i style="width:${v/m*100}%"></i></span><span class="hv">${v}${unit}</span></div>`).join('')}${note?`<p class="mono hn">${note}</p>`:''}</div>`);
+    },
+    /* Journal finding card: returns HTML */
+    study({cite, finding, stat, label='From the literature'}){
+      return `<div class="study"><span class="eyebrow">${label}</span>${stat?`<b class="sstat">${stat}</b>`:''}<p>${finding}</p><cite>${cite}</cite></div>`;
+    },
     poll(el, {q, opts, reveal}){
       const wrap=h('div',{class:'poll ui'}); wrap.appendChild(h('p',{style:'margin:0 0 4px;font-weight:600'},esc(q)));
       const msg=h('div',{class:'feedback',hidden:''});
@@ -263,7 +272,8 @@
       head.innerHTML=`<div><div class="eyebrow">Scene ${cur} of ${S.length-1}</div><h2>${s.title}</h2></div>
         <div class="chips"><span class="chip k-${s.kind||'lecture'}">${kindLabel}</span>${s.minutes?`<span class="chip">${s.minutes} min</span>`:''}</div>`;
       stage.appendChild(head);
-      const split=h('div',{class:'split'+(s.fig?'':' nofig')+(s.wide?' wide':'')+(s.full?' full':'')});
+      const hasFig=!!(s.fig||s.lit||s.chart);
+      const split=h('div',{class:'split'+(hasFig?'':' nofig')+(s.wide?' wide':'')+(s.full?' full':'')});
       const narr=h('div',{class:'narr'});
       (s.narration||[]).forEach((p,i)=>{ const isList=/^\s*<(ul|div|table)/.test(p); const d=h('div',{class:'para'+(i===0&&!isList?' lead':'')}); d.innerHTML=p; narr.appendChild(d); });
       if(s.think) narr.appendChild(h('div',{class:'think'},`<span class="eyebrow">Pause and think</span>${s.think}`));
@@ -271,10 +281,13 @@
       if(s.src) narr.appendChild(h('div',{class:'src'},s.src));
       if(s.notes) narr.appendChild(h('div',{class:'notes'},`<span class="eyebrow">Teacher notes${s.minutes?` · ${s.minutes} min`:''}</span><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`));
       split.appendChild(narr);
-      if(s.fig){ const f=h('figure',{class:'fig',style:'margin:0'}); if(s.fig.label) f.appendChild(h('span',{class:'eyebrow'},esc(s.fig.label)));
-        if(s.fig.mindmap){ const mm=h('div',{style:'margin-bottom:18px'}); f.appendChild(mm); W.mindmap(mm,s.fig.mindmap); }
-        if(s.fig.flow){ const fl=h('div',{style:'margin-bottom:18px'}); f.appendChild(fl); W.flow(fl,s.fig.flow,{note:s.fig.flowNote}); }
-        const body=h('div'); if(s.fig.html) body.innerHTML=s.fig.html; f.appendChild(body); if(s.fig.caption) f.appendChild(h('figcaption',{class:'caption'},s.fig.caption)); split.appendChild(f); if(s.fig.build) s.fig.build(body,W); }
+      if(hasFig){ const fg=s.fig||{}; const f=h('figure',{class:'fig',style:'margin:0'}); const lbl=s.litLabel||fg.label; if(lbl) f.appendChild(h('span',{class:'eyebrow'},esc(lbl)));
+        if(s.lit){ const lt=h('div',{style:'margin-top:10px'}); lt.innerHTML=s.lit; f.appendChild(lt); }
+        if(s.chart){ const ch=h('div',{style:'margin:10px 0 18px'}); f.appendChild(ch); W.bars(ch,s.chart); }
+        if(s.fig && (s.lit||s.chart) && s.fig.label && s.litLabel) f.appendChild(h('span',{class:'eyebrow',style:'display:block;margin-top:8px'},esc(s.fig.label)));
+        if(fg.mindmap){ const mm=h('div',{style:'margin-bottom:18px'}); f.appendChild(mm); W.mindmap(mm,fg.mindmap); }
+        if(fg.flow){ const fl=h('div',{style:'margin-bottom:18px'}); f.appendChild(fl); W.flow(fl,fg.flow,{note:fg.flowNote}); }
+        const body=h('div'); if(fg.html) body.innerHTML=fg.html; f.appendChild(body); if(fg.caption) f.appendChild(h('figcaption',{class:'caption'},fg.caption)); split.appendChild(f); if(fg.build) fg.build(body,W); }
       stage.appendChild(split);
       const pager=h('div',{class:'pager'});
       const prev=h('button',{type:'button',class:'prev'},`<small>← Previous</small>${cur>0?esc(S[cur-1].nav||S[cur-1].title):'Start'}`); prev.disabled=cur===0; prev.addEventListener('click',()=>go(cur-1));
