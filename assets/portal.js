@@ -156,6 +156,7 @@
   function faq(el){
     const Q=[
       ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I was / will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
+      ['Is this an online course?','No. Classes are on campus and taught on the board, and exams are on paper in class. Hybrid sessions happen only when the university announces them. This site supports your classes: notes, practice and dates.'],
       ['How do I contact or meet the professor?',`Email <a href="mailto:${esc(C.email)}">${esc(C.email)}</a>. Office hours: ${esc(C.officeHours||'announced in class')}${C.office?', '+esc(C.office):''}. <a href="#" data-agent="meet">See the weekly schedule and book</a>.`],
       ['What are the assessments?',`Each assessment, its weight and what it includes is on the <a href="${esc((C.pages||{}).exams||'exams.html')}">Exams</a> page.`],
       ['What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).']

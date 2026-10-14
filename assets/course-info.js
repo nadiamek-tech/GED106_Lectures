@@ -1,10 +1,10 @@
 /* GED 106 · course settings for the course portal (assets/portal.js).
    To update the site, edit only this file. Empty links show "coming soon" until you paste them. */
 window.COURSE={
-  code:'GED 106', title:['Smart Decisions:','Data Literacy & Visualization'], eyebrow:'GED 106 · Fall 2026 · 3 credit hours',
+  code:'GED 106', title:['Smart Decisions:','Data Literacy & Visualization'], eyebrow:'GED 106 · Fall 2026 · 3 credit hours · on campus',
   instructor:'Eng. Nadia Mek', classTime:'Wednesday 5–7 PM',
   pages:{lectures:'lectures.html', labs:'labs.html', exams:'exams.html'},
-  blurbs:{lectures:'Narrated lectures with activities and quick checks.', labs:'Microsoft Forms and Excel, step by step.', exams:'Dates, what each assessment includes, revision.'},
+  blurbs:{lectures:'Notes to review each class, with activities and quick checks.', labs:'Microsoft Forms and Excel, step by step.', exams:'Dates, what each assessment includes, revision.'},
 
   links:{
     booking:'',     /* optional booking page; empty = students email to book */
@@ -16,14 +16,14 @@ window.COURSE={
   openSearch:q=>window.CourseSearch&&CourseSearch.open(q),
 
   assess:[
-    {id:'quiz1',name:'Quiz 1',type:'Lecture',weight:'Part of 30%',when:'Week 5',done:true,covers:['Weeks 1–4: the world of data, the four pillars, data collection and surveys, the four levels of analytics'],clos:'1, 2, 3',revise:[['Practice Quiz 1','practice-quiz1.html']]},
+    {id:'quiz1',name:'Quiz 1',type:'Lecture',weight:'Part of 30%',when:'Week 5',done:true,covers:['Weeks 1–4: the world of data, the four pillars, data collection and surveys, the four levels of analytics'],clos:'1, 2, 3',format:'In class, on paper',revise:[['Practice Quiz 1','practice-quiz1.html']]},
     {id:'lab',name:'Excel Lab Assignment',short:'Lab assignment',type:'Lab',weight:'Part of 30%',when:'Week 6',covers:['Sorting, filtering and cleaning a data set in Excel (Labs 4–6)'],clos:'2, 3, 4',
       submit:{link:'',due:'',dueText:'Week 6'},revise:[['Lab 6','lab-06.html']]},
     {id:'mid',name:'Midterm Examination',short:'Midterm',type:'Lecture',weight:'20%',date:'2026-10-23T15:00:00+04:00',timeText:'3:00–4:30 PM',place:'Hub Zones',
       covers:['Weeks 1–8','The four levels of analytics','Reading data from tables and charts','Data dictionary, data literacy, data protection, surveys','Survey questions: find the error and fix it','The five principles of data ethics'],
-      format:'90 minutes · closed book · 20 marks',clos:'2, 3',revise:[['Midterm review','review.html'],['Midterm practice','practice-midterm.html']]},
+      format:'In class, on paper · 90 minutes · closed book · 20 marks',clos:'2, 3',revise:[['Midterm review','review.html'],['Midterm practice','practice-midterm.html']]},
     {id:'lab9',name:'Graded lab · Week 9',short:'Graded lab',type:'Lab',weight:'Part of 30%',when:'Week 9',covers:['Project scoping and data set selection'],clos:'3, 4'},
-    {id:'quiz2',name:'Quiz 2',type:'Lecture',weight:'Part of 30%',when:'Week 12',covers:['Data-informed decision-making','Charts and graphics','Data visualization and storytelling','Begin your data and analytics journey'],clos:'1, 2, 3'},
+    {id:'quiz2',name:'Quiz 2',type:'Lecture',weight:'Part of 30%',when:'Week 12',covers:['Data-informed decision-making','Charts and graphics','Data visualization and storytelling','Begin your data and analytics journey'],clos:'1, 2, 3',format:'In class, on paper'},
     {id:'lab12',name:'Graded lab · Week 12',short:'Graded lab',type:'Lab',weight:'Part of 30%',when:'Week 12',covers:['Feedback and refinement of your project report'],clos:'4, 5'},
     {id:'draft',name:'Project draft',type:'Lab',weight:'Part of 20%',when:'Week 13',covers:['Problem, data set, first charts and storyboard'],clos:'4, 5',
       submit:{link:'',due:'',dueText:'Week 13'}},

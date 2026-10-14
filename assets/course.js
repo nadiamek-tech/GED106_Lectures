@@ -210,6 +210,7 @@
     S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
     const stage=h('main',{class:'stage',id:'stage'});
     shell.append(toc,stage); document.body.appendChild(shell);
+    document.body.appendChild(h('p',{class:'support-note'},'This website is interactive course support. It does not replace classes, attendance or class activities.'));
 
     // controls
     const segBtns=bar.querySelectorAll('.seg button');

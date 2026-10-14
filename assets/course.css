@@ -306,3 +306,4 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
 .sr-ask{border-top:1px solid var(--line);padding:10px 12px;font-family:var(--f-display);font-size:.86rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .sr-ask .mono{color:var(--ink);user-select:all}
 .sr-wrap[hidden]{display:none}
+.support-note{max-width:1440px;margin:0 auto;padding:14px 20px 90px;border-top:1px solid var(--line);font-family:var(--f-display);font-size:.84rem;color:var(--muted);text-align:center}
