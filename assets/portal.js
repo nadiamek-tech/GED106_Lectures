@@ -109,8 +109,11 @@
     wire(el);
   }
   function examCards(el){
-    el.innerHTML=A.map(a=>`<button type="button" class="pt-exam" data-a="${a.id}"><span>${typeTag(a.type)} <span class="pt-tag">${esc(a.weight)}</span>${a.done?' <span class="pt-tag done">Done</span>':''}</span><h3>${esc(a.name)}</h3><p>${esc(whenText(a))}</p>${a.covers?`<p>${esc(a.covers[0])}${a.covers.length>1?' …':''}</p>`:''}</button>`).join('');
+    const n=nextExam();
+    el.innerHTML=A.map(a=>`<div class="pt-exam" data-card="${a.id}"><span class="tags">${typeTag(a.type)} <span class="pt-tag">${esc(a.weight)}</span>${a.done?' <span class="pt-tag done">Done</span>':''}${n&&n.id===a.id?` <span class="pt-tag next">Next · ${until(a.date)}</span>`:''}</span><h3><button type="button" data-a="${a.id}">${esc(a.name)}</button></h3><p>${esc(whenText(a))}</p>${
+      (a.revise||[]).length?`<span class="flags">${a.revise.map(([t,h])=>`<a class="pt-flag" href="${esc(h)}"${ext(h)}>${esc(t)} →</a>`).join('')}</span>`:''}</div>`).join('');
     wire(el);
+    el.querySelectorAll('.pt-exam').forEach(c=>c.addEventListener('click',e=>{ if(!e.target.closest('a,button')) assess(c.dataset.card); }));
   }
   function submissions(el){
     const S=A.filter(a=>a.submit).sort((x,y)=>(x.submit.due||'9').localeCompare(y.submit.due||'9'));
@@ -124,18 +127,12 @@
 
   /* ---------- FAQ ---------- */
   function faq(el){
-    const book=L.booking?`<a href="${esc(L.booking)}" target="_blank" rel="noopener">Book a time ↗</a>`:'Use <a href="#" data-agent="meet">Meet the professor</a>.';
-    const weights=A.map(a=>`${esc(a.name)} · ${esc(a.weight)}`).join('<br>');
+    const book=L.booking?`<a href="${esc(L.booking)}" target="_blank" rel="noopener">Book a time ↗</a>`:'To book, use <a href="#" data-agent="meet">Meet the professor</a>.';
     const Q=[
       ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
-      ['What is the professor’s email?',`<a href="mailto:${esc(C.email)}">${esc(C.email)}</a> · ${esc(C.instructor)}`],
-      ['When are office hours?',esc(C.officeHours||'Announced in class.')+(C.office?' · Office '+esc(C.office):'')],
-      ['How do I book office hours?',book],
-      ['What are the assessments?',weights+`<br><a href="#calendar">See them on the calendar →</a>`],
-      ['Where do I submit my work?',`On Moodle, through the buttons in <a href="#submissions">Upcoming submissions</a>. Never by email.`],
-      ['How do I check my grades?',L.portal?`<a href="${esc(L.portal)}" target="_blank" rel="noopener">Student portal ↗</a>`:'On the student portal (link coming soon).'],
-      ['What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).'],
-      ['I don’t understand a topic.',`Try <a href="#" data-agent="ask">Ask me</a> first, then <a href="#" data-agent="help">I need help</a> or office hours.`]
+      ['How do I contact or meet the professor?',`Email <a href="mailto:${esc(C.email)}">${esc(C.email)}</a>. Office hours: ${esc(C.officeHours||'announced in class')}${C.office?', office '+esc(C.office):''}. ${book}`],
+      ['What are the assessments?',`Each assessment, its weight and what it includes is on the <a href="${esc((C.pages||{}).exams||'exams.html')}">Exams</a> page.`],
+      ['What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).']
     ].concat((C.faqExtra||[]).map(x=>x.length===3?[x[1],x[2]]:x));
     el.className='pt-faq';
     el.innerHTML=Q.map(([q,a])=>`<details><summary>${esc(q)}</summary><div>${a}</div></details>`).join('');
@@ -156,14 +153,12 @@ ${n?`<button type="button" class="pt-next" data-a="${n.id}"><b>Next: ${esc(n.nam
  <a href="${P.exams||'exams.html'}"><span class="ic">${IC.exams}</span><b>Exams</b><span>${esc(C.blurbs&&C.blurbs.exams||'Dates, what is included, revision.')}</span></a>
 </div>
 <section class="pt-help" aria-label="Help"><form class="pt-find" role="search"><input type="search" placeholder="Search the course: a topic, a formula, a date" aria-label="Search the course" autocomplete="off"><button type="submit">Search</button></form><div class="pt-hits" aria-live="polite"></div><div class="pt-agents"></div></section>
-<nav class="pt-jump" aria-label="On this page"><a href="#faq">FAQ</a><a href="#calendar">Calendar</a><a href="#clos">CLOs and grades</a><a href="#submissions">Submissions</a></nav>
+<nav class="pt-jump" aria-label="On this page"><a href="#faq">FAQ</a><a href="#calendar">Calendar</a><a href="#clos">CLOs</a><a href="#submissions">Submissions</a></nav>
 <h2 id="faq">FAQ</h2><div id="pt-faq"></div>
 <h2 id="calendar">Semester calendar</h2><p class="sub">Click an assessment to see what it includes.</p><div id="pt-cal"></div>
-<h2 id="clos">CLOs and grades</h2><p class="sub">What you will be able to do by the end of the course.</p><div class="pt-clos">${C.clos.map(([k,t])=>`<div><b>${esc(k)}</b><span>${esc(t)}</span></div>`).join('')}</div>
-<div class="pt-actions">${L.portal?`<a class="pt-btn" href="${esc(L.portal)}" target="_blank" rel="noopener">Check my grades ↗</a>`:'<button type="button" class="pt-btn" data-agent="grades">Check my grades</button>'}<a class="pt-btn ghost" href="#submissions">Upcoming submissions</a></div>
+<h2 id="clos">Course learning outcomes</h2><p class="sub">What you will be able to do by the end of the course.</p><div class="pt-clos">${C.clos.map(([k,t])=>`<div><b>${esc(k)}</b><span>${esc(t)}</span></div>`).join('')}</div>
 <h2 id="submissions">Upcoming submissions</h2><p class="sub">Every submission is on Moodle. Use these buttons to go straight to the right place.</p><div class="pt-subs" id="pt-subs"></div>`;
     agents($('.pt-agents',root)); faq($('#pt-faq',root)); calendar($('#pt-cal',root)); submissions($('#pt-subs',root)); wire($('.pt-hero',root));
-    root.querySelectorAll('.pt-actions [data-agent]').forEach(b=>b.addEventListener('click',()=>agent(b.dataset.agent)));
     const f=$('.pt-find',root), inp=$('input',f), hits=$('.pt-hits',root);
     const show=()=>{ const q=inp.value.trim(); if(!C.search){ return; } if(q.length<2){ hits.innerHTML=''; return; }
       const r=C.search(q)||[]; hits.innerHTML=r.slice(0,6).map(x=>`<a href="${esc(x.l)}"><b>${esc(x.t)}</b>${x.s?`<small>${esc(x.s)}</small>`:''}</a>`).join('')||'<p class="sub" style="margin:0">No match. Try one key word, or use Ask me.</p>'; };

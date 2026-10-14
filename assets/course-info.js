@@ -31,7 +31,7 @@ window.COURSE={
     {id:'draft',name:'Project draft',type:'Lab',weight:'Part of 20%',when:'Week 13',covers:['Problem, data set, first charts and storyboard'],clos:'4, 5',
       submit:{link:'',due:'',dueText:'Week 13'}},
     {id:'proj',name:'Final project: report and presentation',short:'Final project',type:'Lab',weight:'20%',when:'Weeks 14–15',covers:['Report with a data dashboard and insights','Group presentation'],clos:'4, 5',
-      submit:{link:'',due:'',dueText:'Week 15'},revise:[['Project rubric','assessments.html#project']]}
+      submit:{link:'',due:'',dueText:'Week 15'}}
   ],
 
   weeks:[
@@ -62,7 +62,6 @@ window.COURSE={
 
   faqExtra:[
     ['What are the textbooks?','Morrow (2024) <i>Be Data Literate</i> (2nd ed.) · Sosulski (2019) <i>Data Visualization Made Simple</i> · Klidas &amp; Hanegan (2022) <i>Data Literacy in Practice</i>.'],
-    ['How is my grade made?','Quizzes 30% · Lab work 30% · Midterm 20% · Final project 20%. Full details in <a href="assessments.html">Assessments</a>.'],
     ['What do I need for the labs?','Your CUD Microsoft 365 account: Excel, Forms and OneDrive.']
   ]
 };

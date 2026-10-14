@@ -13,23 +13,14 @@
 <style>:root{--wk:#2F55C8;--wk-soft:rgba(47,85,200,.10);--wk-d:#8AA6FF;--wk-soft-d:rgba(138,166,255,.14)}
 body{font-family:var(--f-display)}
 .pt h1.pg{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1;margin:28px 0 6px}
-.pt .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}.pt .cards a{display:grid;gap:4px;border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface);text-decoration:none;color:var(--ink)}.pt .cards a:hover{border-color:var(--wk)}.pt .cards span{color:var(--muted);font-size:.88rem}</style>
+</style>
 </head>
 <body>
 <div id="hub" data-cur="exams"></div>
 <main class="pt pt-wrap" id="portal">
 <h1 class="pg">Exams</h1>
-<p class="sub">Click an assessment to see what it includes.</p>
+<p class="sub">Click an assessment for what it includes. The flags open its revision.</p>
 <div class="pt-exams" id="ex"></div>
-<h2>Revision</h2>
-<div class="cards">
-  <a href="review.html"><b>Midterm review</b><span>Summary tables, flashcards, practice questions, mixed quiz</span></a>
-  <a href="practice-midterm.html"><b>Midterm practice</b><span>150 questions in 5 parts, with model answers</span></a>
-  <a href="practice-quiz1.html"><b>Practice Quiz 1</b><span>Weeks 1–4, with model answers</span></a>
-  <a href="assessments.html"><b>Assessments in detail</b><span>Grade weights, CLO map, project rubric</span></a>
-</div>
-<h2>Semester calendar</h2>
-<div id="cal"></div>
 </main>
 <footer class="pt-foot">Created and owned by <b>Eng. Nadia Mek</b></footer>
 <script src="assets/course.js"></script>
@@ -38,7 +29,6 @@ body{font-family:var(--f-display)}
 <script>
 Portal.header('exams');
 Portal.examCards(document.getElementById('ex'));
-Portal.calendar(document.getElementById('cal'));
 </script>
 </body>
 </html>

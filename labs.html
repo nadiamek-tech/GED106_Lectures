@@ -39,11 +39,10 @@ body{font-family:var(--f-display)}
 <div id="hub" data-cur="labs"></div>
 <main class="pt pt-wrap" id="portal">
 <h1 class="pg">Labs</h1>
-<p class="sub">Microsoft Forms and Excel, one lab per week. Submit graded work on Moodle.</p>
-<h2>Lab submissions</h2>
-<div class="pt-subs" id="subs"></div>
-<h2>Lab guides</h2>
+<p class="sub">Microsoft Forms and Excel, one lab per week.</p>
+<p><a class="pt-flag" href="index.html#submissions">Submit lab work and the project on Moodle →</a></p>
 <div class="ledger" id="lab"></div>
+<p class="sub" style="margin-top:14px">Week 9 onwards is in preparation. <a href="index.html#calendar">See the plan in the semester calendar →</a></p>
 </main>
 <footer class="pt-foot">Created and owned by <b>Eng. Nadia Mek</b></footer>
 <script src="assets/course.js"></script>
@@ -92,10 +91,9 @@ const row=(open)=>([n,t,sub,c,clo,ref,ass,href])=>{ const tag=href?'a':'div';
     <span class="no">${String(n).padStart(2,'0')}</span>
     <div><h3>${esc(t)}</h3>${sub?`<p class="d">${esc(sub)}</p>`:''}</div>
     <div class="meta">${ref?`<b>Reading</b>${esc(ref)}`:''}</div>
-    <div class="meta"><b>CLO</b>${clo}${ass?`<b style="margin-top:6px">Assessment</b>${ass}`:''}</div>
-    <div class="st">${href?`<span class="open">${open} →</span>`:'<span class="tag">In preparation</span>'}</div></${tag}>`; };
-document.getElementById('lab').innerHTML=LAB.map(row('Open lab')).join('');
-Portal.submissions(document.getElementById('subs'));
+    <div class="meta"><b>CLO</b>${clo}</div>
+    <div class="st"><span class="open">${open} →</span></div></${tag}>`; };
+document.getElementById('lab').innerHTML=LAB.filter(r=>r[7]).map(row('Open lab')).join('');
 </script>
 </body>
 </html>
