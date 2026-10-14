@@ -159,3 +159,11 @@
   .pt-hub nav a{padding:7px 12px;font-size:.9rem}
 }
 body[data-home] .ca-btn{display:none!important}
+.pt-week{overflow-x:auto;margin:4px 0 0}
+.pt-week table{width:100%;border-collapse:collapse;font-size:.8rem;table-layout:fixed}
+@media (max-width:480px){.pt-week table{font-size:.72rem}.pt-week th,.pt-week td{padding:3px 2px}.pt-week tbody th{width:40px}}
+.pt-week th,.pt-week td{border:1px solid var(--line);padding:4px 5px;text-align:center;vertical-align:middle;line-height:1.25}
+.pt-week thead th{background:var(--sunk);font-weight:700}
+.pt-week tbody th{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);font-weight:400;width:52px;white-space:nowrap}
+.pt-week td.busy{background:var(--sunk);color:var(--muted)}
+.pt-week td.oh{background:color-mix(in srgb,var(--ag,var(--wk)) 22%,transparent);color:var(--ink);font-weight:700}

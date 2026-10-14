@@ -5,7 +5,11 @@
    Portal.calendar(el) Portal.examCards(el) Portal.submissions(el)  pieces reused on other pages */
 (function(){
   const C=window.COURSE; if(!C) return;
-  const L=C.links||{}, TZ='Asia/Dubai';
+  const PR=window.PROF||{};
+  ['email','office','officeHours','bookingNote','schedule'].forEach(k=>{ if(C[k]==null&&PR[k]!=null) C[k]=PR[k]; });
+  if(!C.instructor) C.instructor=PR.name;
+  const L=Object.assign({},PR.links||{}); Object.entries(C.links||{}).forEach(([k,v])=>{ if(v) L[k]=v; });
+  const TZ='Asia/Dubai';
   const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const $=(s,r=document)=>r.querySelector(s);
   const fmt=(iso,o)=>new Intl.DateTimeFormat('en-GB',Object.assign({timeZone:TZ},o)).format(new Date(iso));
@@ -56,29 +60,52 @@
   const mail=(subj,body)=>`mailto:${C.email}?subject=${encodeURIComponent('['+C.code+'] '+subj)}&body=${encodeURIComponent(body)}`;
   const AG={
     ask:{face:IC.ask,t:'Ask me',s:'Find anything in the course',c:'var(--wk)'},
-    help:{face:IC.help,t:'I need help',s:'A topic, Moodle, any problem',c:'#2E7D5B',
-      what:['Which week or topic, and what you tried','A screenshot if something does not work','The reply comes to your CUD email'],
-      url:()=>L.formHelp||L.form, btn:'Open the request form',
-      mail:()=>mail('I need help','Name:\nStudent ID:\nSection:\nWeek / topic:\nMy question:\n')},
-    absent:{face:IC.absent,t:'I will be absent',s:'Before or after the class',c:'#B4562F',
-      what:['Date(s) and which class: lecture or lab','The reason','Your evidence (medical note, official letter)','Missed a quiz or exam? Choose that option in the form'],
-      url:()=>L.formAbsent||L.form, btn:'Open the absence form',
+    help:{face:IC.help,t:'General help',s:'A topic, Moodle, any problem',c:'#2E7D5B',
+      what:['In the form, choose “General help”','Which week or topic, and what you tried','A screenshot if something does not work'],
+      url:()=>L.formHelp||L.form, btn:'Open the form',
+      mail:()=>mail('General help','Name:\nStudent ID:\nSection:\nWeek / topic:\nMy question:\n')},
+    absent:{face:IC.absent,t:'I was / will be absent',s:'Missed class, quiz or exam',c:'#B4562F',
+      what:['Date(s) and which class: lecture or lab','The assessment missed, if any','The reason and your evidence (medical note, official letter)'],
+      url:()=>L.formAbsent||L.form, btn:'Open the form',
       mail:()=>mail('Absence','Name:\nStudent ID:\nSection:\nDate(s) of absence:\nClass: lecture / lab\nReason:\nAssessment missed (if any):\nEvidence: attached / will bring\n')},
-    meet:{face:IC.meet,t:'Meet the professor',s:C.officeHours?'Office hours: '+C.officeHours:'Book a time',c:'#5B3FA8',
-      what:[C.officeHours?'Office hours: '+C.officeHours:'',C.office?'Office: '+C.office:'','Book a slot, then bring your question ready'].filter(Boolean),
-      url:()=>L.booking||L.formMeet, btn:'Book a time',
-      mail:()=>mail('Meeting request','Name:\nStudent ID:\nSection:\nPreferred day and time:\nTopic:\n')},
+    meet:{face:IC.meet,t:'Meet the professor',s:'Office hours and booking',c:'#5B3FA8'},
     grades:{face:IC.grades,t:'Check my grades',s:'Student portal',c:'#1F6F8B',
-      what:['Log in with your CUD account','Marks appear once grading is complete','A question about a mark? Use “I need help”'],
+      what:['Log in with your CUD account','Marks appear once grading is complete','A question about a mark? Use “General help”'],
       url:()=>L.portal, btn:'Open the student portal'}
   };
+  const DAYS=['Mon','Tue','Wed','Thu','Fri'];
+  function week(){
+    const S=C.schedule||[]; if(!S.length) return '';
+    const h0=Math.min(...S.map(x=>x[1])), h1=Math.max(...S.map(x=>x[2])), hh=h=>(h>12?h-12:h)+(h>=12?' PM':' AM');
+    const D=[0,1,2,3,4].filter(d=>S.some(x=>x[0]===d));
+    let rows='';
+    for(let h=h0;h<h1;h++){
+      rows+=`<tr><th>${hh(h)}</th>`;
+      for(const d of D){
+        const e=S.find(x=>x[0]===d&&x[1]===h);
+        if(e){ rows+=`<td rowspan="${e[2]-e[1]}" class="${e[4]==='oh'?'oh':'busy'}">${esc(e[3])}</td>`; }
+        else if(!S.some(x=>x[0]===d&&x[1]<h&&x[2]>h)) rows+='<td></td>';
+      }
+      rows+='</tr>';
+    }
+    return `<div class="pt-week"><table><thead><tr><th></th>${D.map(d=>`<th>${DAYS[d]}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+  }
   function agent(k){
     if(k==='ask'){ if(dlg&&dlg.open) dlg.close(); return C.ask&&C.ask(); }
-    const a=AG[k], u=a.url&&a.url();
+    const a=AG[k];
+    if(k==='meet'){
+      const u=L.booking;
+      dialog(head(a.face,a.t,C.office?'Office hours in the '+esc(C.office):'')+week()
+        +`<p class="pt-note" style="margin:10px 0 12px">${esc(C.bookingNote||'Email the professor to book a time.')}</p><div class="row">`
+        +(u?`<a class="pt-btn" href="${esc(u)}"${ext(u)}>Book a time ↗</a>`:'')
+        +`<a class="pt-btn${u?' ghost':''}" href="${mail('Booking request','Name:\nStudent ID:\nSection:\nBooking: office hours / library study room / incubator support session\nPreferred day and time:\nTopic:\n')}">Email to book</a></div>`,a.c);
+      return;
+    }
+    const u=a.url&&a.url();
     const go=u?`<a class="pt-btn" href="${esc(u)}"${ext(u)}>${a.btn} ↗</a>`
       : a.mail?`<a class="pt-btn" href="${a.mail()}">Email the professor</a>` : `<span class="pt-btn" aria-disabled="true">Link coming soon</span>`;
     dialog(head(a.face,a.t,a.s)+`<p style="margin:0 0 4px"><b>Have this ready:</b></p><ul>${a.what.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="row">${go}</div>`
-      +(k!=='grades'?`<p class="pt-note">${u?'All requests go to one form, so the professor sees them straight away.':'The form link is coming soon. Until then, email the professor: '+esc(C.email)}</p>`:''),a.c);
+      +(k!=='grades'&&!u?`<p class="pt-note">Form link coming soon. Until then, email the professor: ${esc(C.email)}</p>`:''),a.c);
   }
   function agents(el){
     el.innerHTML=Object.entries(AG).map(([k,a])=>`<button type="button" class="pt-agent" data-k="${k}" style="--ag:${a.c}"><span class="face" aria-hidden="true">${a.face}</span><b>${a.t}</b><small>${esc(a.s)}</small></button>`).join('');
@@ -127,10 +154,9 @@
 
   /* ---------- FAQ ---------- */
   function faq(el){
-    const book=L.booking?`<a href="${esc(L.booking)}" target="_blank" rel="noopener">Book a time ↗</a>`:'To book, use <a href="#" data-agent="meet">Meet the professor</a>.';
     const Q=[
-      ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
-      ['How do I contact or meet the professor?',`Email <a href="mailto:${esc(C.email)}">${esc(C.email)}</a>. Office hours: ${esc(C.officeHours||'announced in class')}${C.office?', office '+esc(C.office):''}. ${book}`],
+      ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I was / will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
+      ['How do I contact or meet the professor?',`Email <a href="mailto:${esc(C.email)}">${esc(C.email)}</a>. Office hours: ${esc(C.officeHours||'announced in class')}${C.office?', '+esc(C.office):''}. <a href="#" data-agent="meet">See the weekly schedule and book</a>.`],
       ['What are the assessments?',`Each assessment, its weight and what it includes is on the <a href="${esc((C.pages||{}).exams||'exams.html')}">Exams</a> page.`],
       ['What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).']
     ].concat((C.faqExtra||[]).map(x=>x.length===3?[x[1],x[2]]:x));

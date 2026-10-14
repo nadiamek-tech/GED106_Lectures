@@ -2,18 +2,15 @@
    To update the site, edit only this file. Empty links show "coming soon" until you paste them. */
 window.COURSE={
   code:'GED 106', title:['Smart Decisions:','Data Literacy & Visualization'], eyebrow:'GED 106 · Fall 2026 · 3 credit hours',
-  instructor:'Eng. Nadia Mek', classTime:'Wednesday 5–7 PM', email:'Nadia.mekhfi@cud.ac.ae', officeHours:'Monday 2–6 PM', office:'MGT OA8',
+  instructor:'Eng. Nadia Mek', classTime:'Wednesday 5–7 PM',
   pages:{lectures:'lectures.html', labs:'labs.html', exams:'exams.html'},
   blurbs:{lectures:'Narrated lectures with activities and quick checks.', labs:'Microsoft Forms and Excel, step by step.', exams:'Dates, what each assessment includes, revision.'},
 
   links:{
-    form:'',        /* the ONE student request form (Microsoft Forms), same form for all courses */
-    formHelp:'',    /* optional: pre-filled link with "I need help" selected */
-    formAbsent:'',  /* optional: pre-filled link with "Absence / missed assessment" selected */
-    booking:'',     /* office-hours booking page (Microsoft Bookings) */
-    portal:'',      /* student portal (grades) */
-    moodle:''       /* Moodle course page */
+    booking:'',     /* optional booking page; empty = students email to book */
+    moodle:''
   },
+  /* email, office hours, schedule, portal and form links come from assets/professor.js */
 
   ask:()=>window.CourseSearch&&CourseSearch.open(),
   openSearch:q=>window.CourseSearch&&CourseSearch.open(q),
