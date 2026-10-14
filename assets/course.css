@@ -289,3 +289,20 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
 .study cite{font-style:normal;font-family:var(--f-display);font-size:.78rem;color:var(--muted)}
 .study .sstat{font-family:var(--f-display);font-size:1.8rem;line-height:1;color:var(--wk)}
 @media (max-width:520px){.hb{grid-template-columns:minmax(0,7em) minmax(0,1fr) 3.6em;font-size:.8rem}}
+
+/* search + ask panel */
+.sr-wrap{position:fixed;inset:0;z-index:60;background:color-mix(in srgb,var(--ink) 35%,transparent);display:flex;justify-content:center;align-items:flex-start;padding:calc(env(safe-area-inset-top,0px) + 6vh) 16px 16px}
+.sr{width:min(680px,100%);max-height:84vh;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.25);overflow:hidden}
+.sr-top{display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--line)}
+.sr-top input{flex:1;min-width:0;font:inherit;font-family:var(--f-display);font-size:1rem;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.sr-out{overflow:auto;padding:10px 12px;display:grid;gap:8px}
+.sr-hint{margin:6px 2px;color:var(--muted);font-family:var(--f-display);font-size:.9rem}
+.sr-def{display:grid;gap:2px;border-left:4px solid var(--wk);background:var(--wk-soft);border-radius:0 8px 8px 0;padding:8px 10px;font-family:var(--f-display);font-size:.92rem}
+.sr-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.sr-list a{display:grid;gap:2px;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-family:var(--f-display);font-size:.9rem;background:var(--bg)}
+.sr-list a:hover,.sr-list a:focus-visible{border-color:var(--wk)}
+.sr-list small{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.sr-list span{color:var(--muted);font-size:.84rem}
+.sr-ask{border-top:1px solid var(--line);padding:10px 12px;font-family:var(--f-display);font-size:.86rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sr-ask .mono{color:var(--ink);user-select:all}
+.sr-wrap[hidden]{display:none}

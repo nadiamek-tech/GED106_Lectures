@@ -197,6 +197,7 @@
         </div>
         <button type="button" class="pill listen" id="listen" aria-pressed="false">▶ Listen</button>
         <button type="button" class="pill" id="teach" aria-pressed="false" title="Show timings and facilitation notes">Teacher notes</button>
+        <button type="button" class="pill" id="find" title="Search the course or ask a question">⌕ Search</button>
         <button type="button" class="pill" id="theme" title="Switch light or dark">◐ Theme</button>
       </div></div><div class="progress"><i></i></div>`;
     document.body.appendChild(bar);
@@ -219,6 +220,7 @@
     const syncTeach=()=>teach.setAttribute('aria-pressed',document.body.classList.contains('teacher'));
     teach.addEventListener('click',()=>{document.body.classList.toggle('teacher'); store.set('ged102-teacher',document.body.classList.contains('teacher')?'1':'0'); syncTeach();}); syncTeach();
     bar.querySelector('#theme').addEventListener('click',toggleTheme);
+    bar.querySelector('#find').addEventListener('click',()=>CourseSearch.open());
     const listen=bar.querySelector('#listen');
     listen.addEventListener('click',()=>{ speaking?stop():speak(); });
     // Continuous mode: when a scene's narration ends, move to the next scene and keep narrating.
@@ -303,5 +305,48 @@
     addEventListener('keydown',e=>{ if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return; if(e.key==='ArrowRight') go(cur+1); if(e.key==='ArrowLeft') go(cur-1); });
     const m=location.hash.match(/^#s(\d+)$/); go(m?Math.min(+m[1],S.length-1):0,true);
   }};
+
+  /* ---------- course search + ask (works offline: index in assets/search-index.js) ---------- */
+  const CourseSearch=(()=>{
+    const STOP=new Set('a an the of to in on for and or is are was were be what which who why how do does did i my me we you it this that with from by as at about can should difference between vs versus'.split(' '));
+    const stem=w=>w.replace(/(ing|ed|es|s)$/,'');
+    const toks=q=>q.toLowerCase().replace(/[^a-z0-9%\- ]/g,' ').split(/\s+/).filter(w=>w&&!STOP.has(w)).map(stem);
+    let box=null;
+    function load(cb){ if(window.SEARCH_INDEX) return cb(); const sc=document.createElement('script'); sc.src='assets/search-index.js'; sc.onload=cb; sc.onerror=cb; document.head.appendChild(sc); }
+    function rank(q){
+      const I=window.SEARCH_INDEX||{pages:[],terms:[]}, ts=toks(q); if(!ts.length) return {defs:[],hits:[]};
+      const has=(txt,t)=>txt.toLowerCase().split(/[^a-z0-9%\-]+/).some(w=>stem(w)===t);
+      let dl=I.terms.map(d=>{ let sc=0; ts.forEach(t=>{ if(has(d.g,t)) sc+=3; else if(has(d.d,t)) sc+=0.5; }); return {d,sc,full:ts.every(t=>has(d.g,t))}; }).filter(x=>x.sc>=3);
+      if(dl.some(x=>x.full)) dl=dl.filter(x=>x.full);
+      const defs=dl.sort((a,b)=>b.sc-a.sc).slice(0,3).map(x=>x.d);
+      const hits=I.pages.map(e=>{ let sc=0, all=true; ts.forEach(t=>{ const inT=has(e.t,t), inX=has(e.x,t); if(inT) sc+=4; if(inX) sc+=1; if(!inT&&!inX) all=false; }); if(all&&ts.length>1) sc+=3; return {e,sc}; }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc).slice(0,8).map(x=>x.e);
+      return {defs,hits};
+    }
+    const snip=(x,ts)=>{ const lw=x.toLowerCase(); let i=-1; for(const t of ts){ i=lw.indexOf(t); if(i>=0) break; } const st=Math.max(0,i-60); return (st?'…':'')+esc(x.slice(st,st+170))+(x.length>st+170?'…':''); };
+    function draw(){ const q=box.querySelector('input').value, out=box.querySelector('.sr-out');
+      if(!q.trim()){ out.innerHTML=`<p class="sr-hint">Type a term or a question, for example “mean or median”, “non-response bias”, “VLOOKUP”.</p>`; return; }
+      const {defs,hits}=rank(q), ts=toks(q);
+      out.innerHTML=(defs.length?defs.map(d=>`<div class="sr-def"><b>${esc(d.g)}</b><span>${esc(d.d)}</span></div>`).join(''):'')
+        +(hits.length?`<ol class="sr-list">${hits.map(e=>`<li><a href="${e.p}#s${e.s}"><b>${esc(e.t)}</b><small>${esc(e.w)}</small><span>${snip(e.x,ts)}</span></a></li>`).join('')}</ol>`:(defs.length?'':`<p class="sr-hint">No match in the course pages. Try a shorter word.</p>`));
+    }
+    function open(q){
+      if(!box){ box=document.createElement('div'); box.className='sr-wrap'; box.innerHTML=`<div class="sr" role="dialog" aria-modal="true" aria-label="Search the course">
+        <div class="sr-top"><input type="search" id="sr-q" placeholder="Search the course or ask a question" autocomplete="off"><button type="button" class="pill sr-x" aria-label="Close">✕</button></div>
+        <div class="sr-out"></div>
+        <div class="sr-ask">Still unsure? Ask Eng. Nadia: <span class="mono">Nadia.mekhfi@cud.ac.ae</span> <button type="button" class="pill sr-copy">Copy email</button></div></div>`;
+        document.body.appendChild(box);
+        const inp=box.querySelector('input'); let tm; inp.addEventListener('input',()=>{ clearTimeout(tm); tm=setTimeout(draw,120); });
+        box.querySelector('.sr-x').addEventListener('click',close); box.addEventListener('click',e=>{ if(e.target===box) close(); });
+        box.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+        box.querySelector('.sr-copy').addEventListener('click',e=>{ const b=e.target; const done=()=>b.textContent='Copied'; try{ navigator.clipboard.writeText('Nadia.mekhfi@cud.ac.ae').then(done,()=>b.textContent='Select the address to copy'); }catch(err){ b.textContent='Select the address to copy'; } });
+        box.addEventListener('click',e=>{ const a=e.target.closest('a'); if(a&&a.getAttribute('href').split('#')[0]===(location.pathname.split('/').pop()||'index.html')){ close(); setTimeout(()=>location.reload(),0); } });
+      }
+      box.hidden=false; const inp=box.querySelector('input'); if(q!=null) inp.value=q; load(()=>draw()); setTimeout(()=>inp.focus(),30);
+    }
+    function close(){ if(box) box.hidden=true; }
+    addEventListener('keydown',e=>{ if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); open(); } });
+    return {open,close};
+  })();
+  window.CourseSearch=CourseSearch;
   window.GED102Theme = { toggle: toggleTheme };
 })();
