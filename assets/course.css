@@ -307,3 +307,16 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
 .sr-ask .mono{color:var(--ink);user-select:all}
 .sr-wrap[hidden]{display:none}
 .support-note{max-width:1440px;margin:0 auto;padding:14px 20px 90px;border-top:1px solid var(--line);font-family:var(--f-display);font-size:.84rem;color:var(--muted);text-align:center}
+
+/* credential card */
+.cred{border:1.5px solid var(--good);border-radius:12px;padding:14px 16px;margin:1.2em 0;background:color-mix(in srgb,var(--good) 7%,transparent);font-family:var(--f-display);display:grid;gap:4px}
+.cred .eyebrow{color:var(--good)}
+.cred b{font-size:1.05rem}
+.cred-meta{font-size:.86rem;color:var(--muted)}
+.cred .row{margin-top:6px;gap:12px}
+.cred .btn{background:var(--good);border-color:var(--good);color:var(--surface)}
+.cred .btn.ghost{background:none;color:var(--good)}
+.cred-done{display:flex;gap:6px;align-items:center;font-size:.9rem;font-weight:400}
+.cred-steps{margin:.4em 0 0;padding-left:1.2em;font-size:.92rem}
+.cred-all{font-size:.88rem;margin-top:4px}
+.chip.k-bonus{border-color:var(--good);color:var(--good)}

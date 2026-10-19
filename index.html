@@ -23,11 +23,18 @@ body{font-family:var(--f-display)}
 <footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Eng. Nadia Mek</b></footer>
 <script src="assets/supports.js"></script>
 <script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
 <script src="assets/professor.js"></script>
 <script src="assets/course-info.js"></script>
 <script src="assets/portal.js"></script>
 <script>
 Portal.home();
+(function(){ const big=document.querySelector('.pt-big'); if(!big) return;
+  const a=document.createElement('a'); a.className='pt-flag'; a.href='credentials.html'; a.style.cssText='display:inline-block;margin:14px 0 0';
+  a.textContent='My Credentials: free badges in Excel, Forms, OneDrive and Power BI →'; big.after(a);
+  const j=document.querySelector('.pt-jump'); if(j) j.insertAdjacentHTML('beforeend','<a href="credentials.html">Credentials</a>'); })();
 </script>
 </body>
 </html>

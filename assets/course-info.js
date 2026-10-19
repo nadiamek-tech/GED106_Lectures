@@ -12,8 +12,11 @@ window.COURSE={
   },
   /* email, office hours, schedule, portal and form links come from assets/professor.js */
 
-  ask:()=>window.CourseSearch&&CourseSearch.open(),
-  openSearch:q=>window.CourseSearch&&CourseSearch.open(q),
+  ask:()=>window.CourseAssistant&&CourseAssistant.open(),
+  search:q=>{ if(!window.CourseAssistant) return []; const r=CourseAssistant.search(q);
+    return r.kb.slice(0,3).filter(x=>x.s>=1).map(x=>({t:x.e.q,s:x.e.a,l:x.e.l}))
+      .concat(r.idx.slice(0,5).map(x=>({t:x.e.pt+' · '+x.e.n,s:x.e.t.slice(0,140),l:x.e.l}))); },
+  openSearch:q=>window.CourseAssistant&&CourseAssistant.open(q),
 
   assess:[
     {id:'quiz1',name:'Quiz 1',type:'Lecture',weight:'Part of 30%',when:'Week 5',done:true,covers:['Weeks 1–4: the world of data, the four pillars, data collection and surveys, the four levels of analytics'],clos:'1, 2, 3',format:'In class, on paper',revise:[['Practice Quiz 1','practice-quiz1.html']]},
@@ -59,6 +62,7 @@ window.COURSE={
 
   faqExtra:[
     ['What are the textbooks?','Morrow (2024) <i>Be Data Literate</i> (2nd ed.) · Sosulski (2019) <i>Data Visualization Made Simple</i> · Klidas &amp; Hanegan (2022) <i>Data Literacy in Practice</i>.'],
-    ['What do I need for the labs?','Your CUD Microsoft 365 account: Excel, Forms and OneDrive.']
+    ['What do I need for the labs?','Your CUD Microsoft 365 account: Excel, Forms and OneDrive.'],
+    ['Can I earn credentials in this course?','Yes, optional and free: IBM Data Fundamentals, Power BI modules on Microsoft Learn, and OneDrive, Forms and Excel skills. One unit a week, with a class-activity bonus for each proof. <a href="credentials.html">My Credentials →</a>']
   ]
 };
