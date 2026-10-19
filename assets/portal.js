@@ -1,6 +1,6 @@
 /* Course portal · shared by every course site (same file in each repo).
    Reads window.COURSE from assets/course-info.js. Only that file changes from course to course.
-   Portal.header(cur)  sticky header: course code · Lectures · Labs · Exams · theme
+   Portal.header(cur)  sticky menu: code + title · Home · Lectures · Labs · Exams · extras (C.navExtra) · Theme
    Portal.home()       main page: hero, 3 buttons, help agents, FAQ, calendar, CLOs and grades, submissions
    Portal.calendar(el) Portal.examCards(el) Portal.submissions(el)  pieces reused on other pages */
 (function(){
@@ -33,13 +33,23 @@
     labs:SV('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>'),
     exams:SV('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 13l2 2 4-4"/>'),
     lec:SV('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>'),
-    lab:SV('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>')
+    lab:SV('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>'),
+    project:SV('<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M7 7h10M7 11h4M13 11h4v6h-4zM7 14h4M7 17h4"/>'),
+    present:SV('<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8M7 12l3-3 2 2 4-4"/>'),
+    toolkit:SV('<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.7-5.7a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/>')
   };
+  /* main sections: C.nav = [{key,label,href,icon,blurb}] overrides Lectures/Labs/Exams */
+  function NAV(){ const P=C.pages||{}, B=C.blurbs||{};
+    return C.nav||[{key:'lectures',label:'Lectures',href:P.lectures||'lectures.html',icon:'lectures',blurb:B.lectures||'Narrated lectures, practice with answers.'},
+      {key:'labs',label:'Labs',href:P.labs||'labs.html',icon:'labs',blurb:B.labs||'Step-by-step lab guides.'},
+      {key:'exams',label:'Exams',href:P.exams||'exams.html',icon:'exams',blurb:B.exams||'Dates, what is included, revision.'}]; }
   /* ---------- header ---------- */
   function header(cur){
     const el=document.getElementById('hub'); if(!el||el.children.length) return;
-    const P=C.pages||{}, nav=[[P.lectures||'lectures.html','Lectures','lectures'],[P.labs||'labs.html','Labs','labs'],[P.exams||'exams.html','Exams','exams']];
-    el.className='pt-hub'; el.innerHTML=`<div class="pt-hub-in"><a class="crs" href="index.html">${esc(C.code)}</a><nav aria-label="Course sections">${nav.map(([h,t,k])=>`<a href="${h}" ${k===cur?'aria-current="page"':''}>${t}</a>`).join('')}</nav><button type="button" class="pt-theme" title="Light or dark">◐</button></div>`;
+    /* menu: Home · main sections · extras (C.navExtra = [[href,label,key]], e.g. My Credentials) · Theme */
+    const nav=[['index.html','Home','home']].concat(NAV().map(n=>[n.href,n.label,n.key]),C.navExtra||[]);
+    const sub=C.short||[].concat(C.title||[]).join(' ');
+    el.className='pt-hub'; el.innerHTML=`<div class="pt-hub-in"><a class="crs" href="index.html"><b>${esc(C.code)}</b>${sub?`<span>${esc(sub)}</span>`:''}</a><nav aria-label="Course">${nav.map(([h,t,k])=>`<a href="${esc(h)}"${k===cur?' aria-current="page"':''}>${esc(t)}</a>`).join('')}</nav><button type="button" class="pt-theme" title="Light or dark">◐ Theme</button></div>`;
     el.querySelector('.pt-theme').addEventListener('click',()=>window.GED102Theme&&GED102Theme.toggle());
   }
 
@@ -130,9 +140,10 @@
   function calendar(el){
     const cell=(x,l)=>{ if(!x) return `<td data-l="${l}"></td>`; const [t,h]=Array.isArray(x)?x:[x];
       return `<td data-l="${l}">${h?`<a href="${esc(h)}">${esc(t)}</a>`:`<span class="${C.soonLabel!==false&&!h?'soon':''}">${esc(t)}</span>`}</td>`; };
-    el.innerHTML=`<div style="overflow-x:auto"><table class="pt-cal"><thead><tr><th>Week</th><th>Lecture</th><th>Lab</th><th>Assessment</th></tr></thead><tbody>${
-      C.weeks.map(w=>`<tr class="${(w.ev||[]).length?'ex':''}"><td class="w">W${esc(w.w)}</td>${cell(w.lec,'Lecture')}${cell(w.lab,'Lab')}<td>${(w.ev||[]).length?`<div class="pt-ev">${w.ev.map(chip).join('')}</div>`:''}</td></tr>`).join('')
-    }</tbody></table></div><div class="pt-legend"><span><i class="dot"></i>Lecture assessment</span><span><i class="dot lab"></i>Lab assessment</span><span>Click an assessment for details. Linked topics are open now.</span></div>`;
+    const hasLab=C.weeks.some(w=>w.lab);
+    el.innerHTML=`<div style="overflow-x:auto"><table class="pt-cal"><thead><tr><th>Week</th><th>Lecture</th>${hasLab?'<th>Lab</th>':''}<th>Assessment</th></tr></thead><tbody>${
+      C.weeks.map(w=>`<tr class="${(w.ev||[]).length?'ex':''}"><td class="w">W${esc(w.w)}</td>${cell(w.lec,'Lecture')}${hasLab?cell(w.lab,'Lab'):''}<td>${(w.ev||[]).length?`<div class="pt-ev">${w.ev.map(chip).join('')}</div>`:''}</td></tr>`).join('')
+    }</tbody></table></div><div class="pt-legend">${hasLab?'<span><i class="dot"></i>Lecture assessment</span><span><i class="dot lab"></i>Lab assessment</span>':''}<span>Click an assessment for details. Linked topics are open now.</span></div>`;
     wire(el);
   }
   function examCards(el){
@@ -156,9 +167,9 @@
   function faq(el){
     const Q=[
       ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I was / will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
-      ['Is this an online course?','No. Classes are on campus and taught on the board, and exams are on paper in class. Hybrid sessions happen only when the university announces them. This site supports your classes: notes, practice and dates.'],
+      ['Is this an online course?',C.onlineAnswer||'No. Classes are on campus and taught on the board, and exams are on paper in class. Hybrid sessions happen only when the university announces them. This site supports your classes: notes, practice and dates.'],
       ['How do I contact or meet the professor?',`Email <a href="mailto:${esc(C.email)}">${esc(C.email)}</a>. Office hours: ${esc(C.officeHours||'announced in class')}${C.office?', '+esc(C.office):''}. <a href="#" data-agent="meet">See the weekly schedule and book</a>.`],
-      ['What are the assessments?',`Each assessment, its weight and what it includes is on the <a href="${esc((C.pages||{}).exams||'exams.html')}">Exams</a> page.`],
+      ['What are the assessments?',`Each assessment, its weight and what it includes is on the <a href="${esc(C.assessPage||(C.pages||{}).exams||'exams.html')}">${esc(C.assessLabel||'Exams')}</a> page.`],
       ['What if I miss classes?','Attendance is compulsory. Absent for 25% or more of classes: no final assessment (grade “FA”).']
     ].concat((C.faqExtra||[]).map(x=>x.length===3?[x[1],x[2]]:x));
     el.className='pt-faq';
@@ -168,17 +179,13 @@
 
   /* ---------- home ---------- */
   function home(){
-    header('');
-    const root=document.getElementById('portal'); const P=C.pages||{}, n=nextExam();
+    header('home');
+    const root=document.getElementById('portal'); const P=C.pages||{}, n=nextExam(), hl=!n&&C.highlight&&byId(C.highlight);
     root.className='pt pt-wrap';
     root.innerHTML=`
 <section class="pt-hero"><span class="pt-eyebrow">${esc(C.eyebrow||C.code)}</span><h1>${esc(C.title[0])} <span>${esc(C.title[1]||'')}</span></h1><p class="pt-by">${esc(C.role||'Instructor')}: <b>${esc(C.instructor)}</b>${C.classTime?' · '+esc(C.classTime):''}</p>
-${n?`<button type="button" class="pt-next" data-a="${n.id}"><b>Next: ${esc(n.name)}</b><span>${esc(dayShort(n.date))}${n.time!==false?' · '+esc(n.timeText||time(n.date)):''}${n.place?' · '+esc(n.place):''}</span><span class="mono">${until(n.date)}</span><b style="margin-left:auto">Details →</b></button>`:''}</section>
-<div class="pt-big">
- <a href="${P.lectures||'lectures.html'}"><span class="ic">${IC.lectures}</span><b>Lectures</b><span>${esc(C.blurbs&&C.blurbs.lectures||'Narrated lectures, practice with answers.')}</span></a>
- <a href="${P.labs||'labs.html'}"><span class="ic">${IC.labs}</span><b>Labs</b><span>${esc(C.blurbs&&C.blurbs.labs||'Step-by-step lab guides.')}</span></a>
- <a href="${P.exams||'exams.html'}"><span class="ic">${IC.exams}</span><b>Exams</b><span>${esc(C.blurbs&&C.blurbs.exams||'Dates, what is included, revision.')}</span></a>
-</div>
+${n?`<button type="button" class="pt-next" data-a="${n.id}"><b>Next: ${esc(n.name)}</b><span>${esc(dayShort(n.date))}${n.time!==false?' · '+esc(n.timeText||time(n.date)):''}${n.place?' · '+esc(n.place):''}</span><span class="mono">${until(n.date)}</span><b style="margin-left:auto">Details →</b></button>`:hl?`<button type="button" class="pt-next" data-a="${hl.id}"><b>Next: ${esc(hl.name)}</b><span>${esc(whenText(hl))}</span><b style="margin-left:auto">Details →</b></button>`:''}</section>
+<div class="pt-big">${NAV().map(n=>`<a href="${esc(n.href)}"><span class="ic">${IC[n.icon]||IC.lec}</span><b>${esc(n.label)}</b><span>${esc(n.blurb||'')}</span></a>`).join('')}</div>
 <section class="pt-help" aria-label="Help"><form class="pt-find" role="search"><input type="search" placeholder="Search the course: a topic, a formula, a date" aria-label="Search the course" autocomplete="off"><button type="submit">Search</button></form><div class="pt-hits" aria-live="polite"></div><div class="pt-agents"></div></section>
 <nav class="pt-jump" aria-label="On this page"><a href="#faq">FAQ</a><a href="#calendar">Calendar</a><a href="#clos">CLOs</a><a href="#submissions">Submissions</a></nav>
 <h2 id="faq">FAQ</h2><div id="pt-faq"></div>
@@ -193,5 +200,5 @@ ${n?`<button type="button" class="pt-next" data-a="${n.id}"><b>Next: ${esc(n.nam
     f.addEventListener('submit',e=>{ e.preventDefault(); if(C.search) show(); else if(C.openSearch) C.openSearch(inp.value); });
   }
 
-  window.Portal={header,home,calendar,examCards,submissions,assess,agent,faq};
+  window.Portal={header,home,agents,calendar,examCards,submissions,assess,agent,faq};
 })();

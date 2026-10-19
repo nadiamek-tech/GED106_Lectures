@@ -51,3 +51,11 @@ window.COURSE_KB=[
 {q:'How do I use COUNTIF?',k:'countif count condition criteria',a:'=COUNTIF(range, criteria) counts the cells that meet one condition. Put text and conditions in quotes.',l:'lab-07.html#s2'},
 {q:'How do I use IF?',k:'if function logical test excel',a:'=IF(test, if_true, if_false) returns one of two results.',l:'lab-07.html#s3'}
 ];
+window.COURSE_SUGGEST={'index.html':['When is the midterm?','What does the midterm cover?','How do I earn credentials?'],
+    'lectures.html':['What are the four levels of analytics?','What are the five principles of data ethics?','What is a data dictionary?'],
+    'labs.html':['How do I export Forms responses to Excel?','How do I submit lab work?','What do I need for the labs?'],
+    'exams.html':['When is the midterm?','What does the midterm cover?','When is Quiz 2?'],
+    'credentials.html':['How do I earn credentials?','What is the IBM Data Fundamentals badge?','Do I have to pay?'],
+    'review.html':['What does the midterm cover?','How do I fix a leading question?','What is a data dictionary?'],
+    'practice-midterm.html':['What does the midterm cover?','What is percentage change?','What is diagnostic analytics?']};
+window.COURSE_TOPICS=['Midterm date','Midterm parts','Grading','Analytics levels','Data dictionary','Survey bias','Data ethics','Excel functions','Credentials'];

@@ -41,14 +41,9 @@
   const st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
 
   /* ---------- page suggestions ---------- */
-  const SUGGEST={'index.html':['When is the midterm?','What does the midterm cover?','How do I earn credentials?'],
-    'lectures.html':['What are the four levels of analytics?','What are the five principles of data ethics?','What is a data dictionary?'],
-    'labs.html':['How do I export Forms responses to Excel?','How do I submit lab work?','What do I need for the labs?'],
-    'exams.html':['When is the midterm?','What does the midterm cover?','When is Quiz 2?'],
-    'credentials.html':['How do I earn credentials?','What is the IBM Data Fundamentals badge?','Do I have to pay?'],
-    'review.html':['What does the midterm cover?','How do I fix a leading question?','What is a data dictionary?'],
-    'practice-midterm.html':['What does the midterm cover?','What is percentage change?','What is diagnostic analytics?']};
-  const TOPICS=['Midterm date','Midterm parts','Grading','Analytics levels','Data dictionary','Survey bias','Data ethics','Excel functions','Credentials'];
+  /* page suggestions and topic chips come from kb.js: window.COURSE_SUGGEST {page:[q,q,q]}, window.COURSE_TOPICS [..] */
+  const SUGGEST=Object.assign({'index.html':['When is the midterm?','How is the course graded?','Where do I submit?']},window.COURSE_SUGGEST||{});
+  const TOPICS=window.COURSE_TOPICS||['Midterm','Grading','Office hours','Submissions'];
 
   /* ---------- UI ---------- */
   let panel,log,chips,input,opened=false;
@@ -70,7 +65,7 @@
     if(places.length||(top&&top.s>=1)){
       msg(`Here is where the course covers that:${places.length?'<br>'+places.map(p=>'• '+link(p.e.l,`${p.e.pt} · ${p.e.n}`)).join('<br>'):''}${top?`<br><br>Closest answer: ${esc(top.e.a)} ${link(top.e.l,'More')}`:''}`);
       setChips((top?r.kb.slice(0,3).map(x=>x.e.q):[]).concat(SUGGEST[page]||[]).slice(0,3)); return; }
-    msg(`Not found in this course. Pick a topic, or ask with a key word like “survey”, “privacy” or “Power BI”.`);
+    msg(`Not found in this course. Pick a topic, or ask with one key word from the lecture.`);
     setChips(TOPICS);
   }
   function build(){

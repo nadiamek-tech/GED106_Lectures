@@ -4,6 +4,8 @@ window.COURSE={
   code:'GED 106', title:['Smart Decisions:','Data Literacy & Visualization'], eyebrow:'GED 106 · Fall 2026 · 3 credit hours · on campus',
   instructor:'Eng. Nadia Mek', classTime:'Wednesday 5–7 PM',
   pages:{lectures:'lectures.html', labs:'labs.html', exams:'exams.html'},
+  short:'Data Literacy & Visualization',
+  navExtra:[['credentials.html','My Credentials','credentials']],
   blurbs:{lectures:'Notes to review each class, with activities and quick checks.', labs:'Microsoft Forms and Excel, step by step.', exams:'Dates, what each assessment includes, revision.'},
 
   links:{
