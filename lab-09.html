@@ -52,6 +52,17 @@ const checker=el=>{
     v.textContent=n===CHECK.length?'All seven: this data set is ready for your project.':n>=5?`${n} of 7: fix the missing points before you start.`:`${n} of 7: look for a better data set.`; };
   el.querySelectorAll('input').forEach(i=>i.addEventListener('change',upd)); upd(); };
 
+
+const MODEL=`<p style="margin:0 0 8px"><b>Example only:</b> your topic and data set will be different.</p>
+<div class="scroll"><table class="tbl"><tbody>
+<tr><th>Team and topic</th><td>Team Atlas · access to university education in the UAE</td></tr>
+<tr><th>Data set</th><td>School enrollment, tertiary (% gross), indicator SE.TER.ENRR, World Bank Open Data, latest year available. <a href="https://data.worldbank.org/indicator/SE.TER.ENRR" target="_blank" rel="noopener">data.worldbank.org ↗</a></td></tr>
+<tr><th>Main question (Ask)</th><td>How has tertiary enrolment in the UAE changed since 2010, and how does it compare with the other GCC countries?</td></tr>
+<tr><th>Supporting questions</th><td>1. In which years did the UAE grow fastest?<br>2. Which GCC country has the highest enrolment in the latest year?</td></tr>
+<tr><th>Key variables</th><td>Country: categorical<br>Year: numerical (year)<br>Tertiary enrolment: numerical (% gross)</td></tr>
+<tr><th>Decision it could inform</th><td>Where universities and policymakers should plan more study places.</td></tr></tbody></table></div>
+<p style="margin:10px 0 0">Why it works: the question is specific and measurable, the source and year are named, and every variable has a type and a unit.</p>`;
+
 Lecture.mount({
   id:'g106-lab9', course:'GED 106', week:9, clo:'4, 3', short:'Lab 9 · Project Scoping and Dataset Selection',
   title:'Lab 9 · Project Scoping and Dataset Selection',
@@ -84,7 +95,10 @@ Lecture.mount({
     narration:[`Submit on Moodle: your data set file and your project scope (Part C). Save your files in OneDrive › GED106 › Project.`],
     fig:{label:`Quick check`, build:el=>W.quiz(el,[
       {q:`Which is a key variable?`,o:[`A column you will analyse, such as “Monthly visitors”`,`The name of the website`,`Your team name`,`The file format`],a:0,why:`A variable is a column that changes across records. The website, team name and file format are not data in the set.`},
-      {q:`Your data set has no year or source. You should…`,o:[`find the original source, or choose another data set`,`use it anyway`,`guess the year`,`delete the column`],a:0,why:`Without source and year you cannot judge quality or cite it. Guessing or deleting does not fix that.`}])} }
+      {q:`Your data set has no year or source. You should…`,o:[`find the original source, or choose another data set`,`use it anyway`,`guess the year`,`delete the column`],a:0,why:`Without source and year you cannot judge quality or cite it. Guessing or deleting does not fix that.`}])} },
+  { nav:'Model answer', title:'Model answer · Part C', kind:'review', minutes:3,
+    narration:[`What you did today is the hardest part of any data project: a clear question, real data and the right variables. Analysts at companies and government do exactly this before every report. Your project now has its foundation.`],
+    fig:{label:`Compare with your scope`, build:el=>W.practice(el,[{q:`Model answer: an example project scope`,hint:MODEL}],{label:'Show model answer',prefix:'',numbered:false})} },
   ]
 });
 </script>
