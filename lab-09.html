@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lab 9 · Project Scoping and Dataset Selection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261027">
+<style>
+:root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.10);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14)}
+.src4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-family:var(--f-display)}
+.src4 a{display:block;border:1px solid var(--line);border-left:4px solid var(--wk);border-radius:10px;padding:10px 12px;background:var(--surface);color:var(--ink);text-decoration:none}
+.src4 a b{display:block;color:var(--wk)}
+.src4 small{color:var(--muted)}
+.chk{display:grid;gap:6px;font-family:var(--f-display)}
+.chk label{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:8px 11px;cursor:pointer;background:var(--bg);font-size:.92rem}
+.chk label:has(input:checked){border-color:var(--wk);background:var(--wk-soft)}
+.verdict{font-family:var(--f-display);font-weight:700;margin-top:10px}
+@media (max-width:640px){.src4{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261027"></script>
+<script src="assets/course.js?v=20261027"></script>
+<script src="assets/kb.js?v=20261027"></script>
+<script src="assets/search-index.js?v=20261027"></script>
+<script src="assets/assistant.js?v=20261027"></script>
+<script src="assets/onepage.js?v=20261027"></script>
+<script>
+const {W}=Lecture;
+const SOURCES=`<div class="src4">
+<a href="https://bayanat.ae" target="_blank" rel="noopener"><b>Bayanat ↗</b>UAE official open data portal<br><small>Federal and local data sets</small></a>
+<a href="https://www.dubaipulse.gov.ae" target="_blank" rel="noopener"><b>Dubai Pulse ↗</b>Dubai government open data<br><small>Transport, economy, tourism</small></a>
+<a href="https://data.worldbank.org" target="_blank" rel="noopener"><b>World Bank Open Data ↗</b>Country indicators<br><small>Compare the UAE with other countries</small></a>
+<a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener"><b>Kaggle Datasets ↗</b>Community data sets<br><small>Check the original source and licence</small></a></div>`;
+
+const CHECK=[
+  'I know who published it (the source).',
+  'I know the year or period it covers.',
+  'It has enough rows to show a pattern (at least about 50).',
+  'I understand every column I will use (name, type, unit).',
+  'The licence allows me to use it for a class project.',
+  'It has no names, phone numbers or other personal data.',
+  'It can answer my question.'
+];
+const checker=el=>{
+  el.innerHTML=`<div class="chk">${CHECK.map((c,i)=>`<label><input type="checkbox" data-i="${i}"> ${c}</label>`).join('')}</div><p class="verdict"></p>`;
+  const v=el.querySelector('.verdict');
+  const upd=()=>{ const n=el.querySelectorAll('input:checked').length;
+    v.textContent=n===CHECK.length?'All seven: this data set is ready for your project.':n>=5?`${n} of 7: fix the missing points before you start.`:`${n} of 7: look for a better data set.`; };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('change',upd)); upd(); };
+
+Lecture.mount({
+  id:'g106-lab9', course:'GED 106', week:9, clo:'4, 3', short:'Lab 9 · Project Scoping and Dataset Selection',
+  title:'Lab 9 · Project Scoping and Dataset Selection',
+  meta:'Lab · Week 9 · Graded lab',
+  scenes:[
+  { nav:'Start here', title:'Lab 9 · Project Scoping and Dataset Selection', kind:'activity', minutes:5,
+    narration:[`Select a real-world dataset aligned with personal or academic interests. Define research questions and key variables. Work in your project team.`],
+    src:`Lab reading: Excel datasets, Data Literacy in Practice Ch. 4. Lecture link: <a href="week-09.html#five-steps">Week 9 · Ask and Acquire</a>.`,
+    fig:{label:`Lab plan · 60 minutes`, build:el=>W.agenda(el,[[`Choose a topic`,10,'a'],[`Part A · Find a data set`,20,'a'],[`Part B · Check it`,10,'a'],[`Part C · Questions and variables`,15,'a'],[`Submit`,5,'c']])} },
+
+  { nav:'A · Find data', title:'Part A · Find a data set', kind:'activity', minutes:20, wide:true,
+    narration:[`Pick a topic your team cares about, then find one open data set on it. Download it as Excel or CSV and save it in OneDrive › GED106 › Project.`],
+    fig:{label:`Where to look`, html:SOURCES} },
+
+  { nav:'B · Check it', title:'Part B · Check your data set', kind:'activity', minutes:10,
+    narration:[`Before you commit, check the data set. Seven ticks means it is ready.`],
+    fig:{label:`Data set checklist`, build:checker} },
+
+  { nav:'C · Scope', title:'Part C · Research questions and key variables', kind:'activity', minutes:15, wide:true,
+    narration:[`Write your scope. Your answers stay on this device; copy them into your submission.`],
+    fig:{label:`Project scope`, build:el=>W.worksheet(el,{id:'g106-lab9-scope',title:'GED 106 · Lab 9 · Project scope',fields:[
+      {l:'Team and topic',ph:'Team name, members, topic'},
+      {l:'Data set',hint:'Name, publisher, year, link',ph:'e.g. … (Bayanat, 2024), https://…'},
+      {l:'Main research question (Ask)',hint:'Clear, specific, measurable',rows:2},
+      {l:'Two supporting questions',rows:3},
+      {l:'Key variables',hint:'For each: column name, type (categorical or numerical), unit',rows:4},
+      {l:'One decision your findings could inform',rows:2}]})} },
+
+  { nav:'Submit', title:'Before you leave', kind:'check', minutes:5,
+    narration:[`Submit on Moodle: your data set file and your project scope (Part C). Save your files in OneDrive › GED106 › Project.`],
+    fig:{label:`Quick check`, build:el=>W.quiz(el,[
+      {q:`Which is a key variable?`,o:[`A column you will analyse, such as “Monthly visitors”`,`The name of the website`,`Your team name`,`The file format`],a:0,why:`A variable is a column that changes across records. The website, team name and file format are not data in the set.`},
+      {q:`Your data set has no year or source. You should…`,o:[`find the original source, or choose another data set`,`use it anyway`,`guess the year`,`delete the column`],a:0,why:`Without source and year you cannot judge quality or cite it. Guessing or deleting does not fix that.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+/* Lesson page (one lecture = one page), shared with MTH 105 */
+body.lesson{font-family:var(--f-body)}
+.lbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.lbar-in{max-width:1180px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:12px}
+.lbar .brand{display:flex;flex-direction:column;text-decoration:none;color:var(--ink);font-family:var(--f-display);line-height:1.15;flex:none}
+.lbar .brand span{font-size:.78rem;color:var(--muted)}
+.lchips{display:flex;gap:6px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:thin;padding:2px 0}
+.lchips a{flex:none;display:inline-flex;gap:6px;align-items:center;font-family:var(--f-display);font-size:.84rem;text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--surface);white-space:nowrap}
+.lchips a span{font-family:var(--f-mono);font-size:.72rem}
+.lchips a.on{color:var(--on-wk,#fff);background:var(--wk);border-color:var(--wk)}
+.lctl{display:flex;gap:6px;flex:none}
+.lbar .progress{height:3px;background:var(--line)}
+.lbar .progress i{display:block;height:100%;width:0;background:var(--wk);transition:width .15s}
+.lmain{max-width:1180px;margin:0 auto;padding:10px 16px 40px}
+.lhead{padding:26px 0 10px}
+.lhead h1{font-family:var(--f-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:6px 0 6px}
+.lmeta{font-family:var(--f-display);color:var(--muted);font-size:.92rem;margin:0 0 12px}
+.lintro{font-size:1.15rem;max-width:62ch;margin:0 0 16px}
+.lplan{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px 16px;font-family:var(--f-display);max-width:760px}
+.lplan ol{margin:6px 0 6px;padding-left:22px;columns:2;column-gap:28px}
+.lplan li{margin:2px 0}
+.lplan a{color:var(--ink)}
+.lhow{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
+.lsec{border-top:1px solid var(--line);padding:34px 0 10px;scroll-margin-top:70px}
+.lsec h2{font-family:var(--f-display);font-size:clamp(1.5rem,3.2vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin:0 0 14px;display:flex;align-items:baseline;gap:12px}
+.lsec h2 .no{font-family:var(--f-mono);font-size:.9rem;color:var(--on-wk,#fff);background:var(--wk);border-radius:8px;padding:2px 9px;flex:none}
+.lpart{margin:0 0 26px}
+.ltag{display:inline-block;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--wk);border-bottom:2px solid var(--wk);padding-bottom:2px;margin-bottom:10px}
+.lrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:28px;align-items:start}
+.lrow.nofig{grid-template-columns:minmax(0,1fr)}
+.lrow.nofig .ltext{max-width:70ch}
+.ltext{font-size:1.08rem;line-height:1.65}
+.ltext p{margin:0 0 .7em}
+.lfig{margin:0;border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:14px;min-width:0}
+.lfig>.eyebrow{display:block;margin-bottom:8px}
+.lfig .caption{margin-top:8px;font-family:var(--f-display);font-size:.84rem;color:var(--muted)}
+.ldecode{max-width:780px}
+.lp-formula .ltext{max-width:70ch;margin:0 0 10px}
+.lnext{font-family:var(--f-display);color:var(--muted);margin-top:18px}
+.speaking{background:var(--mark);border-radius:6px;box-shadow:0 0 0 6px var(--mark)}
+.lpager{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:16px;margin-top:10px}
+.lpager button{flex:1;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 14px;text-align:left;font:inherit;font-family:var(--f-display);cursor:pointer;max-width:44%}
+.lpager button.next{text-align:right;border-color:var(--wk)}
+.lpager button small{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.lpager button:disabled{opacity:.4;cursor:default}
+.lpager .pc{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);white-space:nowrap}
+.lsplit .lsec{border-top:0;padding-top:20px}
+@media (max-width:860px){.lrow{grid-template-columns:minmax(0,1fr);gap:14px}.lplan ol{columns:1}.lbar .brand span{display:none}}
+@media (max-width:520px){.lbar-in{flex-wrap:wrap}.lchips{order:3;flex-basis:100%}.lctl{margin-left:auto}}
+
+/* demonstrated in class + in-class handout (different style from the online parts) */
+.ldemo{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;border-left:4px solid var(--c3,#B4562F);background:color-mix(in srgb,var(--c3,#B4562F) 8%,transparent);padding:8px 12px;border-radius:0 8px 8px 0;margin:0 0 18px;font-family:var(--f-display);font-size:.92rem}
+.ldemo b{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--c3,#B4562F)}
+.lclass .lc-paper{--paper:#FBF7EE;--paper-line:#E7DDC7;background:var(--paper);border:1.5px dashed var(--paper-line);border-radius:6px;padding:22px 22px 10px;position:relative;box-shadow:0 1px 0 var(--paper-line),0 6px 18px rgba(0,0,0,.05)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lclass .lc-paper{--paper:#1F1B14;--paper-line:#4A4030}}
+:root[data-theme="dark"] .lclass .lc-paper{--paper:#1F1B14;--paper-line:#4A4030}
+.lc-stamp{position:absolute;top:-12px;right:18px;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;background:var(--c3,#B4562F);color:#fff;padding:4px 10px;border-radius:4px;transform:rotate(-2deg)}
+.lc-lead{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:1.08rem;margin:0 0 10px;max-width:70ch}
+.lc-how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0;margin:0 0 14px;list-style:none;counter-reset:h}
+.lc-how li{counter-increment:h;font-family:var(--f-display);font-size:.88rem;border-top:2px solid var(--paper-line);padding-top:8px}
+.lc-how li::before{content:counter(h);display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--c3,#B4562F);color:#fff;font-size:.72rem;margin-right:6px}
+.lc-btns{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}.lc-btns .lc-print{margin-bottom:0}
+.lc-live{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;background:#1E7F4F;color:#fff;border-radius:8px;padding:8px 15px;text-decoration:none}
+.lc-live .lc-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:lcp 1.6s infinite}@keyframes lcp{50%{opacity:.3}}
+@media print{.lc-btns{display:none}}
+.lc-print{font-family:var(--f-display);font-weight:700;border:1.5px solid var(--c3,#B4562F);color:var(--c3,#B4562F);background:transparent;border-radius:8px;padding:7px 14px;cursor:pointer;margin-bottom:16px}
+.lc-ex{border-top:1px solid var(--paper-line);padding:16px 0 12px}
+.lc-exh{display:flex;gap:8px;align-items:center;font-family:var(--f-display)}
+.lc-tag{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--c3,#B4562F);color:var(--c3,#B4562F);border-radius:4px;padding:1px 6px}
+.lc-q{font-size:1.06rem;margin:6px 0 8px;max-width:75ch}
+.lc-tips{font-family:var(--f-display);font-size:.9rem;margin:0 0 6px}
+.lc-tips summary{cursor:pointer;font-weight:700;color:var(--c3,#B4562F)}
+.lc-tips ol{margin:6px 0 0;padding-left:20px;display:grid;gap:3px}
+.lc-ans{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);margin:6px 0 0}
+@media (max-width:700px){.lc-how{grid-template-columns:minmax(0,1fr)}.lclass .lc-paper{padding:20px 12px 8px}}
+/* worked example: step by step (left) and on the board (right) */
+.ltwo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.ltwo .lcol>.eyebrow{display:block;margin-bottom:6px}
+.ltwo .ldecode{max-width:none}
+.lboard .bd{margin:0}
+.lboard .bd-g{grid-template-columns:minmax(0,1fr) 190px}
+.lboard .m,.lboard .tk{font-family:inherit!important;font-size:1em!important;line-height:1.5;text-align:left;white-space:normal;background:none!important;box-shadow:none!important;opacity:1!important}
+.lboard .bd-f{font-size:1.15em}
+.lboard .v{font-style:normal}
+.lboard .bd-parts div{font-size:.82em;color:var(--bi);white-space:normal}
+.lboard .bd-parts b{color:var(--bg2)}
+.lboard .bd-ans b{border-bottom:3px solid var(--br);padding:0 .1em}
+@media (max-width:980px){.ltwo{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.lboard .bd-g{grid-template-columns:minmax(0,1fr)}}
+/* several worked examples in one topic: one box each, with room between them */
+.lfx+.lfx{margin-top:34px;padding-top:26px;border-top:1px dashed var(--line)}
+.lfx-h{font-family:var(--f-display);font-size:1.15rem;margin:0 0 10px;display:flex;gap:10px;align-items:center}
+.lfx-h span{font-family:var(--f-mono);font-size:.78rem;color:var(--wk);border:1.5px solid var(--wk);border-radius:6px;padding:1px 7px}
+/* concept graphic next to the definition */
+.lp-def .lfig.concept{background:var(--surface);padding:10px}
+.lp-def .lfig svg{display:block;width:100%;height:auto}
+
+/* key words (before the lecture) */
+.lkw{max-width:1100px;margin:6px auto 26px;padding:0 4px}
+.lkw-lead{margin:4px 0 12px;color:var(--muted);font-size:.95rem}
+.lkw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.lkw-c{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.lkw-w{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.lkw-w b{font-size:1.08rem;color:var(--wk)}
+.lkw-say{border:1px solid var(--line);background:var(--bg);border-radius:50%;width:32px;height:32px;cursor:pointer;flex:none}
+.lkw-c p{margin:6px 0 0;font-size:.95rem;line-height:1.45}
+.lkw-c .lkw-x{font-family:var(--f-mono);font-size:.84rem;color:var(--muted)}
+/* missed this class */
+.lmissed{margin-top:22px;background:var(--surface);border:1px solid var(--line);border-left:4px solid #1E7F4F;border-radius:14px;padding:14px 18px}
+.lmissed .lm-lead{margin:6px 0 8px}
+.lmissed ol{margin:0;padding-left:1.3em;display:grid;gap:6px;line-height:1.5}
+@media print{.lkw-say{display:none}.lmissed{display:none}}
+
+/* framework steps (non-maths courses): one step per box */
+.lstep{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:16px;margin:12px 0}
+.lstep-n{width:40px;height:40px;border-radius:50%;background:var(--wk);color:var(--on-wk,#fff);display:grid;place-items:center;font:800 1.1rem var(--f-display)}
+.lstep h3{margin:4px 0 8px;font-size:1.15rem}
+.lstep-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.lstep-two p{margin:4px 0 0;line-height:1.5}
+.lstep-app{border-left:3px solid var(--wk);padding-left:12px}
+.lquiz{margin:6px 0 18px}
+#keep-learning .cred{max-width:760px}
+@media (max-width:700px){.lstep{grid-template-columns:minmax(0,1fr)}.lstep-two{grid-template-columns:minmax(0,1fr)}}

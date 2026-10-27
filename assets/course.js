@@ -183,7 +183,7 @@
   window.Lecture = { W, B, mount(cfg){
     document.title = cfg.pageTitle || document.title;
     const S = cfg.scenes; let cur = 0;
-    if(window.COURSE_CREDS && window.COURSE_CREDS.weeks[cfg.week] && !S.some(x=>x.kind==='bonus'))
+    if(window.COURSE_CREDS && window.COURSE_CREDS.weeks[cfg.week] && !S.some(x=>x.kind==='bonus'||x.credMap))
       S.push({ nav:'Take it further', title:'Take it further · credentials', kind:'bonus',
         narration:['This week\'s topic continues in a free unit on the tools of the course. Complete it, add the credential to your CV, and submit your proof for a class-activity bonus.'] });
     const seen = new Set(JSON.parse(store.get('ged102-seen-'+cfg.id)||'[]'));

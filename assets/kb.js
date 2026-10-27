@@ -18,6 +18,11 @@ window.COURSE_KB=[
 {q:'What if I miss a class or an exam?',k:'absent absence missed sick excuse makeup',a:'Use “I was / will be absent” on the course home, with the date, the assessment missed and your evidence.',l:'index.html'},
 {q:'What are the course learning outcomes?',k:'clo outcomes objectives learning',a:'Five CLOs: principles of data literacy and ethics; interpreting data and visualizations; descriptive and diagnostic analytics; Excel and Forms to clean and present data; designing a dashboard.',l:'index.html#clos'},
 
+{q:'What is data-informed decision-making?',k:'data informed decision making week 9 judgement',a:'Using data as evidence, together with experience and judgement, to choose between options.',l:'week-09.html#informed',r:'Be Data Literate, Chapter 9'},
+{q:'What are the five steps of data-informed decision-making?',k:'ask acquire analyse analyze integrate iterate five steps cycle week 9',a:'Ask a question, Acquire data, Analyse it, Integrate the findings into a decision, and Iterate: measure the result and adjust.',l:'week-09.html#five-steps',r:'Be Data Literate, Chapter 9'},
+{q:'Where can I find open data for my project?',k:'open data dataset data set bayanat dubai pulse world bank kaggle find project lab 9',a:'Bayanat (UAE), Dubai Pulse, World Bank Open Data or Kaggle. Always note the source and year.',l:'lab-09.html'},
+{q:'What do I submit for Lab 9?',k:'lab 9 graded lab submit scope research question variables',a:'Your data set file and your project scope (research questions and key variables), on Moodle.',l:'lab-09.html'},
+{q:'How do I start the micro-credentials?',k:'start micro credentials badge sign in ibm microsoft learn week 8 map catch up',a:'Sign in to IBM SkillsBuild (with Credly) and Microsoft Learn with your CUD account, start the Week 1 and 2 units, catch up Weeks 1–8 by Week 11, then one unit a week.',l:'week-08.html'},
 {q:'How do I earn credentials?',k:'credential badge certificate cv bonus credly power bi ibm microsoft learn',a:'Optional: one free unit a week on Excel, Forms, OneDrive and Power BI. Three credentials by Week 14, and a class-activity bonus for every proof you submit.',l:'credentials.html'},
 {q:'What is the IBM Data Fundamentals badge?',k:'ibm skillsbuild data fundamentals credly badge',a:'A free IBM SkillsBuild course with a Credly digital badge. Start in Week 2 and finish by Week 8.',l:'credentials.html'},
 {q:'How do I learn Power BI?',k:'power bi report dashboard microsoft learn module visual',a:'Free Microsoft Learn modules in Weeks 4 and 9–13, from the analytics process to designing reports. They prepare you for the project dashboard.',l:'credentials.html'},
@@ -56,6 +61,7 @@ window.COURSE_SUGGEST={'index.html':['When is the midterm?','What does the midte
     'labs.html':['How do I export Forms responses to Excel?','How do I submit lab work?','What do I need for the labs?'],
     'exams.html':['When is the midterm?','What does the midterm cover?','When is Quiz 2?'],
     'credentials.html':['How do I earn credentials?','What is the IBM Data Fundamentals badge?','Do I have to pay?'],
+    'week-09.html':['What are the five steps of data-informed decision-making?','Where can I find open data for my project?','What do I submit for Lab 9?'],
     'review.html':['What does the midterm cover?','How do I fix a leading question?','What is a data dictionary?'],
     'practice-midterm.html':['What does the midterm cover?','What is percentage change?','What is diagnostic analytics?']};
 window.COURSE_TOPICS=['Midterm date','Midterm parts','Grading','Analytics levels','Data dictionary','Survey bias','Data ethics','Excel functions','Credentials'];

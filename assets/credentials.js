@@ -1,11 +1,13 @@
 /* GED 106 credential pathway: one free unit per week on the tools of the course.
+   Launched in Week 8: Weeks 1–8 units are the catch-up list (finish by Week 11), then one unit a week. Badge targets: IBM Week 12, Power BI Week 13, Microsoft 365 Week 14.
    Verified Oct 2026: IBM SkillsBuild Data Fundamentals (free, Credly badge), Microsoft Learn Power BI modules
    (free, trophies on your Learn profile), Microsoft Support training for OneDrive, Forms and Excel (free, no badge: screenshot proof).
    Optional paid exams (for example Microsoft MO-211 Excel Expert or PL-300 Power BI) are not required. */
 window.COURSE_CREDS = {
   form: '',  // Microsoft Forms link for proof submission (bonus). Paste it here.
+  start: 8,  // week the pathway was introduced in class
   badges: [
-    { id:'ibm', prov:'IBM SkillsBuild', name:'Data Fundamentals', proof:'Credly digital badge', done:8, url:'https://skillsbuild.org/college-students/course-catalog/data-fundamentals' },
+    { id:'ibm', prov:'IBM SkillsBuild', name:'Data Fundamentals', proof:'Credly digital badge', done:12, url:'https://skillsbuild.org/college-students/course-catalog/data-fundamentals' },
     { id:'pbi', prov:'Microsoft Learn', name:'Power BI: analyse and design reports', proof:'Trophies on your Learn profile', done:13, url:'https://learn.microsoft.com/en-us/training/paths/build-power-bi-visuals-reports/' },
     { id:'m365', prov:'Microsoft 365', name:'OneDrive, Forms and Excel skills', proof:'Screenshot of your own work', done:14, url:'https://support.microsoft.com/en-us/office/microsoft-365-basics-video-training-396b8d9e-e118-42d0-8a0d-87d1f2f055fb' }
   ],

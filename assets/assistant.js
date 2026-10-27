@@ -2,7 +2,7 @@
    No AI, no internet. Always points the student somewhere useful. */
 (function(){
   const KB=(window.COURSE_KB||[]).concat(((window.SEARCH_INDEX||{}).terms||[]).map(t=>({q:'What is '+t.g.toLowerCase()+'?',k:t.g+' meaning define definition',a:t.g+': '+t.d+'.',l:'lectures.html'})));
-  const IDX=((window.SEARCH_INDEX||{}).pages||[]).map(p=>({pt:p.w,l:p.p+'#s'+p.s,n:p.t,t:p.x,x:p.x}));
+  const IDX=((window.SEARCH_INDEX||{}).pages||[]).map(p=>({pt:p.w,l:p.p+(p.id?'#'+p.id:'#s'+p.s),n:p.t,t:p.x,x:p.x}));
   const page=(location.pathname.split('/').pop()||'index.html').replace(/^$/,'index.html');
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const STOP=new Set('a an the is are was were be do does did i we you our my me to of in on for and or what how why when where which who can should will with it this that about if your there any much many need tell explain please'.split(' '));

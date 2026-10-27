@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 Week 9 · Data-Informed Decision-Making</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261027">
+<link rel="stylesheet" href="assets/lesson.css?v=20261027">
+<style>
+:root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.09);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14);--c1:#0F766E;--c2:#B4562F;--c3:#2E7D5B;--c4:#5B3FA8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#5EEAD4;--c2:#F2A07E;--c3:#7FD3AA;--c4:#B9A3F5}}
+:root[data-theme="dark"]{--c1:#5EEAD4;--c2:#F2A07E;--c3:#7FD3AA;--c4:#B9A3F5}
+.lfig svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261027"></script>
+<script src="assets/course.js?v=20261027"></script>
+<script src="assets/concept.js?v=20261027"></script>
+<script src="assets/lesson.js?v=20261027"></script>
+<script src="assets/pad.js?v=20261027"></script>
+<script src="assets/credentials.js?v=20261027"></script>
+<script src="assets/keywords.js?v=20261027"></script>
+<script src="assets/professor.js?v=20261027"></script>
+<script src="assets/kb.js?v=20261027"></script>
+<script src="assets/search-index.js?v=20261027"></script>
+<script src="assets/assistant.js?v=20261027"></script>
+<script>
+const {svg,card,text,arrow,curveArrow,tick,cross,pill,axis}=CG;
+
+/* ---------- concept graphics ---------- */
+const gInformed=svg(560,230,
+  card(14,24,190,70,'var(--c1)')+text(109,54,'Data',{a:'middle',s:17,w:700})+text(109,76,'what happened, where, when',{a:'middle',s:12,c:'var(--muted)'})+
+  card(14,124,190,70,'var(--c2)')+text(109,154,'People',{a:'middle',s:17,w:700})+text(109,176,'experience, cost, fairness',{a:'middle',s:12,c:'var(--muted)'})+
+  arrow(210,59,330,104,'var(--c1)',2.4)+arrow(210,159,330,124,'var(--c2)',2.4)+
+  pill(340,92,200,44,'Decision','var(--wk)',{s:17})+
+  text(440,166,'data informs,',{a:'middle',s:13,c:'var(--muted)'})+text(440,184,'people decide',{a:'middle',s:13,c:'var(--muted)'}),
+  'Data and people together lead to a decision');
+
+/* Salik weekday tariff from 31 January 2025 (RTA announcement) */
+const gSalik=(()=>{ const R=h=>h<1?4:h<6?0:h<10?6:h<16?4:h<20?6:4; const X=h=>40+h*20, Y=v=>170-v*20;
+  let b=''; for(let h=0;h<24;h++){ const v=R(h), c=v===6?'var(--c2)':v===4?'var(--c1)':'var(--line)';
+    b+=v?`<rect x="${X(h)+1}" y="${Y(v)}" width="18" height="${v*20}" fill="${c}" fill-opacity="${v===6?.85:.55}"/>`:`<rect x="${X(h)+1}" y="166" width="18" height="4" fill="var(--muted)" fill-opacity=".5"/>`; }
+  return svg(560,230,b+axis(36,524,170)+
+    [0,6,10,16,20,24].map(h=>text(X(h),190,(h%24)+':00',{a:'middle',s:11,mono:true,c:'var(--muted)'})).join('')+
+    text(36,46,'AED 6',{s:12,mono:true,c:'var(--c2)',a:'end'})+text(36,94,'AED 4',{s:12,mono:true,c:'var(--c1)',a:'end'})+
+    text(X(8),40,'peak',{a:'middle',s:13,w:700,c:'var(--c2)'})+text(X(18),40,'peak',{a:'middle',s:13,w:700,c:'var(--c2)'})+text(X(3.5),156,'free',{a:'middle',s:13,w:700,c:'var(--muted)'})+
+    text(280,218,'Salik toll per crossing on a weekday, from 31 Jan 2025',{a:'middle',s:12,c:'var(--muted)'}),
+    'Salik weekday toll: AED 6 at 6 to 10 AM and 4 to 8 PM, AED 4 other hours, free 1 to 6 AM'); })();
+
+/* many options, data narrows them, people choose one */
+const gFunnel=svg(560,220,
+  `<path d="M40,30 L520,30 L380,110 L180,110 Z" fill="var(--c1)" fill-opacity=".12" stroke="var(--c1)" stroke-opacity=".6"/>`+
+  text(280,62,'Many options',{a:'middle',s:15,w:700})+text(280,84,'data rules some out',{a:'middle',s:12,c:'var(--muted)'})+
+  `<path d="M180,118 L380,118 L320,170 L240,170 Z" fill="var(--c2)" fill-opacity=".14" stroke="var(--c2)" stroke-opacity=".6"/>`+
+  text(280,142,'A few good options',{a:'middle',s:13,w:700})+text(280,160,'people weigh them',{a:'middle',s:11,c:'var(--muted)'})+
+  pill(220,180,120,32,'One decision','var(--wk)',{s:13}),
+  'Data narrows many options to a few; people choose one');
+
+/* the five steps as a cycle */
+const gCycle=(()=>{ const S=['Ask','Acquire','Analyse','Integrate','Iterate'], cx=280, cy=128, r=88;
+  const P=S.map((s,i)=>{ const a=-Math.PI/2+i*2*Math.PI/5; return [cx+r*1.55*Math.cos(a), cy+r*Math.sin(a)]; });
+  let b=''; P.forEach(([x,y],i)=>{ const [x2,y2]=P[(i+1)%5]; const mx=(x+x2)/2, my=(y+y2)/2, k=0.18;
+    b+=curveArrow(x+(x2-x)*.28,y+(y2-y)*.28, mx+(cx-mx)*-k, my+(cy-my)*-k, x+(x2-x)*.72,y+(y2-y)*.72,'var(--muted)',1.8); });
+  P.forEach(([x,y],i)=>{ b+=pill(x-58,y-17,116,34,(i+1)+' · '+S[i],i===4?'var(--c2)':'var(--wk)',{s:14}); });
+  return svg(560,260,b+text(cx,cy+5,'Iterate leads',{a:'middle',s:12,c:'var(--muted)'})+text(cx,cy+21,'back to Ask',{a:'middle',s:12,c:'var(--muted)'}),'Ask, Acquire, Analyse, Integrate, Iterate, then back to Ask'); })();
+
+/* Bayanat: one place, many sectors */
+const gOpen=svg(560,210,
+  card(200,20,160,64,'var(--wk)')+text(280,50,'bayanat.ae',{a:'middle',s:16,w:700,mono:true})+text(280,70,'UAE open data portal',{a:'middle',s:11,c:'var(--muted)'})+
+  [['Population',40],['Education',150],['Health',260],['Economy',370],['Transport',480]].map(([t,x])=>arrow(280,88,x,138,'var(--line)',1.6)+card(x-50,140,100,40,'var(--c1)',{op:.08,r:10})+text(x,165,t,{a:'middle',s:12,w:600})).join('')+
+  text(280,204,'Free to download · cite the source and year',{a:'middle',s:12,c:'var(--muted)'}),
+  'Bayanat links to open data sets by sector');
+
+/* reported result: Sheikh Zayed Road traffic about 9% lower */
+const gResult=svg(560,200,
+  axis(60,520,160)+`<rect x="130" y="${160-120}" width="110" height="120" fill="var(--muted)" fill-opacity=".35"/><rect x="320" y="${160-120*0.91}" width="110" height="${120*0.91}" fill="var(--wk)" fill-opacity=".8"/>`+
+  text(185,180,'Before',{a:'middle',s:13,w:700})+text(375,180,'After',{a:'middle',s:13,w:700})+
+  text(185,32,'100',{a:'middle',s:13,mono:true})+text(375,43,'91',{a:'middle',s:13,mono:true,w:700,c:'var(--wk)'})+
+  text(470,80,'−9%',{a:'middle',s:22,w:800,c:'var(--c2)'})+text(470,100,'Sheikh Zayed Rd',{a:'middle',s:11,c:'var(--muted)'})+
+  text(290,198,'Traffic index, before = 100 (RTA, reported May 2025)',{a:'middle',s:11,c:'var(--muted)'}),
+  'Traffic on Sheikh Zayed Road fell about 9 percent after variable pricing');
+
+const SRC_SALIK='Sources: <a href="https://en.aletihad.ae/news/uae/4533573/dubai--rta-announces-variable-salik--parking-tariff-system" target="_blank" rel="noopener">Aletihad, 30 Nov 2024 (RTA tariff)</a> · <a href="https://www.dubaieye1038.com/news/local/variable-salik-rates-helps-reduce-sheikh-zayed-road-traffic-by-9/" target="_blank" rel="noopener">Dubai Eye 103.8, 1 May 2025 (RTA result)</a>';
+
+Lesson.mount({
+  course:'GED 106', week:9, clo:'CLO 5', title:'Data-Informed Decision-Making',
+  pageTitle:'GED 106 Week 9 · Data-Informed Decision-Making',
+  chapter:'Be Data Literate (Morrow, 2024), Chapter 9',
+  intro:'How do people turn data into a good decision? Five steps: Ask, Acquire, Analyse, Integrate, Iterate.',
+  how:'Every topic: <b>Definition</b> → <b>Around us</b> → <b>The framework, step by step</b> → <b>What it means</b>.',
+  topics:[
+    { id:'informed', title:'Data-informed decisions',
+      def:'A <b>data-informed decision</b> uses data as evidence, together with people’s experience and judgement, to choose between options.',
+      defFig:{label:'Data informs, people decide', html:gInformed},
+      life:{ text:'From 31 January 2025, Dubai’s Salik toll changed with the time of day: AED 6 at peak hours, AED 4 off-peak, free from 1 to 6 AM. The RTA said its traffic studies showed the need for it.',
+        fig:{label:'Around us · Salik variable pricing', html:gSalik, caption:SRC_SALIK}},
+      meaning:{ text:'Data does not decide by itself. It rules options out; people then weigh cost, fairness and context, and choose.',
+        fig:{label:'From many options to one decision', html:gFunnel}} },
+    { id:'five-steps', title:'Ask, Acquire, Analyse, Integrate, Iterate',
+      def:'Data-informed decision-making follows five steps: <b>Ask</b> a question, <b>Acquire</b> data, <b>Analyse</b> it, <b>Integrate</b> the findings into a decision, and <b>Iterate</b> (Morrow, 2024, Ch. 9).',
+      defFig:{label:'The five steps are a cycle', html:gCycle},
+      life:{ text:'To Acquire data for your own project, start with Bayanat, the UAE’s official open data portal (launched 2016), which gathers federal and local data sets in one place.',
+        fig:{label:'Around us · open data in the UAE', html:gOpen, caption:'Source: <a href="https://opengov.unescwa.org/node/1217" target="_blank" rel="noopener">UN ESCWA Open Government: Bayanat UAE Open Data Portal</a>'}},
+      caseLabel:'Applied · Salik', stepsNote:'The same Salik decision, one step at a time.',
+      steps:[
+        {name:'Ask', do:'Write the question the decision must answer: clear, specific, measurable.', app:'How can Dubai reduce peak-hour traffic on its toll roads?'},
+        {name:'Acquire', do:'Find and collect the data that can answer the question, and check where it comes from.', app:'Every crossing is recorded at each Salik gate, with the time: traffic by gate and by hour.'},
+        {name:'Analyse', do:'Look for the pattern that answers the question.', app:'The heaviest hours became the peak bands: weekdays 6–10 AM and 4–8 PM.'},
+        {name:'Integrate', do:'Combine the findings with judgement and turn them into a decision.', app:'AED 6 at peak, AED 4 off-peak, free 1–6 AM, from 31 January 2025.'},
+        {name:'Iterate', do:'Measure the result, learn, and adjust. The next question starts the cycle again.', app:'The RTA reported Sheikh Zayed Road traffic about 9% lower (May 2025).'}
+      ],
+      meaning:{ text:'A decision is not the end. Measuring the result shows whether it worked and raises the next question.',
+        fig:{label:'Iterate · measure the result', html:gResult, caption:SRC_SALIK}} }
+  ],
+  inClass:{ live:false,
+    intro:'We work through these together in class, in teams. Use the box below each exercise or the printed handout.',
+    how:['<b>Listen</b> as your professor walks through the five steps on the board.','<b>Try</b> each step for your team’s project idea.','<b>Share</b> and improve together in class. Answers are not posted online.'],
+    items:[
+      {q:'Your team’s project: write <b>one Ask question</b> that is clear, specific and measurable.', tips:['Who is affected?','What would “better” look like in numbers?']},
+      {q:'<b>Acquire:</b> name two data sources that could answer your question. At least one should be open data (for example from bayanat.ae).'},
+      {q:'Draw the five-step cycle and write one line for your project in each step.', draw:true}
+    ]},
+  takeaways:{ label:'Week 9 on one page', mindmap:{center:'Data-informed decisions', branches:[
+    {t:'Ask',items:['A clear, specific question','Measurable']},
+    {t:'Acquire',items:['Find the right data','Check source and year']},
+    {t:'Analyse',items:['Find the pattern','Answer the question']},
+    {t:'Integrate',items:['Findings + judgement','Make the decision']},
+    {t:'Iterate',items:['Measure the result','Back to Ask']}]}},
+  quiz:[
+    {q:'A café counts how many coffees it sells each hour for one month. Which step is this?',o:['Ask','Acquire','Integrate','Iterate'],a:1,why:'<b>Acquire:</b> the café is collecting data. Not Ask (no question is written), not Integrate (no decision yet), not Iterate (nothing has been changed and measured).'},
+    {q:'After a new timetable, a university checks whether waiting times fell. Which step?',o:['Analyse','Integrate','Iterate','Ask'],a:2,why:'<b>Iterate:</b> it measures the result of a decision already made. Analyse looks for patterns before deciding; Integrate is making the decision; Ask writes the first question.'},
+    {q:'Which is the clearest Ask question?',o:['How can we improve things?','Is the library good?','How can we cut the average wait at the library desk below 5 minutes this term?','What data do we have?'],a:2,why:'It is specific and measurable. The others are vague (“things”, “good”) or start from the data instead of the decision.'},
+    {q:'A manager combines sales trends with staff opinions and the budget, then chooses a plan. Which step?',o:['Integrate','Acquire','Analyse','Iterate'],a:0,why:'<b>Integrate:</b> findings are combined with judgement into a decision. Acquire collects data, Analyse finds the pattern, Iterate checks the result afterwards.'}
+  ],
+  practiceLabel:'Show model answer',
+  practice:[
+    {q:'Explain the difference between a decision made on <b>gut feeling</b> and a <b>data-informed</b> decision. Give one example from campus life.', hint:'A gut-feeling decision uses opinion or habit only. A data-informed decision uses evidence (for example, counts of students per hour) together with judgement. Example: opening a second cafeteria counter at 1 PM because sales data show the queue peaks then.'},
+    {q:'Choose a decision in your own life (a course, a phone, a route to campus). Apply the five steps in one line each.', hint:'Ask: which route gets me to campus fastest by 9 AM? Acquire: travel times for each route for two weeks. Analyse: compare the averages and the spread. Integrate: choose the fastest reliable route, adding cost and comfort. Iterate: check again after a month or when roads change.'}
+  ],
+  next:'Next: Week 10, Charts and graphics. Read <i>Data Literacy in Practice</i>, Chapter 7.'
+});
+</script>
+</body>
+</html>

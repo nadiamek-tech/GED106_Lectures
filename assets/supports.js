@@ -6,25 +6,32 @@
   /* [key, label, what changes, why (evidence), method?] method = changes how practice works (page reloads) */
   const SW=[
     ['guided','Guided steps','Each practice question becomes a short step-by-step routine, with the model answer shown one step at a time.','Problem-solving routines (Montague, 2008) and step-by-step worked examples with “which rule is this?” prompts (Atkinson, Renkl & Merrill, 2003).',1],
-    ['single','One question at a time','Practice shows one question, a progress count and a short self-check before moving on.','Smaller chunks reduce working-memory load; self-monitoring improved results for college students with ADHD (Scheithauer & Kelley, 2017).',1],
+    ['single','One question at a time','Practice shows one question, a progress count and a short self-check before moving on.','Smaller chunks reduce working-memory load; self-monitoring helps students stay on task (Scheithauer & Kelley, 2017).',1],
     ['calmstart','Calm start','A 2-minute “write your worries” box before practice; answers become “compare with model working”.','Expressive writing before a test raised anxious students’ scores (Ramirez & Beilock, 2011); low-stakes retrieval practice lowers test anxiety (Agarwal et al., 2014).',1],
     ['voice','Read aloud (AI voice)','Adds a Listen button to lectures and a speaker button to each practice question and step, with symbols in words (x̄ = “x bar”).','Hearing and seeing the text together reduces the reading load of word problems.',1],
     ['font','Readable font','Clearer letter shapes.'],
     ['space','Extra spacing','More space between lines and words.'],
     ['numbers','Bigger numbers and formulas','Formulas and figures easier to read.'],
     ['large','Larger text','About 15% bigger.'],
+    ['glare','Low glare','No bright white: softer background, text and lines.'],
     ['contrast','High contrast','Stronger text and borders.'],
     ['calm','Calm colours, no scores','Muted colours; quiz scores hidden.'],
     ['motion','Reduce motion','No animations.'],
     ['focus','Focus mode','Hides the scene list and side buttons.'],
-    ['resume','Resume where I left off','Reopens the last scene you viewed.']
+    ['resume','Resume where I left off','Reopens the last scene you viewed.'],
+    ['words','Key words first','A short list of words to know at the top of each lecture.'],
+    ['catchup','Catch-up steps','After In class: how to catch up if you missed the class.']
   ];
+  /* one tap = one need; each card turns on a few settings */
   const PRESETS=[
-    ['Number support','Step-by-step solving',['guided','numbers','space']],
-    ['Focus support','One thing at a time',['single','focus','motion','resume']],
-    ['Calm mode','Maths anxiety',['calmstart','calm','motion']],
-    ['Reading support','Reading and dyslexia',['voice','font','space','large']],
-    ['Vision support','Low vision',['large','contrast','voice']]
+    ['Step by step','Guided solving',['guided','numbers']],
+    ['One thing at a time','Less on screen',['single','focus','motion']],
+    ['Calm mode','No scores, calm start',['calmstart','calm','motion']],
+    ['Read aloud','Listen to the text',['voice']],
+    ['Easier reading','Clearer and bigger',['font','space','large']],
+    ['Eye comfort','Tint, less glare',['glare']],
+    ['Key words first','Before each lecture',['words']],
+    ['Catch-up steps','If you missed a class',['catchup']]
   ];
   const load=()=>{ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } };
   const save=s=>{ try{ localStorage.setItem(KEY,JSON.stringify(s)); }catch(e){} };
@@ -39,6 +46,17 @@ html[data-sup-large] body{font-size:19.5px}
 html[data-sup-space] :is(p,li,td,th,dd,summary,.para,.narr,small,label){line-height:1.9!important;letter-spacing:.03em;word-spacing:.12em}
 html[data-sup-numbers] :is(.m,.frac,.keys kbd,.out b,.tbl td,.pt-cal td,code,.mono){font-size:1.15em;letter-spacing:.04em;font-variant-numeric:tabular-nums lining-nums}
 html[data-sup-numbers] .m{line-height:2.1!important}
+html:not([data-sup-words]) .lkw,html:not([data-sup-catchup]) .lmissed{display:none!important}
+html[data-sup-glare]{--bg:#e8e6df;--surface:#efede6;--sunk:#e1ded5;--ink:#2b333d;--line:#cdc8bd}
+@media (prefers-color-scheme:dark){html[data-sup-glare]:not([data-theme="light"]){--bg:#23272c;--surface:#2a2f35;--sunk:#30353c;--ink:#d3d0c8;--line:#454c55}}
+html[data-sup-glare][data-theme="dark"]{--bg:#23272c;--surface:#2a2f35;--sunk:#30353c;--ink:#d3d0c8;--line:#454c55}
+html[data-sup-glare] :is(.bd,.lv-stage){background:#eeebe2!important}
+.ls-tint{position:fixed;inset:0;pointer-events:none;z-index:2147483000;mix-blend-mode:multiply}
+.ls-dim{position:fixed;inset:0;pointer-events:none;z-index:2147483001;background:#000}
+.ls-tints{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ls-tints button{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--line,#ccc);cursor:pointer;font:inherit;font-size:.7rem;color:#333}
+.ls-tints button[aria-pressed="true"]{outline:3px solid var(--wk,#2F5BD3);outline-offset:2px}
+@media print{.ls-tint,.ls-dim{display:none}}
 html[data-sup-contrast]{--muted:var(--ink);--line:#4b5563}
 @media (prefers-color-scheme:dark){html[data-sup-contrast]:not([data-theme="light"]){--line:#a3adb8;--bg:#000;--surface:#0b0b0b}}
 html[data-sup-contrast][data-theme="dark"]{--line:#a3adb8;--bg:#000;--surface:#0b0b0b}
@@ -59,7 +77,9 @@ html[data-sup-focus] .chips .chip:not(:first-child){display:none}
 .ls-head h2{margin:0;font-size:1.25rem}
 .ls-head p{margin:2px 0 0;color:var(--muted,#555);font-size:.88rem}
 .ls-x{margin-left:auto;flex:none;border:1px solid var(--line,#ccc);background:var(--bg,#fff);color:var(--ink,#111);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:1.1rem}
-.ls-pre{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ls-pre{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ls-more{border-top:1px solid var(--line,#ddd);padding-top:10px}.ls-more summary{cursor:pointer;font-weight:700;font-size:.92rem;color:var(--muted,#555)}.ls-more[open]>div{display:grid;gap:12px;margin-top:10px}
+.ls-eye{display:grid;gap:10px;background:var(--bg,#f5f5f5);border-radius:14px;padding:10px 12px}
 .ls-pre button{border:1.5px solid var(--line,#ccc);background:var(--bg,#fff);color:var(--ink,#111);border-radius:14px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;display:grid;gap:2px}
 .ls-pre button b{font-size:.95rem}
 .ls-pre button small{color:var(--muted,#555);font-size:.78rem}
@@ -76,14 +96,23 @@ html[data-sup-focus] .chips .chip:not(:first-child){display:none}
 .ls-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--muted,#555)}
 .ls-foot button{border:1px solid var(--line,#ccc);background:transparent;color:var(--ink,#111);border-radius:10px;padding:7px 12px;cursor:pointer;font:inherit}
 @media (max-width:480px){.ls-btn span{display:none}.ls-btn{padding:10px}}
-@media print{.ls-btn{display:none}}`;
+@media print{.ls-btn{display:none}}
+body.full .ls-btn{display:none}`;
   const style=document.createElement('style'); style.textContent=css; document.head.appendChild(style);
 
+  /* screen tint (like a coloured overlay) and brightness, over the whole page */
+  const TINTS=[['none','None','#ffffff'],['blue','Blue','#c6d9f2'],['grey','Grey','#d4d4d4'],['aqua','Aqua','#c5e8ea'],['green','Green','#d2ead0'],['yellow','Yellow','#f5ecb5'],['rose','Rose','#f2d1d7']];
+  let tintEl=null, dimEl=null;
+  function tint(){ const t=TINTS.find(x=>x[0]===st.tint);
+    if(t&&t[0]!=='none'){ if(!tintEl){ tintEl=document.createElement('div'); tintEl.className='ls-tint'; tintEl.setAttribute('aria-hidden','true'); } tintEl.style.background=t[2]; if(document.body&&!tintEl.isConnected) document.body.appendChild(tintEl); }
+    else if(tintEl) tintEl.remove();
+    const d=+st.dim||0; if(d){ if(!dimEl){ dimEl=document.createElement('div'); dimEl.className='ls-dim'; dimEl.setAttribute('aria-hidden','true'); } dimEl.style.opacity=d; if(document.body&&!dimEl.isConnected) document.body.appendChild(dimEl); }
+    else if(dimEl) dimEl.remove(); }
   let fontLink=null;
-  function apply(){
+  function apply(){ tint();
     SW.forEach(([k])=>{ if(st[k]) root.setAttribute('data-sup-'+k,''); else root.removeAttribute('data-sup-'+k); });
     if(st.font&&!fontLink){ fontLink=document.createElement('link'); fontLink.rel='stylesheet'; fontLink.href='https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap'; document.head.appendChild(fontLink); }
-    const b=document.querySelector('.ls-btn'); if(b){ if(SW.some(([k])=>st[k])||(st.rate&&st.rate!==1)) b.setAttribute('data-on',''); else b.removeAttribute('data-on'); }
+    const b=document.querySelector('.ls-btn'); if(b){ if(SW.some(([k])=>st[k])||(st.rate&&st.rate!==1)||(st.tint&&st.tint!=='none')||+st.dim) b.setAttribute('data-on',''); else b.removeAttribute('data-on'); }
   }
   apply();
 
@@ -106,27 +135,29 @@ html[data-sup-focus] .chips .chip:not(:first-child){display:none}
   let methodChanged=false;
   function render(){
     const on=k=>!!st[k];
-    const row=([k,t,d,why])=>`<label><span>${t}<small>${d}</small>${why?`<em>${why}</em>`:''}</span><input type="checkbox" data-k="${k}" ${on(k)?'checked':''}></label>`;
-    dlg.innerHTML=`<div class="ls-in"><div class="ls-head"><div><h2>Learning supports</h2><p>Choose how you study. Saved on this device only; nothing is sent.</p></div><button type="button" class="ls-x" aria-label="Close">×</button></div>
-<p class="ls-h">Quick settings</p>
+    const row=([k,t,d])=>`<label><span>${t}<small>${d}</small></span><input type="checkbox" data-k="${k}" ${on(k)?'checked':''}></label>`;
+    dlg.innerHTML=`<div class="ls-in"><div class="ls-head"><div><h2>Learning supports</h2><p>Tap what helps you. Saved on this device only.</p></div><button type="button" class="ls-x" aria-label="Close">×</button></div>
 <div class="ls-pre">${PRESETS.map(([t,s,ks],i)=>`<button type="button" data-p="${i}" aria-pressed="${ks.every(on)}"><b>${t}</b><small>${s}</small></button>`).join('')}</div>
-<p class="ls-h">How you practise</p>
-<div class="ls-sw">${SW.filter(x=>x[4]).map(row).join('')}</div>
-<p class="ls-h">How the page looks</p>
-<div class="ls-sw">${SW.filter(x=>!x[4]).map(row).join('')}</div>
-<p class="ls-h">How a lecture is shown</p>
-<div class="ls-speed" role="group" aria-label="Lecture view">${[['page','Whole lecture on one page'],['section','One topic at a time'],['part','One step at a time']].map(([v,t])=>`<button type="button" data-v="${v}" aria-pressed="${(st.view||'page')===v}">${t}</button>`).join('')}</div>
-<div class="ls-speed"><span class="ls-h" style="margin-right:6px">Voice speed</span>${[[0.8,'Slower'],[1,'Normal'],[1.2,'Faster']].map(([r,t])=>`<button type="button" data-r="${r}" aria-pressed="${rate()===r}">${t}</button>`).join('')}</div>
-<div class="ls-foot"><span>Practice changes apply when you close this panel.</span><button type="button" class="ls-reset">Reset all</button></div></div>`;
+${on('glare')?`<div class="ls-eye"><div class="ls-tints" role="group" aria-label="Screen tint">${TINTS.map(([k,t,c])=>`<button type="button" data-t="${k}" title="${t}" aria-label="${t} tint" aria-pressed="${(st.tint||'none')===k}" style="background:${c}">${k==='none'?'None':''}</button>`).join('')}</div>
+<div class="ls-speed" role="group" aria-label="Brightness">${[[0,'Normal'],[0.15,'Dimmer'],[0.3,'Dimmest']].map(([d,t])=>`<button type="button" data-d="${d}" aria-pressed="${(+st.dim||0)===d}">${t}</button>`).join('')}</div></div>`:''}
+<details class="ls-more"${st.more?' open':''}><summary>More options</summary><div>
+<div class="ls-sw">${SW.map(row).join('')}</div>
+<div class="ls-speed" role="group" aria-label="Lecture view">${[['page','Whole page'],['section','One topic'],['part','One step']].map(([v,t])=>`<button type="button" data-v="${v}" aria-pressed="${(st.view||'page')===v}">${t}</button>`).join('')}</div>
+<div class="ls-speed"><span class="ls-h" style="margin-right:6px">Voice</span>${[[0.8,'Slower'],[1,'Normal'],[1.2,'Faster']].map(([r,t])=>`<button type="button" data-r="${r}" aria-pressed="${rate()===r}">${t}</button>`).join('')}</div>
+<div class="ls-foot"><button type="button" class="ls-reset">Reset all</button></div></div></details></div>`;
+    dlg.querySelector('.ls-more').addEventListener('toggle',e=>{ st.more=e.target.open; save(st); });
     dlg.querySelector('.ls-x').onclick=()=>dlg.close();
     const isM=k=>SW.some(x=>x[0]===k&&x[4])||k==='focus';
-    dlg.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ const ks=PRESETS[b.dataset.p][2], all=ks.every(on); ks.forEach(k=>{ st[k]=!all; if(isM(k)) methodChanged=true; }); if(PRESETS[b.dataset.p][0]==='Focus support'){ st.view=all?'page':'section'; methodChanged=true; } commit(); });
+    dlg.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{ const n=+b.dataset.p, ks=PRESETS[n][2], all=ks.every(on); const keep=new Set(PRESETS.filter((P,i)=>i!==n&&P[2].every(on)).flatMap(P=>P[2]));
+      ks.forEach(k=>{ if(all&&keep.has(k)) return; st[k]=!all; if(isM(k)) methodChanged=true; }); if(PRESETS[n][0]==='One thing at a time'){ st.view=all?'page':'section'; methodChanged=true; } commit(); });
     dlg.querySelectorAll('[data-k]').forEach(c=>c.onchange=()=>{ st[c.dataset.k]=c.checked; if(isM(c.dataset.k)) methodChanged=true; commit(); });
     dlg.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{ st.rate=+b.dataset.r; commit(); document.querySelectorAll('audio,video').forEach(m=>{ try{ m.playbackRate=rate(); }catch(e){} }); });
     dlg.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{ st.view=b.dataset.v; methodChanged=true; commit(); });
+    dlg.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{ st.tint=b.dataset.t; commit(); });
+    dlg.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{ st.dim=+b.dataset.d; commit(); });
     dlg.querySelector('.ls-reset').onclick=()=>{ if(SW.some(x=>x[4]&&st[x[0]])||st.view) methodChanged=true; st={}; commit(); };
   }
-  function commit(){ save(st); apply(); const f=document.activeElement&&document.activeElement.dataset; const key=f&&(f.k||f.p||f.r); render(); if(key!=null){ const el=dlg.querySelector(`[data-k="${key}"],[data-p="${key}"],[data-r="${key}"]`); if(el) el.focus(); } }
+  function commit(){ save(st); apply(); const f=document.activeElement&&document.activeElement.dataset; const key=f&&(f.k||f.p||f.r||f.t||f.d); render(); if(key!=null){ const el=dlg.querySelector(`[data-k="${key}"],[data-p="${key}"],[data-r="${key}"],[data-t="${key}"],[data-d="${key}"]`); if(el) el.focus(); } }
   function build(){
     const b=document.createElement('button'); b.type='button'; b.className='ls-btn'; b.setAttribute('aria-haspopup','dialog');
     b.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="4.5" r="1.8"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/></svg><span>Learning supports</span>';

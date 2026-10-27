@@ -17,6 +17,21 @@
 .cmp div{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);font-family:var(--f-display);font-size:.84rem}
 .cmp b{display:block;font-size:1.6rem;line-height:1.1}
 .claim{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:6px 0}
+
+/* micro-credentials map (activity) */
+.cmap{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.88rem}
+.cmap th{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:400;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+.cmap td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+.cmap td:first-child{font-weight:800;color:var(--wk)}
+.cmap tr.grp td{background:var(--sunk);font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.cmap .prov{display:inline-block;white-space:nowrap;border-radius:999px;padding:1px 8px;font-size:.74rem;font-weight:700;color:var(--surface)}
+.cmap .p-ibm{background:#1F6F8B}.cmap .p-pbi{background:#B4562F}.cmap .p-m365{background:#2E7D5B}.cmap .p-all{background:var(--muted)}
+.cmap a.go{font-weight:700;white-space:nowrap}
+.cstart{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;font-family:var(--f-display)}
+.cstart div{border:1px solid var(--line);border-top:4px solid var(--wk);border-radius:12px;padding:10px 12px;background:var(--surface);font-size:.9rem}
+.cstart b{display:block;margin-bottom:4px}
+.cstart a{font-weight:700}
+@media (max-width:760px){.cstart{grid-template-columns:minmax(0,1fr)}.cmap th:nth-child(3),.cmap td:nth-child(3){display:none}}
 </style>
 </head>
 <body>
@@ -71,6 +86,21 @@ function cherry(el){
 
 const FIVE=`<table class="tbl"><thead><tr><th>Problem</th><th>Check</th></tr></thead><tbody><tr><td>Biased data</td><td>Who is missing from the data?</td></tr><tr><td>Proxy variable</td><td>Are we measuring what we care about?</td></tr><tr><td>Misleading presentation</td><td>Full range, honest axis, a comparison</td></tr><tr><td>Privacy and security</td><td>Who can identify or open the data?</td></tr><tr><td>Over-collection</td><td>Is every field needed?</td></tr></tbody></table>`;
 
+
+/* micro-credentials: every week of the course mapped to a free unit (data in assets/credentials.js) */
+const CREDMAP=()=>{ const C=window.COURSE_CREDS; if(!C) return '';
+  const T={1:'The world of data',2:'The four pillars of data literacy',3:'Data collection and surveys',4:'The four levels of analytics',5:'Reading and speaking data',6:'The three Cs of data literacy',7:'Data ethics 1',8:'Data ethics 2',9:'Data-informed decision-making',10:'Charts and graphics',11:'Data visualization and storytelling',12:'Begin your data and analytics journey',13:'Planning capstone projects',14:'Developing data projects',15:'Project presentations'};
+  const row=w=>{ const x=C.weeks[w], b=C.badges.find(y=>y.id===x.b); return `<tr><td>${String(w).padStart(2,'0')}</td><td>${T[w]}</td><td>${x.mod}</td><td><span class="prov p-${x.b}">${b?b.prov:'All'}</span></td><td><a class="go" href="${x.url}"${/^http/.test(x.url)?' target="_blank" rel="noopener"':''}>Open ↗</a></td></tr>`; };
+  const ws=Object.keys(C.weeks).map(Number);
+  return `<div class="scroll"><table class="cmap"><thead><tr><th>Wk</th><th>What we studied</th><th>Free unit</th><th>From</th><th></th></tr></thead><tbody>
+    <tr class="grp"><td colspan="5">Weeks 1–8 · catch up by Week 11</td></tr>${ws.filter(w=>w<=8).map(row).join('')}
+    <tr class="grp"><td colspan="5">Weeks 9–15 · one unit with each lecture</td></tr>${ws.filter(w=>w>8).map(row).join('')}</tbody></table></div>
+    <p class="mono" style="color:var(--muted);margin:8px 0 0">${C.badges.map(b=>`${b.prov}: ${b.name} (${b.proof}) by Week ${b.done}`).join(' · ')}</p>
+    <div class="cstart">
+      <div><b>1 · Sign in now</b><a href="https://skillsbuild.org/college-students/course-catalog/data-fundamentals" target="_blank" rel="noopener">IBM SkillsBuild ↗</a> (free account, then link Credly) and <a href="https://learn.microsoft.com/en-us/training/" target="_blank" rel="noopener">Microsoft Learn ↗</a> with your CUD Microsoft 365 account.</div>
+      <div><b>2 · Start in class</b>Open Week 1 (OneDrive) and Week 2 (IBM Data Fundamentals) above. Tick Done on <a href="credentials.html">My Credentials</a>.</div>
+      <div><b>3 · Keep going</b>Catch up Weeks 1–8 by Week 11, then one unit each week. Submit each proof for a class-activity bonus.</div>
+    </div>`; };
 Lecture.mount({
   id:'g106-w8', course:'GED 106', week:8, clo:1, short:'Week 8 · Data Ethics 2',
   title:'Data Ethics -2',
@@ -131,7 +161,10 @@ Lecture.mount({
       {q:`An algorithm uses past spending to decide who needs care. This is a problem of…`,o:[`a proxy variable`,`too little data`,`a pie chart`,`over-collection`],a:0,why:`Cost stood in for need.`},
       {q:`Showing only the two months when sales fell, from a year of growth, is…`,o:[`cherry-picking`,`data cleaning`,`a data dictionary`,`prescriptive analytics`],a:0,why:`True numbers, misleading selection.`},
       {q:`In Gender Shades (2018), classifiers made the most errors for…`,o:[`lighter-skinned men`,`darker-skinned women`,`all groups equally`,`children`],a:1,why:`Up to 34.7% error, against at most 0.8% for lighter-skinned men.`},
-      {q:`The best response to over-collection is to…`,o:[`collect only what you need`,`encrypt everything and keep it forever`,`publish it`,`add more questions`],a:0,why:`Less data means less risk.`}])} }
+      {q:`The best response to over-collection is to…`,o:[`collect only what you need`,`encrypt everything and keep it forever`,`publish it`,`add more questions`],a:0,why:`Less data means less risk.`}])} },
+  { nav:'Micro-credentials', title:'Activity · Your micro-credentials map', kind:'activity', minutes:15, wide:true, credMap:true,
+    narration:[`Everything we studied in Weeks 1–8 continues in a free industry unit. Three credentials, all free: IBM <b>Data Fundamentals</b> (Credly badge), <b>Power BI</b> on Microsoft Learn, and <b>OneDrive, Forms and Excel</b> skills.`],
+    fig:{label:`Every week, mapped to a free unit · then start`, html:CREDMAP()} },
   ]
 });
 </script>
