@@ -141,17 +141,9 @@
     /* optional micro-credential: this week's free unit (assets/credentials.js) */
     if(cw){ const bd=CC.badges.find(x=>x.id===cw.b), key=(cfg.credKey||'g106-cred-')+cfg.week, form=CC.form||'';
       const kl=el('section',{class:'lsec',id:'keep-learning'}); kl.appendChild(el('h2',{},`<span class="no">${num('keep-learning')}</span>Keep learning`));
-      const get=k=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set=(k,v)=>{ try{ localStorage.setItem(k,v); }catch(e){} };
-      const card=el('div',{class:'cred'});
-      card.innerHTML=`<span class="eyebrow">Optional · bonus · ${bd?esc(bd.prov):'Credential'} · ${esc(cw.part)} · free</span><b>${esc(cw.mod)}</b>
-        <span class="cred-meta">Counts toward: ${bd?esc(bd.name)+' ('+esc(bd.proof)+')':'your credentials'}</span>
-        <ol class="cred-steps"><li>Complete the unit.</li><li>Take a screenshot or copy your badge link.</li><li>Submit it for a class-activity bonus.</li></ol>
-        <div class="row"><a class="btn" href="${cw.url}" target="_blank" rel="noopener">Continue learning ↗</a>
-        ${form?`<a class="btn ghost" href="${form}" target="_blank" rel="noopener">Submit proof ↗</a>`:`<span class="btn ghost" aria-disabled="true" style="opacity:.55;cursor:default">Proof form: link coming soon</span>`}
-        <label class="cred-done"><input type="checkbox" ${get(key)==='1'?'checked':''}> Done</label></div>
-        <a class="cred-all" href="credentials.html">See the full pathway →</a>`;
-      card.querySelector('input').addEventListener('change',e=>set(key,e.target.checked?'1':'0'));
-      kl.appendChild(card); main.appendChild(kl); }
+      kl.appendChild(el('p',{class:'ltext say'},'Optional and free. This week’s topic continues in a free unit: open it, learn, then come back here for a class-activity bonus.'));
+      const card=window.CredCard&&CredCard(cfg.week);
+      if(card) kl.appendChild(card); main.appendChild(kl); }
 
     const pager=el('nav',{class:'lpager','aria-label':'Move through the lecture'}); main.appendChild(pager);
     document.body.appendChild(main);

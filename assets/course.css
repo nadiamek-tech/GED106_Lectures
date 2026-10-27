@@ -320,3 +320,17 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
 .cred-steps{margin:.4em 0 0;padding-left:1.2em;font-size:.92rem}
 .cred-all{font-size:.88rem;margin-top:4px}
 .chip.k-bonus{border-color:var(--good);color:var(--good)}
+
+/* guided credential card: Do → Learn → Return */
+.cred-g .cred-flags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.cred-g .cred-flags span{font:700 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--good);color:var(--good);border-radius:999px;padding:2px 9px}
+.cred-g .cred-t{font-size:1.08rem}
+.cred-go{list-style:none;margin:8px 0 4px;padding:0;display:grid;gap:8px;counter-reset:cg}
+.cred-go li{counter-increment:cg;display:grid;grid-template-columns:30px 76px minmax(0,1fr);gap:4px 10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.cred-go li::before{content:counter(cg);width:26px;height:26px;border-radius:50%;background:var(--good);color:var(--surface);display:grid;place-items:center;font-weight:800;font-size:.85rem;grid-row:span 3}
+.cred-go li > b{font-size:.95rem}
+.cred-go li > span{font-size:.92rem;line-height:1.45}
+.cred-go li > .btn,.cred-go li > .row{grid-column:3;justify-self:start;margin-top:4px}
+.cred-cert{margin:6px 0 0;font-size:.9rem}
+.cred-free{margin:2px 0 0;font-size:.86rem;color:var(--muted)}
+@media (max-width:560px){.cred-go li{grid-template-columns:30px minmax(0,1fr)}.cred-go li > span,.cred-go li > .btn,.cred-go li > .row{grid-column:2}}

@@ -185,7 +185,7 @@
     const S = cfg.scenes; let cur = 0;
     if(window.COURSE_CREDS && window.COURSE_CREDS.weeks[cfg.week] && !S.some(x=>x.kind==='bonus'||x.credMap))
       S.push({ nav:'Take it further', title:'Take it further · credentials', kind:'bonus',
-        narration:['This week\'s topic continues in a free unit on the tools of the course. Complete it, add the credential to your CV, and submit your proof for a class-activity bonus.'] });
+        narration:['Optional and free. This week\'s topic continues in a free unit: open it, learn, then come back here for a class-activity bonus.'] });
     const seen = new Set(JSON.parse(store.get('ged102-seen-'+cfg.id)||'[]'));
     document.body.dataset.layout = 'even';
     
@@ -276,17 +276,7 @@
       if(s.src) narr.appendChild(h('div',{class:'src'},s.src));
       const CC=window.COURSE_CREDS, cw=CC&&CC.weeks[cfg.week];
       if(cw && s.kind==='bonus'){
-        const bd=CC.badges.find(x=>x.id===cw.b), key='g106-cred-'+cfg.week, form=CC.form||'';
-        const card=h('div',{class:'cred'});
-        card.innerHTML=`<span class="eyebrow">${bd?esc(bd.prov):'Credential'} · ${esc(cw.part)} · free</span><b>${esc(cw.mod)}</b>
-          <span class="cred-meta">Counts toward: ${bd?esc(bd.name)+' ('+esc(bd.proof)+')':'your credentials'}</span>
-          <ol class="cred-steps"><li>Complete the unit.</li><li>Take a screenshot or copy your badge link.</li><li>Submit it for a class-activity bonus.</li></ol>
-          <div class="row"><a class="btn" href="${cw.url}" target="_blank" rel="noopener">Start the unit ↗</a>
-          ${form?`<a class="btn ghost" href="${form}" target="_blank" rel="noopener">Submit proof ↗</a>`:`<span class="btn ghost" aria-disabled="true" style="opacity:.55;cursor:default">Proof form: link coming soon</span>`}
-          <label class="cred-done"><input type="checkbox" ${store.get(key)==='1'?'checked':''}> Done</label></div>
-          <a class="cred-all" href="credentials.html">See the full pathway →</a>`;
-        card.querySelector('input').addEventListener('change',e=>store.set(key,e.target.checked?'1':'0'));
-        narr.appendChild(card);
+        const card=window.CredCard&&CredCard(cfg.week); if(card) narr.appendChild(card);
       }
       if(s.notes) narr.appendChild(h('div',{class:'notes'},`<span class="eyebrow">Teacher notes${s.minutes?` · ${s.minutes} min`:''}</span><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`));
       split.appendChild(narr);
