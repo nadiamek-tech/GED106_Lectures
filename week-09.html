@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=20261027">
-<link rel="stylesheet" href="assets/lesson.css?v=20261027">
+<link rel="stylesheet" href="assets/course.css?v=20261027b">
+<link rel="stylesheet" href="assets/lesson.css?v=20261027b">
 <style>
 :root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.09);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14);--c1:#0F766E;--c2:#B4562F;--c3:#2E7D5B;--c4:#5B3FA8}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#5EEAD4;--c2:#F2A07E;--c3:#7FD3AA;--c4:#B9A3F5}}
@@ -17,17 +17,17 @@
 </style>
 </head>
 <body>
-<script src="assets/supports.js?v=20261027"></script>
-<script src="assets/course.js?v=20261027"></script>
-<script src="assets/concept.js?v=20261027"></script>
-<script src="assets/lesson.js?v=20261027"></script>
-<script src="assets/pad.js?v=20261027"></script>
-<script src="assets/credentials.js?v=20261027"></script>
-<script src="assets/keywords.js?v=20261027"></script>
-<script src="assets/professor.js?v=20261027"></script>
-<script src="assets/kb.js?v=20261027"></script>
-<script src="assets/search-index.js?v=20261027"></script>
-<script src="assets/assistant.js?v=20261027"></script>
+<script src="assets/supports.js?v=20261027b"></script>
+<script src="assets/course.js?v=20261027b"></script>
+<script src="assets/concept.js?v=20261027b"></script>
+<script src="assets/lesson.js?v=20261027b"></script>
+<script src="assets/pad.js?v=20261027b"></script>
+<script src="assets/credentials.js?v=20261027b"></script>
+<script src="assets/keywords.js?v=20261027b"></script>
+<script src="assets/professor.js?v=20261027b"></script>
+<script src="assets/kb.js?v=20261027b"></script>
+<script src="assets/search-index.js?v=20261027b"></script>
+<script src="assets/assistant.js?v=20261027b"></script>
 <script>
 const {svg,card,text,arrow,curveArrow,tick,cross,pill,axis}=CG;
 
@@ -84,6 +84,16 @@ const gResult=svg(560,200,
   text(290,198,'Traffic index, before = 100 (RTA, reported May 2025)',{a:'middle',s:11,c:'var(--muted)'}),
   'Traffic on Sheikh Zayed Road fell about 9 percent after variable pricing');
 
+
+const MODEL4=`<p style="margin:0 0 8px"><b>Example only:</b> your topic and data set will be different.</p>
+<div class="scroll"><table class="tbl"><tbody>
+<tr><th>Topic</th><td>Access to university education in the UAE</td></tr>
+<tr><th>Data set</th><td>School enrollment, tertiary (% gross), indicator SE.TER.ENRR, World Bank Open Data. <a href="https://data.worldbank.org/indicator/SE.TER.ENRR" target="_blank" rel="noopener">data.worldbank.org ↗</a></td></tr>
+<tr><th>Main question (Ask)</th><td>How has tertiary enrolment in the UAE changed since 2010, and how does it compare with the other GCC countries?</td></tr>
+<tr><th>Supporting questions</th><td>1. In which years did the UAE grow fastest?<br>2. Which GCC country has the highest enrolment in the latest year?</td></tr>
+<tr><th>Key variables</th><td>Country: categorical<br>Year: numerical (year)<br>Tertiary enrolment: numerical (% gross)</td></tr>
+<tr><th>Decision it could inform</th><td>Where universities and policymakers should plan more study places.</td></tr></tbody></table></div>
+<p style="margin:10px 0 0">Why it works: the question is specific and measurable, the source is named, and every variable has a type and a unit.</p>`;
 const SRC_SALIK='Sources: <a href="https://en.aletihad.ae/news/uae/4533573/dubai--rta-announces-variable-salik--parking-tariff-system" target="_blank" rel="noopener">Aletihad, 30 Nov 2024 (RTA tariff)</a> · <a href="https://www.dubaieye1038.com/news/local/variable-salik-rates-helps-reduce-sheikh-zayed-road-traffic-by-9/" target="_blank" rel="noopener">Dubai Eye 103.8, 1 May 2025 (RTA result)</a>';
 
 Lesson.mount({
@@ -122,7 +132,8 @@ Lesson.mount({
     items:[
       {q:'Your team’s project: write <b>one Ask question</b> that is clear, specific and measurable.', tips:['Who is affected?','What would “better” look like in numbers?']},
       {q:'<b>Acquire:</b> name two data sources that could answer your question. At least one should be open data (for example from bayanat.ae).'},
-      {q:'Draw the five-step cycle and write one line for your project in each step.', draw:true}
+      {q:'Draw the five-step cycle and write one line for your project in each step.', draw:true},
+      {q:'<b>Scope your project:</b> write your team’s main research question, two supporting questions, and the key variables (column name, type, unit). Then name one decision your findings could inform.', tips:['Main question: clear, specific, measurable.','For each variable: categorical or numerical, and its unit.'], draw:false}
     ]},
   takeaways:{ label:'Week 9 on one page', mindmap:{center:'Data-informed decisions', branches:[
     {t:'Ask',items:['A clear, specific question','Measurable']},
@@ -141,6 +152,9 @@ Lesson.mount({
     {q:'Explain the difference between a decision made on <b>gut feeling</b> and a <b>data-informed</b> decision. Give one example from campus life.', hint:'A gut-feeling decision uses opinion or habit only. A data-informed decision uses evidence (for example, counts of students per hour) together with judgement. Example: opening a second cafeteria counter at 1 PM because sales data show the queue peaks then.'},
     {q:'Choose a decision in your own life (a course, a phone, a route to campus). Apply the five steps in one line each.', hint:'Ask: which route gets me to campus fastest by 9 AM? Acquire: travel times for each route for two weeks. Analyse: compare the averages and the spread. Integrate: choose the fastest reliable route, adding cost and comfort. Iterate: check again after a month or when roads change.'}
   ],
+  end:[{ id:'model-answer', title:'Model answer · Exercise 4',
+    text:'What you did today is the hardest part of any data project: a clear question, real data and the right variables. Analysts in companies and government do exactly this before every report. Your project now has its foundation.',
+    build:(el,W)=>W.practice(el,[{q:'Model answer: an example project scope',hint:MODEL4}],{label:'Show model answer',prefix:'',numbered:false}) }],
   next:'Next: Week 10, Charts and graphics. Read <i>Data Literacy in Practice</i>, Chapter 7.'
 });
 </script>

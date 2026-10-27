@@ -43,7 +43,7 @@
     /* top bar: back link, contents, voice, theme */
     const bar=el('header',{class:'lbar'});
     const CC=window.COURSE_CREDS, cw=CC&&CC.weeks&&CC.weeks[cfg.week];
-    const secs=cfg.topics.map(t=>({id:t.id,t:t.title})).concat(cfg.inClass?[{id:'in-class',t:'In class'}]:[]).concat([{id:'takeaways',t:'Takeaways'},{id:'practice',t:'Practice'}]).concat(cw?[{id:'keep-learning',t:'Keep learning'}]:[]);
+    const secs=cfg.topics.map(t=>({id:t.id,t:t.title})).concat(cfg.inClass?[{id:'in-class',t:'In class'}]:[]).concat([{id:'takeaways',t:'Takeaways'},{id:'practice',t:'Practice'}]).concat((cfg.end||[]).map(x=>({id:x.id,t:x.title}))).concat(cw?[{id:'keep-learning',t:'Keep learning'}]:[]);
     const num=id=>secs.findIndex(x=>x.id===id)+1;
     bar.innerHTML=`<div class="lbar-in"><a class="brand" href="${cfg.home||'lectures.html'}"><b>${esc(cfg.course||'MTH 105')}</b><span>← Lectures · Week ${cfg.week}</span></a>
       <nav class="lchips" aria-label="In this lecture">${secs.map((s,i)=>`<a href="#${s.id}" data-id="${s.id}"><span>${i+1}</span>${esc(s.t)}</a>`).join('')}</nav>
@@ -138,6 +138,10 @@
     const pbox=el('div'); prb.appendChild(pbox); builds.push(()=>W.practice(pbox,cfg.practice,{label:cfg.practiceLabel||'Show answer',prefix:''})); pr.appendChild(prb);
     if(cfg.next) pr.appendChild(el('p',{class:'lnext'},cfg.next));
     main.appendChild(pr);
+    /* extra sections after Practice, e.g. the model answer to an in-class exercise */
+    (cfg.end||[]).forEach(x=>{ const sec=el('section',{class:'lsec',id:x.id}); sec.appendChild(el('h2',{},`<span class="no">${num(x.id)}</span>${esc(x.title)}`));
+      const b=el('div',{class:'lpart','data-part':'end'}); if(x.text) b.appendChild(el('p',{class:'ltext say'},x.text)); const box=el('div'); b.appendChild(box); sec.appendChild(b); main.appendChild(sec);
+      builds.push(()=>{ if(x.html) box.innerHTML=x.html; if(x.build) x.build(box,W); }); });
     /* optional micro-credential: this week's free unit (assets/credentials.js) */
     if(cw){ const bd=CC.badges.find(x=>x.id===cw.b), key=(cfg.credKey||'g106-cred-')+cfg.week, form=CC.form||'';
       const kl=el('section',{class:'lsec',id:'keep-learning'}); kl.appendChild(el('h2',{},`<span class="no">${num('keep-learning')}</span>Keep learning`));
