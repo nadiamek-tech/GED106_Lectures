@@ -4,28 +4,34 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>GED 106 · Graded Lab 1</title>
+<title>Week 9 Lab · Revision and Graded Lab 1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=20261028c">
-<link rel="stylesheet" href="assets/portal.css?v=20261028c">
+<link rel="stylesheet" href="assets/course.css?v=20261028d">
 <style>
 :root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.10);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14)}
-body{font-family:var(--f-display)}
-.pt h1.pg{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:28px 0 6px}
-.lock{max-width:440px;margin:26px 0;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:20px}
+.shot svg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.shot figcaption{display:block;font:400 .78rem var(--f-mono);color:var(--muted);margin-top:6px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mini{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;font-family:var(--f-display)}
+.mini b{display:block}.mini small{color:var(--muted)}
+.mini svg{width:100%;height:auto;display:block;margin:6px 0}
+.ok{list-style:none;padding:0;margin:0;font-family:var(--f-display);display:grid;gap:6px}
+.ok li{border-left:3px solid var(--good);padding:2px 0 2px 10px}
+.ok li.no{border-left-color:var(--bad)}
+.lock{max-width:460px;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:18px;font-family:var(--f-display)}
 .lock b{display:block;font-size:1.1rem;margin-bottom:4px}
 .lock p{margin:0 0 12px;color:var(--muted);font-size:.92rem}
 .lock form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
 .lock input{min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:600 1rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
 .lock .err{color:var(--bad);font-size:.9rem;margin:8px 0 0;min-height:1.2em}
-.gl-meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+#gl{font-family:var(--f-display)}
+.gl-meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
 .gl-meta span{font:700 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--wk);color:var(--wk);border-radius:999px;padding:2px 9px}
-.gl-lead{font-size:1.05rem;max-width:62ch}
 .gl-dl{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;border:1px solid var(--line);border-left:4px solid var(--wk);border-radius:12px;padding:12px 14px;background:var(--surface);margin:14px 0 6px}
-.gl-dl span{font-size:.92rem;color:var(--muted);flex:1 1 260px}
-#gl h2{font-size:1.3rem;font-weight:800;margin:30px 0 10px}
+.gl-dl span{font-size:.92rem;color:var(--muted);flex:1 1 220px}
+#gl h2{font-size:1.2rem;font-weight:800;margin:24px 0 10px}
 .gl-steps{list-style:none;padding:0;margin:0;display:grid;gap:10px;counter-reset:s}
 .gl-steps li{counter-increment:s;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px 12px 58px;position:relative}
 .gl-steps li::before{content:counter(s);position:absolute;left:16px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--wk);color:var(--on-wk,#fff);display:grid;place-items:center;font-weight:800}
@@ -35,57 +41,148 @@ body{font-family:var(--f-display)}
 .gl-tip{font-size:.88rem;color:var(--muted)}
 .gl-tip code{font-family:var(--f-mono);background:var(--sunk);padding:1px 5px;border-radius:4px}
 .scroll{overflow-x:auto}
-.gl-rub{width:100%;border-collapse:collapse;font-size:.92rem}
+.gl-rub{width:100%;border-collapse:collapse;font-size:.9rem}
 .gl-rub th{font:400 .66rem var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px;border-bottom:1px solid var(--line)}
 .gl-rub td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .gl-rub td:first-child{font-weight:800;color:var(--wk)}
 .gl-rub td:last-child{font-weight:700;text-align:right}
 .gl-rub tr.tot td{font-weight:800}
+@media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
-<div id="hub"></div>
-<main class="pt pt-wrap" id="portal">
-<p style="margin:18px 0 0"><a class="pt-flag" href="labs.html">← Labs</a></p>
-<h1 class="pg">Graded Lab 1 · Survey Design, Cleaning and Charts</h1>
-<p class="sub">Week 9 · Eng. Nadia Mek</p>
-<div class="lock" id="lock">
-  <b>Enter the lab password</b>
-  <p>Your professor gives it in the lab session.</p>
-  <form id="unlock" autocomplete="off"><input id="pw" type="text" inputmode="text" aria-label="Lab password" placeholder="Password" spellcheck="false"><button class="btn" type="submit">Open</button></form>
-  <p class="err" id="err" aria-live="polite"></p>
-</div>
-<div id="gl" hidden></div>
-</main>
-<footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Eng. Nadia Mek</b></footer>
-<script src="assets/supports.js?v=20261028c"></script>
-<script src="assets/course.js?v=20261028c"></script>
-<script src="assets/professor.js?v=20261028c"></script>
-<script src="assets/course-info.js?v=20261028c"></script>
-<script src="assets/portal.js?v=20261028c"></script>
-<script src="assets/gl1-sealed.js?v=20261028c"></script>
+<script src="assets/supports.js?v=20261028d"></script>
+<script src="assets/course.js?v=20261028d"></script>
+<script src="assets/kb.js?v=20261028d"></script>
+<script src="assets/search-index.js?v=20261028d"></script>
+<script src="assets/assistant.js?v=20261028d"></script>
+<script src="assets/onepage.js?v=20261028d"></script>
+<script src="assets/gl1-sealed.js?v=20261028d"></script>
 <script>
-Portal.header('labs');
-(function(){
-  const S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-  const KEY='g106-gl1-pass', err=document.getElementById('err'), inp=document.getElementById('pw');
-  async function key(pw){ const base=await crypto.subtle.importKey('raw',enc.encode(pw.trim().toUpperCase()),'PBKDF2',false,['deriveKey']);
-    return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(S.salt),iterations:S.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']); }
+const {W}=Lecture;
+const FT='font-family="Segoe UI,Schibsted Grotesk,Arial,sans-serif"';
+const t=(x,y,s,o={})=>`<text x="${x}" y="${y}" ${FT} font-size="${o.s||12}" font-weight="${o.w||400}" fill="${o.c||'var(--ink)'}" text-anchor="${o.a||'start'}">${s}</text>`;
+const box=(x,y,w,h,o={})=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${o.r??6}" fill="${o.f||'none'}" stroke="${o.s||'var(--line)'}" stroke-width="${o.sw||1}"/>`;
+const ring=(x,y,w,h)=>box(x-3,y-3,w+6,h+6,{s:'#E0442F',sw:2.5,r:8});
+const shot=(svg,cap)=>`<figure class="shot" style="margin:0">${svg}<figcaption>${cap}</figcaption></figure>`;
+
+/* Illustration: Microsoft Forms, adding a question */
+const FORMS=shot(`<svg viewBox="0 0 520 250" role="img" aria-label="Microsoft Forms: Add new question menu">`+
+  box(0,0,520,36,{f:'#03787C',s:'#03787C',r:0})+t(16,23,'Forms',{c:'#fff',w:700,s:14})+t(500,23,'Questions   Responses',{c:'#fff',a:'end'})+
+  box(30,52,460,58,{f:'var(--bg)'})+t(46,76,'Campus café survey',{s:16,w:700})+t(46,96,'Help us improve the café. 2 minutes, anonymous.',{c:'var(--muted)'})+
+  box(30,124,140,32,{f:'var(--surface)'})+t(46,145,'+ Add new',{w:700,c:'#03787C'})+ring(30,124,140,32)+
+  [['Choice',190],['Text',262],['Rating',318],['Date',384]].map(([n,x])=>box(x,124,n.length*8+22,32,{f:'var(--surface)'})+t(x+11,145,n)).join('')+t(452,145,'⌄ more',{c:'var(--muted)'})+
+  t(30,186,'More: Ranking · Likert · Net Promoter Score · Section',{c:'var(--muted)'})+
+  box(30,200,460,36,{f:'var(--bg)'})+t(46,223,'Required',{})+box(430,210,40,16,{f:'#03787C',s:'#03787C',r:8})+`<circle cx="462" cy="218" r="6" fill="#fff"/>`+ring(420,204,60,28)+
+  `</svg>`,'Illustration (simplified): in Microsoft Forms, “+ Add new” gives the question types; switch on “Required” for each question.');
+
+/* Illustration: Forms Responses → Open results in Excel */
+const EXPORT=shot(`<svg viewBox="0 0 520 170" role="img" aria-label="Microsoft Forms Responses tab with Open results in Excel">`+
+  box(0,0,520,36,{f:'#03787C',s:'#03787C',r:0})+t(16,23,'Forms',{c:'#fff',w:700,s:14})+t(380,23,'Questions',{c:'#fff'})+t(450,23,'Responses',{c:'#fff',w:700})+`<line x1="450" y1="31" x2="510" y2="31" stroke="#fff" stroke-width="2"/>`+ring(446,8,68,26)+
+  t(30,70,'54',{s:28,w:800})+t(30,90,'Responses',{c:'var(--muted)'})+t(150,70,'02:11',{s:28,w:800})+t(150,90,'Average time to complete',{c:'var(--muted)'})+
+  box(330,56,170,34,{f:'#107C41',s:'#107C41'})+t(415,78,'Open results in Excel',{c:'#fff',w:700,a:'middle'})+ring(330,56,170,34)+
+  box(30,110,470,44,{f:'var(--bg)'})+t(46,137,'Each answer becomes one row; each question becomes one column.',{c:'var(--muted)'})+`</svg>`,
+  'Illustration (simplified): Responses tab → “Open results in Excel” downloads the data, one row per response.');
+
+/* Illustration: Excel Data tab → Remove Duplicates */
+const CLEAN=shot(`<svg viewBox="0 0 520 190" role="img" aria-label="Excel Data tab with Remove Duplicates">`+
+  box(0,0,520,30,{f:'#107C41',s:'#107C41',r:0})+t(14,20,'Excel',{c:'#fff',w:700,s:13})+
+  [['Home',80],['Insert',130],['Formulas',182],['Data',250],['Review',294]].map(([n,x])=>t(x,20,n,{c:'#fff',w:n==='Data'?700:400})).join('')+ring(244,6,44,22)+
+  box(0,30,520,62,{f:'var(--bg)',r:0})+
+  [['Sort',20],['Filter',80]].map(([n,x])=>box(x,40,50,40,{f:'var(--surface)'})+t(x+25,65,n,{a:'middle'})).join('')+t(75,88,'Sort & Filter',{s:9,c:'var(--muted)',a:'middle'})+
+  [['Text to Columns',150,110],['Remove Duplicates',280,116]].map(([n,x,w])=>box(x,40,w,40,{f:'var(--surface)'})+t(x+w/2,65,n,{a:'middle',s:11})).join('')+ring(280,40,116,40)+t(275,88,'Data Tools',{s:9,c:'var(--muted)',a:'middle'})+
+  box(30,108,460,70,{f:'var(--surface)'})+t(46,130,'Remove Duplicates',{w:700})+t(46,150,'☑ ID   ☑ Year of study   ☑ Buys most often …',{})+t(46,168,'Then Home → Find & Select → Replace to fix labels; Filter to spot odd values.',{c:'var(--muted)',s:11})+`</svg>`,
+  'Illustration (simplified): Data → Remove Duplicates. Use Find & Replace and Filter for labels and odd values.');
+
+/* Illustration: Excel Insert → Charts */
+const INSERT=shot(`<svg viewBox="0 0 520 150" role="img" aria-label="Excel Insert tab with Recommended Charts">`+
+  box(0,0,520,30,{f:'#107C41',s:'#107C41',r:0})+t(14,20,'Excel',{c:'#fff',w:700,s:13})+
+  [['Home',80],['Insert',130],['Formulas',182],['Data',250]].map(([n,x])=>t(x,20,n,{c:'#fff',w:n==='Insert'?700:400})).join('')+ring(124,6,46,22)+
+  box(0,30,520,70,{f:'var(--bg)',r:0})+box(20,40,110,50,{f:'var(--surface)'})+t(75,62,'Recommended',{a:'middle',s:11})+t(75,77,'Charts',{a:'middle',s:11})+ring(20,40,110,50)+
+  [0,1,2,3].map(i=>box(150+i*46,44,38,38,{f:'var(--surface)'})).join('')+
+  `<rect x="158" y="62" width="6" height="14" fill="#107C41"/><rect x="166" y="54" width="6" height="22" fill="#107C41"/><rect x="174" y="66" width="6" height="10" fill="#107C41"/>`+
+  `<polyline points="202,74 210,64 218,68 228,54" fill="none" stroke="#107C41" stroke-width="2"/>`+`<circle cx="261" cy="63" r="12" fill="#107C41" opacity=".8"/>`+
+  `<rect x="292" y="52" width="22" height="5" fill="#107C41"/><rect x="292" y="60" width="16" height="5" fill="#107C41"/><rect x="292" y="68" width="10" height="5" fill="#107C41"/>`+
+  t(237,94,'Charts',{s:9,c:'var(--muted)',a:'middle'})+
+  box(350,40,150,50,{f:'var(--surface)'})+t(425,62,'Chart Elements (+)',{a:'middle',s:11})+t(425,78,'☑ Axis Titles ☑ Chart Title',{a:'middle',s:10,c:'var(--muted)'})+
+  t(20,130,'Select the table (with headers) first, then Insert.',{c:'var(--muted)'})+`</svg>`,
+  'Illustration (simplified): select the data → Insert → Recommended Charts; then Chart Elements (+) for titles.');
+
+const sv=(body,aria)=>`<svg viewBox="0 0 240 110" role="img" aria-label="${aria}">${body}</svg>`;
+const ax=`<line x1="20" y1="100" x2="230" y2="100" stroke="var(--ink)"/><line x1="20" y1="8" x2="20" y2="100" stroke="var(--ink)"/>`;
+const COL=sv(ax+[80,55,40,25].map((v,i)=>`<rect x="${35+i*48}" y="${100-v}" width="32" height="${v}" fill="var(--wk)" opacity="${1-i*.15}"/>`).join(''),'Column chart');
+const LINE=sv(ax+`<polyline points="${[30,38,44,42,52,60,58,72,78,74].map((v,i)=>`${30+i*21},${100-v}`).join(' ')}" fill="none" stroke="var(--wk)" stroke-width="2.6"/>`,'Line chart');
+const PIE=(()=>{ const P=[.59,.23,.18],cx=120,cy=55,r=45; let a=-Math.PI/2,s=''; P.forEach((p,i)=>{ const b=a+p*2*Math.PI; s+=`<path d="M${cx},${cy} L${cx+r*Math.cos(a)},${cy+r*Math.sin(a)} A${r},${r} 0 ${p>.5?1:0} 1 ${cx+r*Math.cos(b)},${cy+r*Math.sin(b)} Z" fill="var(--wk)" opacity="${1-i*.3}" stroke="var(--surface)" stroke-width="2"/>`; a=b; }); return sv(s,'Pie chart'); })();
+const CHARTS=`<div class="two"><div class="mini"><b>Column or bar</b><small>Compare categories</small>${COL}</div><div class="mini"><b>Line</b><small>Change over time</small>${LINE}</div><div class="mini"><b>Pie</b><small>Parts of one whole · 2–4 parts</small>${PIE}</div><div class="mini"><b>Every chart</b><small>Title = the message · both axis titles · bars from zero · no 3-D</small></div></div>`;
+
+const GOODQ=`<ul class="ok"><li>One topic per question</li><li>Neutral wording</li><li>Clear options, with “Other” when needed</li><li class="no">Not leading: “Don’t you agree…?”</li><li class="no">Not double-barrelled: “food and prices”</li><li class="no">No personal data you do not need</li></ul>`;
+
+/* ---------- locked graded lab ---------- */
+function locked(el){
+  const S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)), KEY='g106-gl1-pass';
+  el.innerHTML=`<div class="lock" id="lock"><b>Enter the lab password</b><p>Your professor gives it in the lab session.</p><form id="unlock" autocomplete="off"><input id="pw" type="text" aria-label="Lab password" placeholder="Password" spellcheck="false"><button class="btn" type="submit">Open</button></form><p class="err" id="err" aria-live="polite"></p></div><div id="gl" hidden></div>`;
+  const err=el.querySelector('#err'), inp=el.querySelector('#pw');
+  const key=async pw=>{ const base=await crypto.subtle.importKey('raw',enc.encode(pw.trim().toUpperCase()),'PBKDF2',false,['deriveKey']); return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(S.salt),iterations:S.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']); };
   const open=(k,x)=>crypto.subtle.decrypt({name:'AES-GCM',iv:b64(x.iv)},k,b64(x.ct));
-  async function tryOpen(pw,quiet){
-    if(!window.crypto||!crypto.subtle){ err.textContent='Please open this page in an up-to-date browser (Chrome, Edge or Safari).'; return; }
-    try{ const k=await key(pw), html=new TextDecoder().decode(await open(k,S.page));
-      const gl=document.getElementById('gl'); gl.innerHTML=html; gl.hidden=false; document.getElementById('lock').hidden=true;
+  async function go(pw,quiet){
+    if(!window.crypto||!crypto.subtle){ err.textContent='Please use an up-to-date browser (Chrome, Edge or Safari).'; return; }
+    try{ const k=await key(pw), gl=el.querySelector('#gl'); gl.innerHTML=new TextDecoder().decode(await open(k,S.page)); gl.hidden=false; el.querySelector('#lock').hidden=true; err.textContent='';
       try{ sessionStorage.setItem(KEY,pw); }catch(e){}
-      const g=document.getElementById('gl-get');
-      g.addEventListener('click',async()=>{ const bytes=await open(k,S.file); const url=URL.createObjectURL(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
-        const a=document.createElement('a'); a.href=url; a.download=S.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000); });
+      gl.querySelector('#gl-get').addEventListener('click',async()=>{ const url=URL.createObjectURL(new Blob([await open(k,S.file)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})); const a=document.createElement('a'); a.href=url; a.download=S.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000); });
     }catch(e){ if(!quiet){ err.textContent='Wrong password. Try again.'; inp.select(); } }
   }
-  document.getElementById('unlock').addEventListener('submit',e=>{ e.preventDefault(); err.textContent='Checking…'; tryOpen(inp.value).then(()=>{ if(err.textContent==='Checking…') err.textContent=''; }); });
-  let saved=null; try{ saved=sessionStorage.getItem(KEY); }catch(e){}
-  if(saved) tryOpen(saved,true);
-})();
+  el.querySelector('#unlock').addEventListener('submit',e=>{ e.preventDefault(); err.textContent='Checking…'; go(inp.value); });
+  let saved=null; try{ saved=sessionStorage.getItem(KEY); }catch(e){} if(saved) go(saved,true);
+}
+
+Lecture.mount({
+  id:'g106-wk9-lab', course:'GED 106', week:9, clo:'3, 4', short:'Week 9 Lab · Revision and Graded Lab 1',
+  title:'Week 9 Lab · Revision and Graded Lab 1',
+  meta:'Lab · Week 9 · Revision, then Graded Lab 1 (10%)',
+  scenes:[
+  { nav:'Start here', title:'Week 9 Lab · Revision and Graded Lab 1', kind:'activity', minutes:5,
+    narration:[`First a short revision of the four skills you need: survey questions, Microsoft Forms, cleaning and charts. Then Graded Lab 1, at the bottom of this page.`],
+    fig:{label:`Today`, build:el=>W.agenda(el,[[`Revision: questions, Forms, cleaning, charts`,20,'l'],[`Graded Lab 1`,55,'c'],[`Submit on Moodle`,5,'c']])} },
+
+  { nav:'Good questions', title:'Revise · Good survey questions', kind:'lecture', minutes:4,
+    narration:[`A good question measures one thing, without pushing the answer. Collect only what the objective needs.`],
+    src:`Week 3 · <a href="week-03.html#s4">Choosing the right questions</a>`,
+    fig:{label:`Keep · avoid`, html:GOODQ} },
+
+  { nav:'Forms', title:'Revise · Build it in Microsoft Forms', kind:'lecture', minutes:4, wide:true,
+    narration:[`Pick the type that fits each question: Choice for categories, Rating for scales, Text for open answers. Make each one Required.`],
+    src:`Lab 3 · <a href="lab-03.html">Survey design in Microsoft Forms</a>`,
+    fig:{label:`Forms · add a question`, html:FORMS} },
+
+  { nav:'Export', title:'Revise · From Forms to Excel', kind:'lecture', minutes:3, wide:true,
+    narration:[`Responses → Open results in Excel. Each response is a row; each question is a column.`],
+    src:`Lab 4 · <a href="lab-04.html">Data collection and exporting</a>`,
+    fig:{label:`Forms · responses`, html:EXPORT} },
+
+  { nav:'Cleaning', title:'Revise · Clean the data', kind:'lecture', minutes:4, wide:true,
+    narration:[`Remove duplicates and test rows, make labels consistent, blank out impossible values, and never guess a missing one. Write every change in a log.`],
+    src:`Lab 6 · <a href="lab-06.html">Data cleaning and preparation</a>`,
+    fig:{label:`Excel · Data tab`, html:CLEAN} },
+
+  { nav:'Charts', title:'Revise · Charts', kind:'lecture', minutes:5, wide:true,
+    narration:[`Choose the chart from your question, then Insert, a title that says the message, and both axis titles.`],
+    src:`Full guide and practice: <a href="lab-charts.html">Charts in Excel · Guided Lab</a>`,
+    fig:{label:`Excel · Insert → Charts`, html:INSERT+`<div style="height:12px"></div>`+CHARTS} },
+
+  { nav:'Takeaways', title:'Takeaways', kind:'review', minutes:2, full:true,
+    narration:[`Five steps from question to chart.`],
+    fig:{label:`Today on one page`, mindmap:{center:'From survey to chart',branches:[
+      {t:'Ask good questions',items:['One topic each','Neutral, clear options','Only what you need']},
+      {t:'Build in Forms',items:['Right question type','Required','Share inside CUD']},
+      {t:'Export',items:['Open results in Excel','Row = response']},
+      {t:'Clean',items:['Duplicates, test rows','Consistent labels','Blank, never guess','Log every change']},
+      {t:'Chart',items:['Fits the question','Title = message','Axis titles, from zero']}]}} },
+
+  { nav:'Graded Lab 1', title:'Graded Lab 1 · Survey Design, Cleaning and Charts', kind:'activity', minutes:55, wide:true,
+    narration:[`Individual, in the lab. 15 marks, counting for 10% of the course. Enter the password your professor gives you.`],
+    fig:{label:`Graded Lab 1`, build:locked} }
+  ]
+});
 </script>
 </body>
 </html>
