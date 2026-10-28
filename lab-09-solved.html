@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 9 Lab · Solved Example</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261028e">
+<style>
+:root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.10);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14)}
+.xl{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.xl table{border-collapse:collapse;font:400 .8rem var(--f-display);width:100%}
+.xl th{position:sticky;top:0;background:#107C41;color:#fff;font-weight:600;text-align:left;padding:5px 7px;white-space:nowrap}
+.xl td{border-bottom:1px solid var(--line);padding:4px 7px;white-space:nowrap}
+.xl td.bad,.xl tr.bad td{background:color-mix(in srgb,var(--bad) 22%,transparent)}
+.xl td.fix{background:color-mix(in srgb,var(--good) 24%,transparent);font-weight:600}
+.xl td.n{color:var(--muted);font-family:var(--f-mono)}
+.key{display:flex;gap:14px;flex-wrap:wrap;font:400 .78rem var(--f-mono);color:var(--muted);margin:6px 0 0}
+.key i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:4px}
+.qt{width:100%;border-collapse:collapse;font:400 .86rem var(--f-display)}
+.qt td,.qt th{border-bottom:1px solid var(--line);padding:6px 7px;vertical-align:top;text-align:left}
+.qt th{font:400 .66rem var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.qt .y{color:var(--good);font-weight:800}.qt .no{color:var(--bad);font-weight:800}
+.form{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);font-family:var(--f-display)}
+.form .top{background:#03787C;color:#fff;padding:8px 14px;font-weight:700}
+.form .hd{padding:12px 14px;border-bottom:1px solid var(--line)}
+.form .hd b{font-size:1.05rem}
+.form .q{padding:9px 14px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:baseline;font-size:.9rem}
+.form .q span.t{margin-left:auto;font:600 .7rem var(--f-mono);color:#03787C;border:1px solid #03787C;border-radius:999px;padding:1px 8px;white-space:nowrap}
+.form .q i{color:var(--bad);font-style:normal}
+.form .ft{padding:9px 14px;font-size:.82rem;color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.xc{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:8px}
+.xc svg{width:100%;height:auto;display:block}
+.dl{display:inline-flex;align-items:center;gap:8px;background:var(--wk);color:var(--on-wk);text-decoration:none;font-family:var(--f-display);font-weight:700;padding:10px 16px;border-radius:10px}
+.go{display:block;text-align:center;background:var(--wk);color:var(--on-wk);text-decoration:none;font:800 1.2rem var(--f-display);padding:18px;border-radius:14px;margin-top:6px}
+.go small{display:block;font-weight:400;font-size:.88rem;opacity:.9}
+.said{font-family:var(--f-display);border-left:4px solid var(--wk);background:var(--surface);border-radius:8px;padding:10px 14px;line-height:1.55}
+@media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261028e"></script>
+<script src="assets/course.js?v=20261028e"></script>
+<script src="assets/kb.js?v=20261028e"></script>
+<script src="assets/search-index.js?v=20261028e"></script>
+<script src="assets/assistant.js?v=20261028e"></script>
+<script src="assets/onepage.js?v=20261028e"></script>
+<script>
+const {W}=Lecture;
+const DEMO={"raw": [[0, "Year 1", "0", 5, "Silent floor", "TEST - ignore"], [1, "Year 1", "1–3", 5, "Silent floor", "More computers"], [2, "Year 1", "1–3", 5, "Group rooms", "Quieter silent floor"], [3, "Year 2", "1–3", 4, "Group rooms", "Better Wi-Fi on floor 2"], [4, "year 2", "1–3", 3, "Computer area", "More computers"], [5, "Year 3", "0", 1, "Group rooms", "Better Wi-Fi on floor 2"], [6, "Year 1", "7+", 3, "Silent floor", "Better Wi-Fi on floor 2"], [6, "Year 1", "7+", 3, "Silent floor", "Better Wi-Fi on floor 2"], [7, "Year 1", "0", 4, "Computer area", "Longer opening hours"], [8, "Year 1", "4–6", 4, "Silent floor", "More computers"], [9, "2nd year", "1–3", 1, "Café corner", "Better Wi-Fi on floor 2"], [10, "Year 1", "4–6", 1, "Group rooms", "Longer opening hours"], [11, "Year 1", "1–3", 6, "Silent floor", "Longer opening hours"], [12, "Year 1", "1–3", 5, "Silent floor", "Quieter silent floor"], [13, "Year 3", "7+", 4, "Silent  floor", "More power sockets"], [14, "Year 1", "4–6", 3, "Group rooms", "Quieter silent floor"], [15, "Year 2", "7+", 4, "Silent floor", "More power sockets"], [16, "Year 2", "1–3", 2, "Silent floor", "More computers"], [17, "Year 2", "7+", 4, "group rooms", "Quieter silent floor"], [18, "Year 2", "1–3", 2, "Silent floor", "More power sockets"], [19, "Year 3", null, 3, "Café corner", "More computers"], [20, "Year 3", "1–3", 3, "Computer area", "More computers"], [20, "Year 3", "1–3", 3, "Computer area", "More computers"], [21, "Year 3", "7+", 5, "Computer area", "Longer opening hours"], [22, "Year 2", "1–3", 3, "Computers", "Book group rooms online"], [23, "Year 4+", "1–3", 5, "Silent floor", "Longer opening hours"], [24, "Year 2", "1–3", 4, "Silent floor", "More computers"], [25, "Year 1", "4–6", 3, "Group rooms", "Better Wi-Fi on floor 2"], [26, "Year 1", "4–6", 4, "Group rooms", "Longer opening hours"], [27, "Year 2", "0", 4, "Group rooms", "Book group rooms online"], [28, "Year 2", "0", 4, "Silent floor", "Quieter silent floor"], [29, "Year 3", "4–6", 2, "Group rooms", "More power sockets"], [30, "Year 2", "4–6", 3, "Café corner", "Better Wi-Fi on floor 2"]], "clean": [[1, "Year 1", "1–3", 5, "Silent floor", "More computers"], [2, "Year 1", "1–3", 5, "Group rooms", "Quieter silent floor"], [3, "Year 2", "1–3", 4, "Group rooms", "Better Wi-Fi on floor 2"], [4, "Year 2", "1–3", 3, "Computer area", "More computers"], [5, "Year 3", "0", 1, "Group rooms", "Better Wi-Fi on floor 2"], [6, "Year 1", "7+", 3, "Silent floor", "Better Wi-Fi on floor 2"], [7, "Year 1", "0", 4, "Computer area", "Longer opening hours"], [8, "Year 1", "4–6", 4, "Silent floor", "More computers"], [9, "Year 2", "1–3", 1, "Café corner", "Better Wi-Fi on floor 2"], [10, "Year 1", "4–6", 1, "Group rooms", "Longer opening hours"], [11, "Year 1", "1–3", null, "Silent floor", "Longer opening hours"], [12, "Year 1", "1–3", 5, "Silent floor", "Quieter silent floor"], [13, "Year 3", "7+", 4, "Silent floor", "More power sockets"], [14, "Year 1", "4–6", 3, "Group rooms", "Quieter silent floor"], [15, "Year 2", "7+", 4, "Silent floor", "More power sockets"], [16, "Year 2", "1–3", 2, "Silent floor", "More computers"], [17, "Year 2", "7+", 4, "Group rooms", "Quieter silent floor"], [18, "Year 2", "1–3", 2, "Silent floor", "More power sockets"], [19, "Year 3", null, 3, "Café corner", "More computers"], [20, "Year 3", "1–3", 3, "Computer area", "More computers"], [21, "Year 3", "7+", 5, "Computer area", "Longer opening hours"], [22, "Year 2", "1–3", 3, "Computer area", "Book group rooms online"], [23, "Year 4+", "1–3", 5, "Silent floor", "Longer opening hours"], [24, "Year 2", "1–3", 4, "Silent floor", "More computers"], [25, "Year 1", "4–6", 3, "Group rooms", "Better Wi-Fi on floor 2"], [26, "Year 1", "4–6", 4, "Group rooms", "Longer opening hours"], [27, "Year 2", "0", 4, "Group rooms", "Book group rooms online"], [28, "Year 2", "0", 4, "Silent floor", "Quieter silent floor"], [29, "Year 3", "4–6", 2, "Group rooms", "More power sockets"], [30, "Year 2", "4–6", 3, "Café corner", "Better Wi-Fi on floor 2"]], "sp": [["Silent floor", 12], ["Group rooms", 10], ["Computer area", 5], ["Café corner", 3]], "sat": [[1, 3], [2, 3], [3, 8], [4, 10], [5, 5]], "mess": [[4, 1], [9, 1], [13, 4], [17, 4], [22, 4], [11, 3], [19, 2]], "dups": [6, 20], "log": null};
+const HD=['ID','Year of study','Library hours last week','Satisfaction (1–5)','Space used most','One change'];
+const esc=s=>s==null?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const MESS=new Set(DEMO.mess.map(([r,c])=>r+':'+c));
+function rawTable(){ const seen=new Set();
+  const rows=DEMO.raw.map(r=>{ const dup=seen.has(r[0]); seen.add(r[0]); const bad=dup||r[0]===0;
+    return `<tr class="${bad?'bad':''}">${r.map((v,j)=>`<td class="${j===0?'n':''} ${!bad&&MESS.has(r[0]+':'+j)?'bad':''}">${v===null?'':esc(v)}</td>`).join('')}</tr>`; }).join('');
+  return `<div class="xl"><table><thead><tr>${HD.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><p class="key"><span><i style="background:color-mix(in srgb,var(--bad) 35%,transparent)"></i>a problem to fix</span><span>${DEMO.raw.length} rows exported</span></p>`; }
+function cleanTable(){ const rows=DEMO.clean.map(r=>`<tr>${r.map((v,j)=>`<td class="${j===0?'n':''} ${MESS.has(r[0]+':'+j)?'fix':''}">${v===null?'':esc(v)}</td>`).join('')}</tr>`).join('');
+  return `<div class="xl"><table><thead><tr>${HD.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div><p class="key"><span><i style="background:color-mix(in srgb,var(--good) 40%,transparent)"></i>cleaned cell</span><span>${DEMO.clean.length} rows after cleaning</span></p>`; }
+const LOG=[['Test row','ID 0','Deleted','Not a real student'],['Duplicates','IDs 6 and 20','Data → Remove Duplicates','Each student counts once'],['Labels','IDs 4, 9','“year 2”, “2nd year” → Year 2','Same answer, different spelling'],['Labels','IDs 13, 17, 22','→ Silent floor, Group rooms, Computer area','Same category, different spelling'],['Impossible value','ID 11','Rating 6 → blank','Outside the 1–5 scale'],['Missing value','ID 19','Left blank, not guessed','Guessing adds false data']];
+const LOGT=`<table class="qt"><thead><tr><th>Issue</th><th>Rows</th><th>What I did</th><th>Why</th></tr></thead><tbody>${LOG.map(r=>`<tr>${r.map((v,i)=>`<td>${i===0?`<b>${v}</b>`:v}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const BANK=[['Which year of study are you in?','y','Clear choice; compares groups.'],['How many hours did you study in the library last week?','y','Specific time frame, clear options.'],['Don’t you think the library is too noisy?','n','Leading: pushes a “yes”.'],['How satisfied are you with the Wi-Fi and the opening hours?','n','Double-barrelled: two topics.'],['Overall, how satisfied are you with the study spaces? (1–5)','y','Labelled rating scale.'],['Do you study a lot?','n','Vague: “a lot” means different things.'],['Which space do you use most?','y','Clear categories.'],['How often do you visit? (Rarely / Sometimes / Often)','n','Vague scale.'],['What is your home address?','n','Personal data not needed.'],['What one change would help you study better?','y','Open question: ideas numbers miss.']];
+const BANKT=`<table class="qt"><thead><tr><th>Candidate question</th><th>Use?</th><th>Reason</th></tr></thead><tbody>${BANK.map(([q,u,r])=>`<tr><td>${q}</td><td class="${u==='y'?'y':'no'}">${u==='y'?'Yes':'No'}</td><td>${r}</td></tr>`).join('')}</tbody></table>`;
+const FORM=`<div class="form"><div class="top">Forms</div><div class="hd"><b>Library study spaces survey</b><br><small>Help us improve the study spaces. 2 minutes, anonymous.</small></div>
+${[['1. Which year of study are you in?','Choice'],['2. How many hours did you study in the library last week?','Choice'],['3. Overall, how satisfied are you with the study spaces?','Rating 1–5'],['4. Which space do you use most?','Choice'],['5. What one change would help you study better?','Text']].map(([q,t])=>`<div class="q">${q} <i>*</i><span class="t">${t}</span></div>`).join('')}
+<div class="ft"><i style="color:var(--bad);font-style:normal">*</i> Required · Share → Only people in my organization can respond → Copy link</div></div>`;
+function chart(rows,title,xt){ const W0=360,H0=230,L=46,B=50,T=34,mx=Math.max(...rows.map(r=>r[1])),top=Math.ceil(mx/5)*5||5, bw=(W0-L-14)/rows.length;
+  const Y=v=>H0-B-(H0-B-T)*v/top; let s=`<svg viewBox="0 0 ${W0} ${H0}" role="img" aria-label="${title}"><rect width="${W0}" height="${H0}" fill="var(--surface)"/>`;
+  s+=`<text x="${W0/2}" y="20" text-anchor="middle" font-family="Segoe UI,Arial" font-size="13" font-weight="700" fill="var(--ink)">${title}</text>`;
+  for(let v=0;v<=top;v+=top/5){ s+=`<line x1="${L}" x2="${W0-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end" font-family="Segoe UI,Arial" font-size="10" fill="var(--muted)">${v}</text>`; }
+  rows.forEach(([k,v],i)=>{ const x=L+i*bw+bw*.18; s+=`<rect x="${x}" y="${Y(v)}" width="${bw*.64}" height="${H0-B-Y(v)}" fill="#4472C4"/><text x="${x+bw*.32}" y="${Y(v)-4}" text-anchor="middle" font-family="Segoe UI,Arial" font-size="10" fill="var(--ink)">${v}</text><text x="${x+bw*.32}" y="${H0-B+14}" text-anchor="middle" font-family="Segoe UI,Arial" font-size="10" fill="var(--ink)">${k}</text>`; });
+  s+=`<text x="${(L+W0)/2}" y="${H0-12}" text-anchor="middle" font-family="Segoe UI,Arial" font-size="11" fill="var(--muted)">${xt}</text><text transform="translate(14 ${(H0-B+T)/2}) rotate(-90)" text-anchor="middle" font-family="Segoe UI,Arial" font-size="11" fill="var(--muted)">Number of students</text></svg>`;
+  return `<div class="xc">${s}</div>`; }
+const SUM=`<div class="two"><table class="qt"><thead><tr><th>Space used most</th><th>Students</th></tr></thead><tbody>${DEMO.sp.map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`).join('')}</tbody></table>
+<table class="qt"><thead><tr><th>Satisfaction</th><th>Students</th></tr></thead><tbody>${DEMO.sat.map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`).join('')}</tbody></table></div>
+<p class="key">Formula used: <code>=COUNTIF(Clean!$E$2:$E$31,A2)</code>, copied down.</p>`;
+const CHARTS=`<div class="two">${chart(DEMO.sp,'The silent floor is used most','Space')}${chart(DEMO.sat,'Most students rate the spaces 3 or 4','Rating (1–5)')}</div>`;
+const satN=DEMO.sat.reduce((a,[,v])=>a+v,0), s45=DEMO.sat.filter(([k])=>k>=4).reduce((a,[,v])=>a+v,0);
+
+Lecture.mount({
+  id:'g106-wk9-solved', course:'GED 106', week:9, clo:'3, 4', short:'Week 9 Lab · Solved Example',
+  title:'Week 9 Lab · Solved Example',
+  meta:'Lab · Week 9 · Demonstrated, then Graded Lab 1',
+  scenes:[
+  { nav:'Start here', title:'Week 9 Lab · Solved Example', kind:'activity', minutes:3,
+    narration:[`One complete lab, solved step by step: the same steps as Graded Lab 1, on a different survey. The library wants to improve its study spaces.`],
+    fig:{label:`Solved workbook`, html:`<p><a class="dl" href="assets/charts/GED106_Week9_Solved_Example.xlsx" download>Download the solved workbook ↓</a></p><p class="key">Sheets: Survey plan · Responses · Clean · Log · Charts. Fictional data for teaching.</p>`} },
+
+  { nav:'1 · Questions', title:'Step 1 · Choose the best questions', kind:'lecture', minutes:3, wide:true,
+    narration:[`Objective: how can the library improve its study spaces? Five questions kept, five rejected.`],
+    src:`Week 3 · <a href="week-03.html#s4">Choosing the right questions</a>`,
+    fig:{label:`Survey plan · solved`, html:BANKT} },
+
+  { nav:'2 · Form', title:'Step 2 · Build it in Microsoft Forms', kind:'lecture', minutes:3, wide:true,
+    narration:[`The five questions, each with the right type and set to Required, shared inside CUD only.`],
+    src:`Lab 3 · <a href="lab-03.html">Survey design in Microsoft Forms</a>`,
+    fig:{label:`The finished form`, html:FORM} },
+
+  { nav:'3 · Collected data', title:'Step 3 · The collected data', kind:'lecture', minutes:3, wide:true,
+    narration:[`Responses → Open results in Excel. Real exports are messy: a test row, duplicates, labels typed differently, an impossible rating, a blank.`],
+    src:`Lab 4 · <a href="lab-04.html">Data collection and exporting</a>`,
+    fig:{label:`Responses sheet · as exported`, html:rawTable()} },
+
+  { nav:'4 · Clean', title:'Step 4 · Clean it and log it', kind:'lecture', minutes:4, wide:true,
+    narration:[`Every fix is written in the log, so anyone can check it.`],
+    src:`Lab 6 · <a href="lab-06.html">Data cleaning and preparation</a>`,
+    fig:{label:`Log sheet · then the Clean sheet`, html:LOGT+'<div style="height:12px"></div>'+cleanTable()} },
+
+  { nav:'5 · Charts', title:'Step 5 · Count and chart', kind:'lecture', minutes:4, wide:true,
+    narration:[`Count each category with COUNTIF, select the small table, Insert → Column chart, then a title that says the message and both axis titles.`],
+    src:`More practice: <a href="lab-charts.html">Charts in Excel · Guided Lab</a>`,
+    fig:{label:`Charts sheet · solved`, html:SUM+CHARTS} },
+
+  { nav:'6 · Interpret', title:'Step 6 · What it shows', kind:'lecture', minutes:2,
+    narration:[`Numbers first, then one decision.`],
+    fig:{label:`Interpretation · solved`, html:`<p class="said">The silent floor is the most used space (${DEMO.sp[0][1]} of ${DEMO.clean.length} students), and ${s45} of ${satN} valid ratings are 4 or 5. The most requested change is more computers (7 students).<br><b>Decision:</b> add computers in the computer area first, then survey again to check satisfaction (Iterate).</p>`} },
+
+  { nav:'Takeaways', title:'Takeaways', kind:'review', minutes:2, full:true,
+    narration:[`Six steps from question to decision.`],
+    fig:{label:`Today on one page`, mindmap:{center:'From survey to decision',branches:[
+      {t:'1 · Choose questions',items:['One topic each','Neutral, clear options','Only what you need']},
+      {t:'2 · Build in Forms',items:['Right question type','Required','Share inside CUD']},
+      {t:'3 · Export',items:['Open results in Excel','Row = response']},
+      {t:'4 · Clean and log',items:['Test rows, duplicates','Consistent labels','Blank, never guess']},
+      {t:'5 · Count and chart',items:['COUNTIF','Title = message','Axis titles']},
+      {t:'6 · Interpret',items:['Two numbers','One decision']}]}} },
+
+  { nav:'Graded Lab 1', title:'Your turn · Graded Lab 1', kind:'check', minutes:55, full:true,
+    narration:[`Same six steps, new survey. Individual, 15 marks, 10% of the course.`],
+    fig:{label:`Start`, html:`<a class="go" href="graded-lab-1.html">Start Graded Lab 1 →<small>Opens a new page · password from your professor</small></a>`} }
+  ]
+});
+</script>
+</body>
+</html>
