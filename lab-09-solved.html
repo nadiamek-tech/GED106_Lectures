@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=20261028e">
+<link rel="stylesheet" href="assets/course.css?v=20261028f">
 <style>
 :root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.10);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14)}
 .xl{max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
@@ -39,15 +39,21 @@
 .go small{display:block;font-weight:400;font-size:.88rem;opacity:.9}
 .said{font-family:var(--f-display);border-left:4px solid var(--wk);background:var(--surface);border-radius:8px;padding:10px 14px;line-height:1.55}
 @media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
+.xlv{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.xlv iframe{display:block;width:100%;height:560px;border:0}
+.xlb{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 10px}
+.xlb a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font:700 .95rem var(--f-display);padding:10px 16px;border-radius:10px}
+.xlb a.v{background:#107C41;color:#fff}.xlb a.d{border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+@media (max-width:640px){.xlv iframe{height:440px}}
 </style>
 </head>
 <body>
-<script src="assets/supports.js?v=20261028e"></script>
-<script src="assets/course.js?v=20261028e"></script>
-<script src="assets/kb.js?v=20261028e"></script>
-<script src="assets/search-index.js?v=20261028e"></script>
-<script src="assets/assistant.js?v=20261028e"></script>
-<script src="assets/onepage.js?v=20261028e"></script>
+<script src="assets/supports.js?v=20261028f"></script>
+<script src="assets/course.js?v=20261028f"></script>
+<script src="assets/kb.js?v=20261028f"></script>
+<script src="assets/search-index.js?v=20261028f"></script>
+<script src="assets/assistant.js?v=20261028f"></script>
+<script src="assets/onepage.js?v=20261028f"></script>
 <script>
 const {W}=Lecture;
 const DEMO={"raw": [[0, "Year 1", "0", 5, "Silent floor", "TEST - ignore"], [1, "Year 1", "1–3", 5, "Silent floor", "More computers"], [2, "Year 1", "1–3", 5, "Group rooms", "Quieter silent floor"], [3, "Year 2", "1–3", 4, "Group rooms", "Better Wi-Fi on floor 2"], [4, "year 2", "1–3", 3, "Computer area", "More computers"], [5, "Year 3", "0", 1, "Group rooms", "Better Wi-Fi on floor 2"], [6, "Year 1", "7+", 3, "Silent floor", "Better Wi-Fi on floor 2"], [6, "Year 1", "7+", 3, "Silent floor", "Better Wi-Fi on floor 2"], [7, "Year 1", "0", 4, "Computer area", "Longer opening hours"], [8, "Year 1", "4–6", 4, "Silent floor", "More computers"], [9, "2nd year", "1–3", 1, "Café corner", "Better Wi-Fi on floor 2"], [10, "Year 1", "4–6", 1, "Group rooms", "Longer opening hours"], [11, "Year 1", "1–3", 6, "Silent floor", "Longer opening hours"], [12, "Year 1", "1–3", 5, "Silent floor", "Quieter silent floor"], [13, "Year 3", "7+", 4, "Silent  floor", "More power sockets"], [14, "Year 1", "4–6", 3, "Group rooms", "Quieter silent floor"], [15, "Year 2", "7+", 4, "Silent floor", "More power sockets"], [16, "Year 2", "1–3", 2, "Silent floor", "More computers"], [17, "Year 2", "7+", 4, "group rooms", "Quieter silent floor"], [18, "Year 2", "1–3", 2, "Silent floor", "More power sockets"], [19, "Year 3", null, 3, "Café corner", "More computers"], [20, "Year 3", "1–3", 3, "Computer area", "More computers"], [20, "Year 3", "1–3", 3, "Computer area", "More computers"], [21, "Year 3", "7+", 5, "Computer area", "Longer opening hours"], [22, "Year 2", "1–3", 3, "Computers", "Book group rooms online"], [23, "Year 4+", "1–3", 5, "Silent floor", "Longer opening hours"], [24, "Year 2", "1–3", 4, "Silent floor", "More computers"], [25, "Year 1", "4–6", 3, "Group rooms", "Better Wi-Fi on floor 2"], [26, "Year 1", "4–6", 4, "Group rooms", "Longer opening hours"], [27, "Year 2", "0", 4, "Group rooms", "Book group rooms online"], [28, "Year 2", "0", 4, "Silent floor", "Quieter silent floor"], [29, "Year 3", "4–6", 2, "Group rooms", "More power sockets"], [30, "Year 2", "4–6", 3, "Café corner", "Better Wi-Fi on floor 2"]], "clean": [[1, "Year 1", "1–3", 5, "Silent floor", "More computers"], [2, "Year 1", "1–3", 5, "Group rooms", "Quieter silent floor"], [3, "Year 2", "1–3", 4, "Group rooms", "Better Wi-Fi on floor 2"], [4, "Year 2", "1–3", 3, "Computer area", "More computers"], [5, "Year 3", "0", 1, "Group rooms", "Better Wi-Fi on floor 2"], [6, "Year 1", "7+", 3, "Silent floor", "Better Wi-Fi on floor 2"], [7, "Year 1", "0", 4, "Computer area", "Longer opening hours"], [8, "Year 1", "4–6", 4, "Silent floor", "More computers"], [9, "Year 2", "1–3", 1, "Café corner", "Better Wi-Fi on floor 2"], [10, "Year 1", "4–6", 1, "Group rooms", "Longer opening hours"], [11, "Year 1", "1–3", null, "Silent floor", "Longer opening hours"], [12, "Year 1", "1–3", 5, "Silent floor", "Quieter silent floor"], [13, "Year 3", "7+", 4, "Silent floor", "More power sockets"], [14, "Year 1", "4–6", 3, "Group rooms", "Quieter silent floor"], [15, "Year 2", "7+", 4, "Silent floor", "More power sockets"], [16, "Year 2", "1–3", 2, "Silent floor", "More computers"], [17, "Year 2", "7+", 4, "Group rooms", "Quieter silent floor"], [18, "Year 2", "1–3", 2, "Silent floor", "More power sockets"], [19, "Year 3", null, 3, "Café corner", "More computers"], [20, "Year 3", "1–3", 3, "Computer area", "More computers"], [21, "Year 3", "7+", 5, "Computer area", "Longer opening hours"], [22, "Year 2", "1–3", 3, "Computer area", "Book group rooms online"], [23, "Year 4+", "1–3", 5, "Silent floor", "Longer opening hours"], [24, "Year 2", "1–3", 4, "Silent floor", "More computers"], [25, "Year 1", "4–6", 3, "Group rooms", "Better Wi-Fi on floor 2"], [26, "Year 1", "4–6", 4, "Group rooms", "Longer opening hours"], [27, "Year 2", "0", 4, "Group rooms", "Book group rooms online"], [28, "Year 2", "0", 4, "Silent floor", "Quieter silent floor"], [29, "Year 3", "4–6", 2, "Group rooms", "More power sockets"], [30, "Year 2", "4–6", 3, "Café corner", "Better Wi-Fi on floor 2"]], "sp": [["Silent floor", 12], ["Group rooms", 10], ["Computer area", 5], ["Café corner", 3]], "sat": [[1, 3], [2, 3], [3, 8], [4, 10], [5, 5]], "mess": [[4, 1], [9, 1], [13, 4], [17, 4], [22, 4], [11, 3], [19, 2]], "dups": [6, 20], "log": null};
@@ -87,7 +93,7 @@ Lecture.mount({
   scenes:[
   { nav:'Start here', title:'Week 9 Lab · Solved Example', kind:'activity', minutes:3,
     narration:[`One complete lab, solved step by step: the same steps as Graded Lab 1, on a different survey. The library wants to improve its study spaces.`],
-    fig:{label:`Solved workbook`, html:`<p><a class="dl" href="assets/charts/GED106_Week9_Solved_Example.xlsx" download>Download the solved workbook ↓</a></p><p class="key">Sheets: Survey plan · Responses · Clean · Log · Charts. Fictional data for teaching.</p>`} },
+    wide:true, fig:{label:`Solved workbook · open it in your browser`, html:`<div class="xlb"><a class="v" href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fnadiamek-tech.github.io%2FGED106_Lectures%2Fassets%2Fcharts%2FGED106_Week9_Solved_Example.xlsx" target="_blank" rel="noopener">Open in Excel (web view) ↗</a><a class="d" href="assets/charts/GED106_Week9_Solved_Example.xlsx" download>Download ↓</a></div><div class="xlv"><iframe src="https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fnadiamek-tech.github.io%2FGED106_Lectures%2Fassets%2Fcharts%2FGED106_Week9_Solved_Example.xlsx" title="Solved workbook" loading="lazy"></iframe></div><p class="key">Sheets: Survey plan · Responses · Clean · Log · Charts. Use the tabs at the bottom. Fictional data for teaching.</p>`} },
 
   { nav:'1 · Questions', title:'Step 1 · Choose the best questions', kind:'lecture', minutes:3, wide:true,
     narration:[`Objective: how can the library improve its study spaces? Five questions kept, five rejected.`],
