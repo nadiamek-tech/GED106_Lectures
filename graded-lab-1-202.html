@@ -67,8 +67,8 @@ body{font-family:var(--f-display)}
 <p class="sec-tag">Section 202</p>
 <p class="sub">Week 9 · Section 202 · Eng. Nadia Mek</p>
 <div class="rules">
-  <div><small>Starts</small><b>Wed 28 Oct 2026 · 3:30 PM</b></div>
-  <div><small>Time</small><b>60 minutes · ends 4:30 PM</b></div>
+  <div><small>Starts</small><b>Wed 28 Oct 2026 · 3:10 PM</b></div>
+  <div><small>Time</small><b>Ends 4:30 PM</b></div>
   <div><small>Grade</small><b>15 marks · 15% of the course</b></div>
   <div><small>Books</small><b>Open, limited book</b></div>
   <div class="no"><small>Not allowed</small><b>No phone · no internet</b><br><span class="gl-tip">except this page, Microsoft Forms and Excel</span></div>
@@ -77,7 +77,7 @@ body{font-family:var(--f-display)}
 <div class="clock" id="clock" aria-live="polite"></div>
 <div class="lock" id="lock">
   <b>Enter the lab password</b>
-  <p>Your professor gives it in the lab. It changes every 15 minutes.</p>
+  <p>Your professor gives it in the lab. It changes every 10 minutes.</p>
   <form id="unlock" autocomplete="off"><input id="pw" type="text" aria-label="Lab password" placeholder="Password" spellcheck="false"><button class="btn" type="submit">Open</button></form>
   <p class="err" id="err" aria-live="polite"></p>
 </div>
@@ -89,10 +89,10 @@ body{font-family:var(--f-display)}
 <script src="assets/professor.js?v=20261028g"></script>
 <script src="assets/course-info.js?v=20261028g"></script>
 <script src="assets/portal.js?v=20261028h"></script>
-<script src="assets/gl1-202-sealed.js?v=20261028n"></script>
+<script src="assets/gl1-202-sealed.js?v=20261028p"></script>
 <script>
 Portal.header('labs');
-(function(){ const start=new Date('2026-10-28T15:30:00+04:00'), end=new Date('2026-10-28T16:30:00+04:00'), el=document.getElementById('clock');
+(function(){ const start=new Date('2026-10-28T15:10:00+04:00'), end=new Date('2026-10-28T16:30:00+04:00'), el=document.getElementById('clock');
   const mm=ms=>{ const t=Math.max(0,Math.round(ms/1000)), h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=t%60; return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0'); };
   const tick=()=>{ const now=Date.now();
     el.innerHTML= now<start ? `Starts in <span class="t">${mm(start-now)}</span>` : now<end ? `Time left <span class="t">${mm(end-now)}</span> <span>Submit on Moodle before 4:30 PM</span>` : `Time is over. Submit on Moodle now.`; };
