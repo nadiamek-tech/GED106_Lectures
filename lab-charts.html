@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Charts in Excel · Guided Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261028">
+<style>
+:root{--wk:#B4562F;--wk-soft:rgba(180,86,47,.10);--wk-d:#F2A07E;--wk-soft-d:rgba(242,160,126,.14)}
+.ct4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ct4 div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;font-family:var(--f-display)}
+.ct4 b{display:block}
+.ct4 small{color:var(--muted)}
+.ct4 svg,.gb svg{width:100%;height:auto;display:block;margin:6px 0}
+.gb{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;font-family:var(--f-display)}
+.gb>div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px}
+.gb .bad{border-top:4px solid var(--bad)}.gb .good{border-top:4px solid var(--good)}
+.gb ul{margin:4px 0 0;padding-left:1.1em;font-size:.88rem}
+.dl{display:inline-flex;align-items:center;gap:8px;background:var(--wk);color:var(--on-wk);text-decoration:none;font-family:var(--f-display);font-weight:700;padding:10px 16px;border-radius:10px}
+.steps6{margin:0;padding-left:1.2em;font-family:var(--f-display);line-height:1.6}
+.steps6 b{color:var(--wk)}
+.chk{display:grid;gap:6px;font-family:var(--f-display)}
+.chk label{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:8px 11px;cursor:pointer;background:var(--bg);font-size:.92rem}
+.chk label:has(input:checked){border-color:var(--wk);background:var(--wk-soft)}
+@media (max-width:640px){.ct4,.gb{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261028"></script>
+<script src="assets/course.js?v=20261028"></script>
+<script src="assets/kb.js?v=20261028"></script>
+<script src="assets/search-index.js?v=20261028"></script>
+<script src="assets/assistant.js?v=20261028"></script>
+<script src="assets/onepage.js?v=20261028"></script>
+<script>
+const {W}=Lecture;
+const FT='font-family="Schibsted Grotesk,Arial,sans-serif"';
+const sv=(body,aria)=>`<svg viewBox="0 0 240 130" role="img" aria-label="${aria}">${body}</svg>`;
+const ax=`<line x1="20" y1="110" x2="230" y2="110" stroke="var(--ink)" stroke-width="1.2"/><line x1="20" y1="10" x2="20" y2="110" stroke="var(--ink)" stroke-width="1.2"/>`;
+const BAR=sv(ax+[80,55,40,25].map((v,i)=>`<rect x="22" y="${16+i*23}" width="${v*2.3}" height="16" fill="var(--wk)" opacity="${1-i*.15}"/>`).join(''),'Bar chart');
+const COL=sv(ax+[85,60,45,30].map((v,i)=>`<rect x="${35+i*48}" y="${110-v}" width="32" height="${v}" fill="var(--wk)" opacity="${1-i*.15}"/>`).join(''),'Column chart');
+const LINE=sv(ax+`<polyline points="${[30,38,44,42,52,60,58,72,78,74].map((v,i)=>`${30+i*21},${110-v}`).join(' ')}" fill="none" stroke="var(--wk)" stroke-width="2.6"/>`+[30,38,44,42,52,60,58,72,78,74].map((v,i)=>`<circle cx="${30+i*21}" cy="${110-v}" r="2.6" fill="var(--wk)"/>`).join(''),'Line chart');
+const PIE=(()=>{ const P=[.59,.23,.18], cx=120, cy=65, r=52; let a=-Math.PI/2, s='';
+  P.forEach((p,i)=>{ const b=a+p*2*Math.PI, l=p>.5?1:0; s+=`<path d="M${cx},${cy} L${cx+r*Math.cos(a)},${cy+r*Math.sin(a)} A${r},${r} 0 ${l} 1 ${cx+r*Math.cos(b)},${cy+r*Math.sin(b)} Z" fill="var(--wk)" opacity="${1-i*.3}" stroke="var(--surface)" stroke-width="2"/>`; a=b; });
+  return sv(s,'Pie chart'); })();
+const TYPES=`<div class="ct4">
+<div><b>Bar or column</b><small>Compare categories</small>${COL}<small>Which item sells most?</small></div>
+<div><b>Line</b><small>Change over time</small>${LINE}<small>How did visits change by week?</small></div>
+<div><b>Pie</b><small>Parts of one whole · 2–4 parts</small>${PIE}<small>How do students pay?</small></div>
+<div><b>Horizontal bar</b><small>Long category names, ranked</small>${BAR}<small>Which complaint is most common?</small></div></div>`;
+
+/* the same data, misleading vs clear */
+const BAD=sv(`<line x1="20" y1="110" x2="230" y2="110" stroke="var(--ink)"/><line x1="20" y1="10" x2="20" y2="110" stroke="var(--ink)"/>`+[[60,'92'],[110,'95']].map(([h,t],i)=>`<rect x="${60+i*90}" y="${110-h+10}" width="50" height="${h-10}" fill="var(--bad)" opacity=".75"/>`).join('')+`<text x="14" y="104" text-anchor="end" ${FT} font-size="9" fill="var(--muted)">90</text><text x="14" y="16" text-anchor="end" ${FT} font-size="9" fill="var(--muted)">96</text>`,'Misleading chart: axis starts at 90');
+const GOOD=sv(`<line x1="20" y1="110" x2="230" y2="110" stroke="var(--ink)"/><line x1="20" y1="10" x2="20" y2="110" stroke="var(--ink)"/>`+[92,95].map((v,i)=>`<rect x="${60+i*90}" y="${110-v}" width="50" height="${v}" fill="var(--good)" opacity=".8"/><text x="${85+i*90}" y="${106-v}" text-anchor="middle" ${FT} font-size="10" font-weight="700" fill="var(--ink)">${v}</text>`).join('')+`<text x="14" y="110" text-anchor="end" ${FT} font-size="9" fill="var(--muted)">0</text>`,'Clear chart: axis starts at zero');
+const GB=`<div class="gb"><div class="bad"><b>Misleading</b>${BAD}<ul><li>Axis starts at 90: a 3-point gap looks huge</li><li>No title, no axis titles</li></ul></div>
+<div class="good"><b>Clear</b>${GOOD}<ul><li>Bars start at zero</li><li>Title says the message; axes have titles and units</li></ul></div></div>`;
+
+const STEPS=`<ol class="steps6">
+<li><b>Select</b> the table, headers included.</li>
+<li><b>Insert</b> → Recommended Charts, or choose Column, Bar, Line or Pie.</li>
+<li><b>Title:</b> click it and write the message, for example “Coffee is ordered most”.</li>
+<li><b>Axis titles:</b> Chart Elements (+) → Axis Titles; type what each axis shows and its unit.</li>
+<li><b>Legend:</b> remove it when there is one series; keep it when you compare groups.</li>
+<li><b>Tidy:</b> sort bars from largest to smallest; never sort time; no 3-D.</li></ol>`;
+
+const CHECK=['The chart type fits the question (categories, time, or parts of a whole).','The title says the message, not just the topic.','Both axes have titles, with units.','Bars start at zero.','No 3-D, no more than 4 pie slices.','One chart = one message.'];
+const checker=el=>{ el.innerHTML=`<div class="chk">${CHECK.map(c=>`<label><input type="checkbox"> ${c}</label>`).join('')}</div>`; };
+
+Lecture.mount({
+  id:'g106-lab-charts', course:'GED 106', week:9, clo:'2, 4', short:'Charts in Excel · Guided Lab',
+  title:'Charts in Excel · Guided Lab',
+  meta:'Lab · Guided practice · not graded',
+  scenes:[
+  { nav:'Start here', title:'Charts in Excel · Guided Lab', kind:'activity', minutes:5,
+    narration:[`A chart should answer one question at a glance. Download the practice workbook: the <b>Demo</b> sheet is done for you, then four short exercises.`],
+    src:`Reading: Data Visualization Made Simple (Sosulski, 2019), Chapter 3 · Data Literacy in Practice, Chapter 7.`,
+    fig:{label:`Practice workbook`, html:`<p><a class="dl" href="assets/charts/GED106_Charts_Practice.xlsx" download>Download GED106_Charts_Practice.xlsx ↓</a></p>`, build:el=>{ const d=document.createElement('div'); el.appendChild(d); W.agenda(d,[[`Choose the chart`,5,'l'],[`Make it, step by step`,10,'a'],[`Make it clear`,5,'l'],[`Exercises 1–4`,25,'a'],[`Check yourself`,5,'c']]); }} },
+
+  { nav:'Choose', title:'Choose the right chart', kind:'lecture', minutes:5, wide:true,
+    narration:[`Start from your question, not from the chart menu. Four charts cover most needs.`],
+    fig:{label:`Question → chart`, html:TYPES} },
+
+  { nav:'Which chart?', title:'Activity · Which chart?', kind:'check', minutes:5,
+    narration:[`Pick the best chart for each question.`],
+    fig:{label:`Four questions`, build:el=>W.quiz(el,[
+      {q:`Number of students in each major`,o:[`Column chart`,`Line chart`,`Pie chart with 8 slices`,`Scatter plot`],a:0,why:`Categories → column (or bar). A line suggests a time order the majors do not have; 8 slices are too many for a pie; a scatter needs two numerical variables.`},
+      {q:`Café visits each week of the semester`,o:[`Pie chart`,`Line chart`,`Bar chart sorted largest first`,`Table only`],a:1,why:`Change over time → line. A pie has no time order; sorting weeks breaks the timeline; a table hides the trend.`},
+      {q:`Share of students paying by card, cash and phone`,o:[`Line chart`,`Pie chart`,`Clustered column of three years`,`3-D column`],a:1,why:`Parts of one whole, only 3 parts → pie. A line needs time; a clustered column compares groups; 3-D distorts sizes.`},
+      {q:`Satisfied students by year, before and after a change`,o:[`Clustered column`,`Pie chart`,`Line with one point`,`Single bar`],a:0,why:`Two groups compared across categories → clustered column with a legend. A pie shows one whole only; one point or one bar cannot compare.`}])} },
+
+  { nav:'Step by step', title:'Make a chart, step by step', kind:'activity', minutes:10, wide:true,
+    narration:[`Open the <b>Demo</b> sheet and follow the steps: the chart there was made exactly this way.`],
+    fig:{label:`Six steps in Excel`, html:STEPS} },
+
+  { nav:'Make it clear', title:'Make it clear', kind:'lecture', minutes:5, wide:true,
+    narration:[`The same two numbers: a cut axis makes a small gap look large. Start bars at zero and let the title say the message.`],
+    fig:{label:`Misleading vs clear`, html:GB} },
+
+  { nav:'Exercises', title:'Exercises 1–4', kind:'activity', minutes:25, wide:true,
+    narration:[`Each sheet has the data and the steps. Make one chart per sheet, then use the checklist.`],
+    fig:{label:`In the practice workbook`, build:el=>W.accordion(el,[
+      {t:`Ex1 · Compare categories`,d:`Bar chart of orders by item. Sort largest first; title the message.`},
+      {t:`Ex2 · Change over time`,d:`Line chart of visits by week. Keep the weeks in order.`},
+      {t:`Ex3 · Parts of a whole`,d:`Pie chart of payment methods with percentage labels.`},
+      {t:`Ex4 · Compare two groups`,d:`Clustered column, Before and After by year. Keep the legend.`}])} },
+
+  { nav:'Check', title:'Check yourself', kind:'check', minutes:5,
+    narration:[`Tick each point for every chart you made. All six: your chart is ready for your project.`],
+    fig:{label:`Chart checklist`, build:checker} }
+  ]
+});
+</script>
+</body>
+</html>
