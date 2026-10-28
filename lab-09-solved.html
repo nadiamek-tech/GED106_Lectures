@@ -48,6 +48,8 @@
 .scroll{overflow-x:auto;max-width:100%}
 .qt.lg td{min-width:120px}.qt.lg td:nth-child(2){min-width:56px}
 .xl i.blank{color:var(--muted);font-size:.75rem}
+.go2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.go2{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -137,8 +139,8 @@ Lecture.mount({
       {t:'6 · Interpret',items:['Two numbers','One decision']}]}} },
 
   { nav:'Graded Lab 1', title:'Your turn · Graded Lab 1', kind:'check', minutes:55, full:true,
-    narration:[`Same six steps, new survey. Wed 28 Oct, 1:30 PM · 45 minutes · 15% · open limited book · no phone.`],
-    fig:{label:`Start`, html:`<a class="go" href="graded-lab-1.html">Start Graded Lab 1 →<small>Opens a new page · password from your professor</small></a>`} }
+    narration:[`Same six steps, new survey. 45 minutes · 15% · open limited book · no phone. Choose your section.`],
+    fig:{label:`Start`, html:`<div class="go2"><a class="go" href="graded-lab-1.html">Section 201 →<small>Graded Lab 1 · password from your professor</small></a><a class="go" href="graded-lab-1-202.html">Section 202 →<small>Graded Lab 1 · password from your professor</small></a></div>`} }
   ]
 });
 </script>
