@@ -75,7 +75,7 @@ body{font-family:var(--f-display)}
 <div class="clock" id="clock" aria-live="polite"></div>
 <div class="lock" id="lock">
   <b>Enter the lab password</b>
-  <p>Your professor gives it in the lab session.</p>
+  <p>Your professor gives it in the lab. It changes every 15 minutes.</p>
   <form id="unlock" autocomplete="off"><input id="pw" type="text" aria-label="Lab password" placeholder="Password" spellcheck="false"><button class="btn" type="submit">Open</button></form>
   <p class="err" id="err" aria-live="polite"></p>
 </div>
@@ -87,7 +87,7 @@ body{font-family:var(--f-display)}
 <script src="assets/professor.js?v=20261028g"></script>
 <script src="assets/course-info.js?v=20261028g"></script>
 <script src="assets/portal.js?v=20261028h"></script>
-<script src="assets/gl1-sealed.js?v=20261028g"></script>
+<script src="assets/gl1-sealed.js?v=20261028j"></script>
 <script>
 Portal.header('labs');
 (function(){ const start=new Date('2026-10-28T13:30:00+04:00'), end=new Date('2026-10-28T14:15:00+04:00'), el=document.getElementById('clock');
@@ -96,19 +96,27 @@ Portal.header('labs');
     el.innerHTML= now<start ? `Starts in <span class="t">${mm(start-now)}</span>` : now<end ? `Time left <span class="t">${mm(end-now)}</span> <span>Submit on Moodle before 2:15 PM</span>` : `Time is over. Submit on Moodle now.`; };
   tick(); setInterval(tick,1000); })();
 (function(){
-  const S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-  const KEY='g106-gl1-pass', err=document.getElementById('err'), inp=document.getElementById('pw');
-  const key=async pw=>{ const base=await crypto.subtle.importKey('raw',enc.encode(pw.trim().toUpperCase()),'PBKDF2',false,['deriveKey']); return crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(S.salt),iterations:S.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']); };
+  const S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)), tob64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
+  const KEY='g106-gl1-key', err=document.getElementById('err'), inp=document.getElementById('pw');
   const open=(k,x)=>crypto.subtle.decrypt({name:'AES-GCM',iv:b64(x.iv)},k,b64(x.ct));
-  async function go(pw,quiet){
+  const slotNow=()=>{ const t=Date.now(); return S.slots.find(x=>t>=Date.parse(x.from)&&t<Date.parse(x.to)); };
+  async function unwrap(pw,x){ const base=await crypto.subtle.importKey('raw',enc.encode(pw.trim().toUpperCase()),'PBKDF2',false,['deriveKey']);
+    const kk=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(x.salt),iterations:S.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    return open(kk,x); }
+  async function show(raw){ const k=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']), gl=document.getElementById('gl');
+    gl.innerHTML=new TextDecoder().decode(await open(k,S.page)); gl.hidden=false; document.getElementById('lock').hidden=true; err.textContent='';
+    try{ sessionStorage.setItem(KEY,tob64(raw)); }catch(e){}
+    document.getElementById('gl-get').addEventListener('click',async()=>{ const url=URL.createObjectURL(new Blob([await open(k,S.file)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})); const a=document.createElement('a'); a.href=url; a.download=S.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000); }); }
+  async function go(pw){
     if(!window.crypto||!crypto.subtle){ err.textContent='Please open this page in an up-to-date browser (Chrome, Edge or Safari).'; return; }
-    try{ const k=await key(pw), gl=document.getElementById('gl'); gl.innerHTML=new TextDecoder().decode(await open(k,S.page)); gl.hidden=false; document.getElementById('lock').hidden=true; err.textContent='';
-      try{ sessionStorage.setItem(KEY,pw); }catch(e){}
-      document.getElementById('gl-get').addEventListener('click',async()=>{ const url=URL.createObjectURL(new Blob([await open(k,S.file)],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})); const a=document.createElement('a'); a.href=url; a.download=S.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000); });
-    }catch(e){ if(!quiet){ err.textContent='Wrong password. Try again.'; inp.select(); } }
+    const cur=slotNow();
+    if(!cur){ err.textContent=Date.now()<Date.parse(S.slots[0].from)?'The lab is not open yet.':'The lab is closed.'; return; }
+    try{ await show(await unwrap(pw,cur)); return; }catch(e){}
+    for(const x of S.slots){ if(x===cur) continue; try{ await unwrap(pw,x); err.textContent=Date.parse(x.to)<=Date.now()?'This password has expired. Ask your professor for the current one.':'This password is not valid yet.'; inp.select(); return; }catch(e){} }
+    err.textContent='Wrong password. Try again.'; inp.select();
   }
   document.getElementById('unlock').addEventListener('submit',e=>{ e.preventDefault(); err.textContent='Checking…'; go(inp.value); });
-  let saved=null; try{ saved=sessionStorage.getItem(KEY); }catch(e){} if(saved) go(saved,true);
+  let saved=null; try{ saved=sessionStorage.getItem(KEY); }catch(e){} if(saved) show(b64(saved)).catch(()=>{});
 })();
 </script>
 </body>
