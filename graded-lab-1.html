@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=20261028f">
-<link rel="stylesheet" href="assets/portal.css?v=20261028f">
+<link rel="stylesheet" href="assets/course.css?v=20261028g">
+<link rel="stylesheet" href="assets/portal.css?v=20261028g">
 <style>
 :root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.10);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14)}
 body{font-family:var(--f-display)}
@@ -44,6 +44,18 @@ body{font-family:var(--f-display)}
 .gl-rub td:last-child{font-weight:700;text-align:right}
 .gl-rub tr.tot td{font-weight:800}
 @media (max-width:560px){.gl-part ol{padding-left:22px}.gl-part p{margin-left:0}}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 6px}
+.rules div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px}
+.rules small{display:block;font:400 .66rem var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.rules b{font-size:1rem}
+.rules .no{border-color:var(--bad)}.rules .no b{color:var(--bad)}
+.clock{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border:1px solid var(--wk);background:var(--wk-soft);border-radius:12px;padding:10px 14px;margin:12px 0;font-weight:700}
+.clock .t{font:800 1.4rem var(--f-mono);color:var(--wk)}
+.xlb{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 10px}
+.xlb a.v{display:inline-flex;align-items:center;background:#107C41;color:#fff;text-decoration:none;font-weight:700;padding:8px 14px;border-radius:8px}
+.xlv{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.xlv iframe{display:block;width:100%;height:520px;border:0}
+@media (max-width:640px){.rules{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.xlv iframe{height:420px}}
 </style>
 </head>
 <body>
@@ -52,6 +64,15 @@ body{font-family:var(--f-display)}
 <p style="margin:18px 0 0"><a class="pt-flag" href="lab-09-solved.html">← Solved example</a></p>
 <h1 class="pg">Graded Lab 1 · Survey Design, Cleaning and Charts</h1>
 <p class="sub">Week 9 · Eng. Nadia Mek</p>
+<div class="rules">
+  <div><small>Starts</small><b>Wed 28 Oct 2026 · 1:30 PM</b></div>
+  <div><small>Time</small><b>45 minutes · ends 2:15 PM</b></div>
+  <div><small>Grade</small><b>15 marks · 15% of the course</b></div>
+  <div><small>Books</small><b>Open, limited book</b></div>
+  <div class="no"><small>Not allowed</small><b>No phone · no internet</b><br><span class="gl-tip">except this page, Microsoft Forms and Excel</span></div>
+  <div><small>Submit</small><b>On Moodle, before 2:15 PM</b></div>
+</div>
+<div class="clock" id="clock" aria-live="polite"></div>
 <div class="lock" id="lock">
   <b>Enter the lab password</b>
   <p>Your professor gives it in the lab session.</p>
@@ -61,14 +82,19 @@ body{font-family:var(--f-display)}
 <div id="gl" hidden></div>
 </main>
 <footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Eng. Nadia Mek</b></footer>
-<script src="assets/supports.js?v=20261028f"></script>
-<script src="assets/course.js?v=20261028f"></script>
-<script src="assets/professor.js?v=20261028f"></script>
-<script src="assets/course-info.js?v=20261028f"></script>
-<script src="assets/portal.js?v=20261028f"></script>
-<script src="assets/gl1-sealed.js?v=20261028f"></script>
+<script src="assets/supports.js?v=20261028g"></script>
+<script src="assets/course.js?v=20261028g"></script>
+<script src="assets/professor.js?v=20261028g"></script>
+<script src="assets/course-info.js?v=20261028g"></script>
+<script src="assets/portal.js?v=20261028h"></script>
+<script src="assets/gl1-sealed.js?v=20261028g"></script>
 <script>
 Portal.header('labs');
+(function(){ const start=new Date('2026-10-28T13:30:00+04:00'), end=new Date('2026-10-28T14:15:00+04:00'), el=document.getElementById('clock');
+  const mm=ms=>{ const t=Math.max(0,Math.round(ms/1000)), h=Math.floor(t/3600), m=Math.floor(t%3600/60), s=t%60; return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(s).padStart(2,'0'); };
+  const tick=()=>{ const now=Date.now();
+    el.innerHTML= now<start ? `Starts in <span class="t">${mm(start-now)}</span>` : now<end ? `Time left <span class="t">${mm(end-now)}</span> <span>Submit on Moodle before 2:15 PM</span>` : `Time is over. Submit on Moodle now.`; };
+  tick(); setInterval(tick,1000); })();
 (function(){
   const S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
   const KEY='g106-gl1-pass', err=document.getElementById('err'), inp=document.getElementById('pw');

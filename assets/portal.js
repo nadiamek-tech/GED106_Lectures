@@ -16,7 +16,8 @@
   const dayLong=iso=>fmt(iso,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   const dayShort=iso=>fmt(iso,{weekday:'short',day:'numeric',month:'short'});
   const time=iso=>fmt(iso,{hour:'numeric',minute:'2-digit',hour12:true}).replace(/\s?([ap])m/i,(m,a)=>' '+a.toUpperCase()+'M');
-  const daysTo=iso=>Math.ceil((new Date(iso).getTime()-Date.now())/86400000);
+  const dayKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:TZ}).format(d);
+  const daysTo=iso=>{ const t=new Date(iso); if(t.getTime()<Date.now()) return -1; return Math.round((new Date(dayKey(t))-new Date(dayKey(new Date())))/86400000); };
   const until=iso=>{ const d=daysTo(iso); return d>1?d+' days to go':d===1?'Tomorrow':d===0?'Today':''; };
   const A=C.assess||[], byId=id=>A.find(a=>a.id===id);
   const typeTag=t=>`<span class="pt-tag ${t==='Lab'?'lab':'lec'}">${esc(t)}</span>`;
