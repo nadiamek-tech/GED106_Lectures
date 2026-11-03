@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 Week 10 · Charts and Graphics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261103">
+<link rel="stylesheet" href="assets/lesson.css?v=20261103">
+<style>
+:root{--wk:#B4562F;--wk-soft:rgba(180,86,47,.09);--wk-d:#F2A07E;--wk-soft-d:rgba(242,160,126,.14);--c1:#B4562F;--c2:#1F6F8B;--c3:#2E7D5B;--c4:#5B3FA8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#F2A07E;--c2:#7CC4DE;--c3:#7FD3AA;--c4:#B9A3F5}}
+:root[data-theme="dark"]{--c1:#F2A07E;--c2:#7CC4DE;--c3:#7FD3AA;--c4:#B9A3F5}
+.lfig svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261103"></script>
+<script src="assets/course.js?v=20261103"></script>
+<script src="assets/concept.js?v=20261103"></script>
+<script src="assets/lesson.js?v=20261103"></script>
+<script src="assets/pad.js?v=20261103"></script>
+<script src="assets/credentials.js?v=20261103"></script>
+<script src="assets/keywords.js?v=20261103"></script>
+<script src="assets/professor.js?v=20261103"></script>
+<script src="assets/kb.js?v=20261103"></script>
+<script src="assets/search-index.js?v=20261103"></script>
+<script src="assets/assistant.js?v=20261103"></script>
+<script>
+const {svg,card,text,arrow,pill,axis}=CG;
+const FT='font-family="Schibsted Grotesk,Arial,sans-serif"';
+
+/* ---------- small chart helpers (theme colours, work in dark mode) ---------- */
+function bars(rows,o={}){ const W=o.w||560,H=o.h||250,L=o.l||110,R=20,T=o.title?36:14,B=24, mx=o.max||Math.max(...rows.map(r=>r[1])), bh=(H-T-B)/rows.length;
+  let s=o.title?text(W/2,22,o.title,{a:'middle',s:14,w:700}):'';
+  rows.forEach(([k,v],i)=>{ const y=T+i*bh+bh*.15, w=(W-L-R-40)*v/mx;
+    s+=`<rect x="${L}" y="${y}" width="${w}" height="${bh*.7}" rx="3" fill="${i===0&&o.hl!==false?'var(--c1)':'var(--c2)'}" fill-opacity="${i===0&&o.hl!==false?1:.55}"/>`+text(L-8,y+bh*.48,k,{a:'end',s:12})+text(L+w+6,y+bh*.48,o.fmt?o.fmt(v):v,{s:12,w:700}); });
+  return svg(W,H,s+(o.unit?text(W-R,H-6,o.unit,{a:'end',s:11,c:'var(--muted)'}):''),o.aria||'Bar chart'); }
+function line(vals,labels,o={}){ const W=o.w||560,H=o.h||230,L=40,R=16,T=o.title?36:16,B=30, mn=o.min??0, mx=o.max||Math.max(...vals)*1.1;
+  const X=i=>L+(W-L-R)*i/(vals.length-1), Y=v=>H-B-(H-B-T)*(v-mn)/(mx-mn);
+  let s=o.title?text(W/2,22,o.title,{a:'middle',s:14,w:700}):'';
+  s+=axis(L,W-R,H-B)+`<polyline points="${vals.map((v,i)=>X(i)+','+Y(v)).join(' ')}" fill="none" stroke="var(--c1)" stroke-width="2.6"/>`+vals.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="var(--c1)"/>`).join('');
+  labels.forEach((l,i)=>{ if(i%(o.every||1)===0) s+=text(X(i),H-10,l,{a:'middle',s:10,c:'var(--muted)'}); });
+  return svg(W,H,s,o.aria||'Line chart'); }
+function pie(parts,o={}){ const W=o.w||300,H=o.h||220,cx=W/2,cy=H/2+(o.title?10:0),r=Math.min(W,H)/2-26, tot=parts.reduce((a,p)=>a+p[1],0); let a0=-Math.PI/2, s=o.title?text(W/2,18,o.title,{a:'middle',s:13,w:700}):'';
+  const C=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--muted)','var(--line)'];
+  parts.forEach(([k,v],i)=>{ const a1=a0+2*Math.PI*v/tot, l=(a1-a0)>Math.PI?1:0;
+    s+=`<path d="M${cx},${cy} L${cx+r*Math.cos(a0)},${cy+r*Math.sin(a0)} A${r},${r} 0 ${l} 1 ${cx+r*Math.cos(a1)},${cy+r*Math.sin(a1)} Z" fill="${C[i%C.length]}" stroke="var(--surface)" stroke-width="1.5"/>`; a0=a1; });
+  return svg(W,H,s,o.aria||'Pie chart'); }
+
+/* ---------- concept graphics ---------- */
+const gChoose=svg(560,220,
+  pill(14,90,120,40,'Your question','var(--wk)',{s:13})+arrow(138,110,176,110,'var(--muted)',2.2)+
+  [['Compare','bar / column',20],['Change over time','line',62],['Part of a whole','pie / stacked',104],['Distribution','histogram',146],['Relationship','scatter',188]].map(([a,b,y])=>card(182,y-14,180,30,'var(--c2)',{r:8,op:.08})+text(194,y+5,a,{s:12,w:700})+arrow(366,y,400,y,'var(--line)',1.6)+text(408,y+5,b,{s:12,c:'var(--c1)',w:700})).join(''),
+  'Start from the question, find its purpose, then the chart');
+
+const mini=(t,body)=>`<g>${body}</g>`;
+const gTypes=(()=>{ const box=(x,y,t,inner)=>card(x,y,170,110,'var(--c2)',{r:10,op:.05})+text(x+85,y+102,t,{a:'middle',s:12,w:700})+inner;
+  const b=(x,y)=>[40,62,28,50].map((h,i)=>`<rect x="${x+22+i*32}" y="${y+80-h}" width="22" height="${h}" fill="var(--c1)" fill-opacity="${i===1?1:.5}"/>`).join('');
+  const l=(x,y)=>`<polyline points="${[30,38,34,50,58,70].map((v,i)=>`${x+18+i*27},${y+82-v}`).join(' ')}" fill="none" stroke="var(--c1)" stroke-width="2.4"/>`;
+  const p=(x,y)=>`<circle cx="${x+85}" cy="${y+46}" r="34" fill="var(--c2)" fill-opacity=".35"/><path d="M${x+85},${y+46} L${x+85},${y+12} A34,34 0 0 1 ${x+117},${y+57} Z" fill="var(--c1)"/>`;
+  const h=(x,y)=>[12,28,46,58,40,22,10].map((v,i)=>`<rect x="${x+20+i*19}" y="${y+82-v}" width="19" height="${v}" fill="var(--c3)" fill-opacity=".7" stroke="var(--surface)"/>`).join('');
+  const sc=(x,y)=>[[20,70],[34,62],[48,60],[60,48],[76,44],[90,36],[104,30],[118,24],[132,20],[60,64],[96,46]].map(([a,c])=>`<circle cx="${x+a+8}" cy="${y+c}" r="3.4" fill="var(--c4)"/>`).join('');
+  return svg(560,250,box(5,5,'Bar · compare',b(5,5))+box(195,5,'Line · trend',l(195,5))+box(385,5,'Pie · part of whole',p(385,5))+box(100,130,'Histogram · spread',h(100,130))+box(290,130,'Scatter · relationship',sc(290,130)),'Five chart types and their purpose'); })();
+
+/* Inditex FY2024 net sales by brand, € billion (Jing Daily, 14 Mar 2025) */
+const INDITEX=[['Zara + Zara Home',27.77],['Bershka',2.93],['Stradivarius',2.66],['Pull&Bear',2.46],['Massimo Dutti',1.96],['Oysho',0.83]];
+const gInditex=bars(INDITEX,{title:'Zara brings most of Inditex’s sales',unit:'Net sales, € billion, FY2024',fmt:v=>v.toFixed(2),l:130,aria:'Inditex sales by brand, Zara far ahead'});
+const gPieBad=pie(INDITEX,{title:'Same data as a pie',aria:'Pie of Inditex brands: small brands hard to compare'});
+
+/* truncated axis vs zero baseline */
+const gTrunc=svg(560,220,
+  card(8,8,262,204,'var(--bad)',{op:.04,r:10})+text(139,30,'Axis starts at 90',{a:'middle',s:13,w:700,c:'var(--bad)'})+
+  `<rect x="70" y="${190-40}" width="60" height="40" fill="var(--bad)" fill-opacity=".6"/><rect x="150" y="${190-130}" width="60" height="130" fill="var(--bad)" fill-opacity=".6"/>`+axis(50,240,190)+text(100,206,'92',{a:'middle',s:11})+text(180,206,'95',{a:'middle',s:11})+
+  card(290,8,262,204,'var(--good)',{op:.04,r:10})+text(421,30,'Axis starts at 0',{a:'middle',s:13,w:700,c:'var(--good)'})+
+  `<rect x="350" y="${190-147}" width="60" height="147" fill="var(--good)" fill-opacity=".7"/><rect x="430" y="${190-152}" width="60" height="152" fill="var(--good)" fill-opacity=".7"/>`+axis(330,520,190)+text(380,206,'92',{a:'middle',s:11})+text(460,206,'95',{a:'middle',s:11}),
+  'A cut axis makes a 3-point gap look huge; a zero baseline shows it is small');
+
+/* Spotify Wrapped: hours to reach 200 million engaged users */
+const gWrapped=bars([['Wrapped 2024',62],['Wrapped 2025',24]],{title:'Hours to reach 200 million engaged users',unit:'Hours (Spotify, Dec 2025)',l:110,hl:false,aria:'Wrapped 2025 reached 200 million users in about 24 hours, 2024 in about 62'});
+
+/* ---------- in-class case data (fictional, for teaching) ---------- */
+const WEEKS=['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'];
+const WATER=[410,430,455,520,610,690,760,820,800,740,620,500];
+const tbl=(h,rows)=>`<table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const HOURS=[['12–1 PM',140],['1–2 PM',210],['2–3 PM',160],['6–7 PM',120],['7–8 PM',260],['8–9 PM',310],['9–10 PM',280],['10–11 PM',150]];
+
+Lesson.mount({
+  course:'GED 106', week:10, clo:'CLO 2', title:'Charts and Graphics',
+  pageTitle:'GED 106 Week 10 · Charts and Graphics',
+  chapter:'Data Literacy in Practice (Klidas & Hanegan, 2022), Chapter 7 · Data Visualization Made Simple (Sosulski, 2019), Chapter 3',
+  intro:'A chart answers one question at a glance. Today: how to choose the right one, and the main types of graphs.',
+  how:'Every topic: <b>Definition</b> → <b>Around us</b> → <b>The framework, step by step</b> → <b>What it means</b> → <b>Quick check</b>.',
+  topics:[
+    { id:'choose', title:'Selecting the right visualization',
+      def:'Choose a chart from the <b>question</b> you want to answer, not from the chart menu: first find its purpose, then the chart that shows it best.',
+      defFig:{label:'Question → purpose → chart', html:gChoose},
+      life:{ text:'Spotify Wrapped turns a year of listening into a few simple visuals people want to share. Wrapped 2025 reached 200 million engaged users in about 24 hours, against about 62 hours for 2024.',
+        fig:{label:'Around us · Spotify Wrapped', html:gWrapped, caption:'Source: <a href="https://www.musicbusinessworldwide.com/spotify-wrapped-campaign-hit-200m-engaged-users-in-24-hours-a-19-yoy-increase" target="_blank" rel="noopener">Music Business Worldwide, 8 Dec 2025</a>'}},
+      caseLabel:'Applied · Inditex sales by brand', stepsNote:'Five steps, applied to real data: Inditex (Zara’s owner) net sales by brand, FY2024.',
+      steps:[
+        {name:'Ask the question', do:'Write what the reader needs to know.', app:'Which brand brings most of Inditex’s sales?'},
+        {name:'Know your data', do:'Categories, numbers, or time? How many values?', app:'6 brands (categories), one number each (€ billion).'},
+        {name:'Find the purpose', do:'Compare, trend, part of a whole, distribution or relationship?', app:'Compare brands.'},
+        {name:'Pick the chart', do:'Match the purpose to a chart type.', app:'A bar chart, sorted from largest to smallest.'},
+        {name:'Label and check', do:'Title = the message; units on the axis; start bars at zero.', app:'“Zara brings most of Inditex’s sales” · € billion · from zero.'}
+      ],
+      meaning:{ text:'The same numbers as a pie are hard to compare: the five small slices look alike. The sorted bar chart shows the order and the gap at a glance.',
+        fig:{label:'Same data · bar chart vs pie', html:`<div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:10px;align-items:center">${gInditex}${gPieBad}</div>`, caption:'Data: Inditex FY2024 net sales by brand (Zara includes Zara Home). Source: <a href="https://jingdaily.com/intels/2025-03/14/zara-owner-posts-record-usd6-4b-profit-for-2024" target="_blank" rel="noopener">Jing Daily, 14 Mar 2025</a>'}},
+      check:[
+        {q:'You want to show how a café’s daily sales changed over 30 days. Best chart?',o:['Line chart','Pie chart','Scatter plot','Histogram'],a:0,why:'<b>Line:</b> change over time. A pie shows parts of one whole, a scatter needs two numerical variables, a histogram shows how values are spread, not their order in time.'},
+        {q:'Which should you decide first?',o:['The question the chart must answer','The colours','The chart type','The font'],a:0,why:'The question comes first: it gives the purpose, and the purpose gives the chart. Colours and fonts come last; choosing the chart type first is “starting from the menu”.'},
+        {q:'A good chart title is…',o:['The message, e.g. “Zara brings most of the sales”','The topic only, e.g. “Sales”','The file name','Left empty'],a:0,why:'A message title tells the reader what to see. “Sales” names a topic only; a file name means nothing to the reader; no title leaves them guessing.'}] },
+
+    { id:'types', title:'Different types of graphs',
+      def:'Five purposes cover most charts: <b>compare</b> (bar), <b>change over time</b> (line), <b>part of a whole</b> (pie or stacked bar), <b>distribution</b> (histogram) and <b>relationship</b> (scatter).',
+      defFig:{label:'Five types, five purposes', html:gTypes},
+      life:{ text:'Food-delivery apps such as Talabat show order peaks by hour; a column chart of orders per hour makes the lunch and late-evening peaks obvious. (Data in the in-class case is fictional.)',
+        fig:{label:'Around us · orders by hour (fictional)', html:bars(HOURS.slice().sort((a,b)=>b[1]-a[1]),{title:'Late evening is the busiest time',unit:'Orders, one evening (fictional)',l:90})}},
+      caseLabel:'Which chart?', stepsNote:'One purpose per chart.',
+      steps:[
+        {name:'Bar or column', do:'Compare categories. Sort the bars; start at zero.', app:'Sales by brand, students by major.'},
+        {name:'Line', do:'Show change over time. Keep time in order; never sort it.', app:'Weekly sales across a semester.'},
+        {name:'Pie or stacked bar', do:'Show parts of one whole. Only 2–4 parts that add to 100%.', app:'Card, cash or phone payments.'},
+        {name:'Histogram', do:'Show how numerical values are spread.', app:'Delivery times in minutes.'},
+        {name:'Scatter', do:'Show the relationship between two numerical variables.', app:'Study hours vs quiz score.'}
+      ],
+      meaning:{ text:'A chart can mislead without false numbers: a cut axis turns a 3-point gap into a giant one. Bars must start at zero.',
+        fig:{label:'Misleading vs honest', html:gTrunc}},
+      check:[
+        {q:'Delivery times (in minutes) for 500 orders: how are they spread?',o:['Histogram','Pie chart','Line chart','Single bar'],a:0,why:'<b>Histogram:</b> spread of one numerical variable. A pie needs a few parts of a whole; a line needs a time order; one bar shows one value only.'},
+        {q:'Study hours and quiz score for 40 students: is there a link?',o:['Scatter plot','Pie chart','Bar chart of names','Line chart of student IDs'],a:0,why:'<b>Scatter:</b> two numerical variables. A pie shows composition; bars of names compare people, not the link; IDs are not a time order, so a line is wrong.'},
+        {q:'A pie chart is a good choice when…',o:['A few parts add up to one whole','You compare 12 months','You have 15 categories','Values do not add up to 100%'],a:0,why:'Pies only work for a few parts of one whole. 12 months is time (line); 15 slices are unreadable (bar); parts that do not add up are not a whole.'}] }
+  ],
+  inClass:{ live:false,
+    intro:'Work in pairs. Each case has its data and guided questions. Write your answers in the box, then check with your professor.',
+    how:['<b>Read</b> the case and its data.','<b>Answer</b> the guided questions, in order.','<b>Compare</b> with the model answer your professor shows.'],
+    items:[
+      {case:1, title:'Zara and Inditex', q:'Inditex’s net sales by brand, FY2024 (€ billion). Real data.',
+       fig:tbl(['Brand','Net sales (€ bn)'],INDITEX.map(([k,v])=>[k,v.toFixed(2)])),
+       guided:['What question could a chart of this table answer?','Which chart would you choose, and why not a pie?','Roughly what share of the total is Zara? (total ≈ €38.6 bn)','Write a title that states the message.']},
+      {case:2, title:'A Carrefour-style hypermarket', q:'Bottles of water sold per week in one store, summer term. Fictional data.',
+       fig:tbl(['Week',...WEEKS],[['Bottles',...WATER]]),
+       guided:['Which chart shows this best, and why?','In which week do sales peak?','Describe the trend in one sentence.','One decision the store manager could make.']},
+      {case:3, title:'A food-delivery app, Gen Z customers', q:'Orders per hour, one evening. Fictional data.',
+       fig:tbl(['Hour','Orders'],HOURS),
+       guided:['Which chart would you use? Should you sort the hours?','When is the peak, and how many orders?','A classmate made a 3-D pie of these hours. What is wrong with it?','One decision for the delivery app.'], draw:true},
+      {case:4, title:'Your own “Wrapped”', q:'Minutes a student listened to each genre in one month. Fictional data.',
+       fig:tbl(['Genre','Minutes'],[['Pop',1240],['Hip-hop',980],['Khaleeji',610],['Lo-fi',430],['Rock',220],['Other',120]]),
+       guided:['Bar chart or pie chart? Explain.','What percentage of the minutes is Pop? (total 3,600)','Write a Wrapped-style title for the chart.']}
+    ]},
+  takeaways:{ label:'Week 10 on one page', mindmap:{center:'Charts and graphics', branches:[
+    {t:'Start with the question',items:['Purpose first','Then the chart']},
+    {t:'Compare',items:['Bar or column','Sorted, from zero']},
+    {t:'Over time',items:['Line','Keep time in order']},
+    {t:'Part of a whole',items:['Pie or stacked bar','2–4 parts only']},
+    {t:'Spread · link',items:['Histogram','Scatter']},
+    {t:'Honest charts',items:['Title = message','No cut axis, no 3-D']}]}},
+  quiz:[
+    {q:'Monthly visitors to Dubai Mall over two years: best chart?',o:['Line chart','Pie chart','Histogram','Scatter plot'],a:0,why:'Time series → line. A pie has no time order; a histogram shows spread, not order; a scatter needs two numerical variables.'},
+    {q:'Share of students who use Instagram, TikTok, Snapchat (one answer each): best chart?',o:['Pie or single stacked bar','Line chart','Scatter plot','Histogram'],a:0,why:'Three parts of one whole → pie or stacked bar. Line needs time; scatter needs two numbers per student; histogram needs a numerical variable.'},
+    {q:'Which makes a chart misleading?',o:['A vertical axis that starts at 90 instead of 0','Sorting bars from largest to smallest','A title that states the message','Axis titles with units'],a:0,why:'A cut axis exaggerates small gaps. Sorting, message titles and axis units all make a chart clearer.'}
+  ],
+  practiceLabel:'Show model answer',
+  practice:[
+    {q:'You have the number of students in each of 8 majors. Which chart, how would you order it, and what title would you write?', hint:'A bar chart (horizontal if the names are long), sorted from the largest major to the smallest, starting at zero. Title = the message, e.g. “Business has the most students”, with axis titles “Major” and “Number of students”.'},
+    {q:'Find one chart on social media or in the news this week. Say what question it answers and whether its chart type fits.', hint:'Name the source and date, the question (e.g. how prices changed), the purpose (change over time), and judge the chart (a line fits; a pie would not). Check the axis starts at zero for bars and that the title states a message.'}
+  ],
+  next:'Next: Week 11, Data visualization and storytelling. Read <i>Data Visualization Made Simple</i>, Chapter 3.'
+});
+</script>
+</body>
+</html>

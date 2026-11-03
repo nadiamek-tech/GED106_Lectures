@@ -47,7 +47,7 @@ window.COURSE={
     {w:'7', lec:['Data ethics 1','week-07.html'], lab:['Basic analytical functions in Excel','lab-07.html']},
     {w:'8', lec:['Data ethics 2','week-08.html'], ev:['mid']},
     {w:'9', lec:['Data-informed decision-making','week-09.html'], lab:['Solved example, then Graded Lab 1','lab-09-solved.html'], ev:['lab9']},
-    {w:'10', lec:'Charts and graphics', lab:['Project starts · scoping and data set selection','lab-09.html']},
+    {w:'10', lec:['Charts and graphics','week-10.html'], lab:['Project starts · scoping and data set selection','lab-09.html']},
     {w:'11', lec:'Data visualization and storytelling', lab:'Drafting project reports', ev:['quiz2']},
     {w:'12', lec:'Begin your data and analytics journey', lab:'Feedback and refinement', ev:['lab12']},
     {w:'13', lec:'Planning capstone projects', lab:'Presentation skills', ev:['draft']},

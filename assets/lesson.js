@@ -6,7 +6,7 @@
 (function(){
   const W=window.Lecture.W, esc=W.esc;
   const LS=window.LearningSupports||{on:()=>false,get:()=>null};
-  const PARTS={def:'Definition',life:'Around us',formula:'Formula · solve it step by step',framework:'The framework · step by step',meaning:'What it means'};
+  const PARTS={def:'Definition',life:'Around us',formula:'Formula · solve it step by step',framework:'The framework · step by step',meaning:'What it means',check:'Quick check'};
   const el=(t,a={},html='')=>{ const e=document.createElement(t); Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v)); if(html) e.innerHTML=html; return e; };
 
   function figure(f){ const fig=el('figure',{class:'lfig'}); if(f.label) fig.appendChild(el('span',{class:'eyebrow'},esc(f.label)));
@@ -35,6 +35,43 @@
     if(F0.keys&&window.CALC){ const entry=F0.keys.split(' ').filter(Boolean).filter(k=>k!=='=').join('').replace(/x²/g,'²').replace(/nCr/g,'C');
       try{ const v=CALC.parse(CALC.tokenize(entry.replace(/C/g,'C'),0)); if(isFinite(v)) calc=[entry.replace(/C/g,'C'),String(parseFloat(v.toPrecision(10))).replace('-','−')]; }catch(e){} }
     el.innerHTML=Board.make([{lines,calc}]);
+  }
+  /* In-class model answers: one password-protected PDF per week (solutions/week-NN.pdf), behind one side button.
+     The professor unlocks it with the PDF password (checked by the PDF itself), shows it, then locks or hides the button again. */
+  function solutionsTab(cfg){
+    const file=`solutions/week-${String(cfg.week).padStart(2,'0')}.pdf`, HK='sol-tab-hidden';
+    fetch(file,{method:'HEAD'}).then(r=>{ if(r.ok) build(); }).catch(()=>{});
+    function build(){
+      const lockSvg='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+      const tab=el('div',{class:'sol-tab'}); tab.innerHTML=`<button type="button" class="sol-open" aria-label="Model answers (locked)">${lockSvg}<span>Answers</span></button><button type="button" class="sol-handle" aria-label="Show the answers button"></button>`;
+      const pop=el('div',{class:'sol-pop',hidden:''}); pop.innerHTML=`<b>Model answers · Week ${cfg.week}</b><input type="password" autocomplete="off" placeholder="Password" aria-label="Password"><div class="sol-err" aria-live="polite"></div><div class="sol-row"><button type="button" class="sol-go">Unlock</button><button type="button" class="sol-hide">Hide button</button></div>`;
+      const dr=el('aside',{class:'sol-drawer',hidden:'','aria-label':'Model answers'}); dr.innerHTML=`<div class="sol-bar"><b>Week ${cfg.week} · In class · model answers</b><span class="sol-sp"></span><button type="button" class="sol-close">Close</button><button type="button" class="sol-lock">Lock</button><button type="button" class="sol-hide2">Hide button</button></div><div class="sol-pages"></div>`;
+      document.body.append(tab,pop,dr);
+      let doc=null;
+      const hidden=v=>{ tab.classList.toggle('mini',v); try{ v?localStorage.setItem(HK,'1'):localStorage.removeItem(HK); }catch(e){} if(v){ pop.hidden=true; dr.hidden=true; } };
+      try{ hidden(localStorage.getItem(HK)==='1'); }catch(e){}
+      const state=()=>{ tab.querySelector('.sol-open').classList.toggle('open',!!doc); tab.querySelector('.sol-open span').textContent=doc?'Answers ✓':'Answers'; };
+      const lock=()=>{ if(doc){ try{ doc.destroy(); }catch(e){} } doc=null; dr.querySelector('.sol-pages').innerHTML=''; dr.hidden=true; state(); };
+      const loadLib=()=>window.pdfjsLib?Promise.resolve():new Promise((ok,no)=>{ const sc=document.createElement('script'); sc.src='assets/vendor/pdfjs/pdf.min.js'; sc.onload=ok; sc.onerror=no; document.head.appendChild(sc); });
+      async function unlock(pw){ const err=pop.querySelector('.sol-err'); err.textContent='Opening…';
+        try{ await loadLib(); pdfjsLib.GlobalWorkerOptions.workerSrc='assets/vendor/pdfjs/pdf.worker.min.js';
+          doc=await pdfjsLib.getDocument({url:file,password:pw}).promise; }
+        catch(e){ doc=null; err.textContent=(e&&e.name==='PasswordException')?'Wrong password.':'Could not open the file.'; return; }
+        err.textContent=''; pop.hidden=true; pop.querySelector('input').value=''; state(); show(); }
+      async function show(){ dr.hidden=false; const box=dr.querySelector('.sol-pages'); if(box.childElementCount) return;
+        const W=Math.min(980,box.clientWidth-24)*(window.devicePixelRatio||1);
+        for(let i=1;i<=doc.numPages;i++){ const pg=await doc.getPage(i), v0=pg.getViewport({scale:1}), vp=pg.getViewport({scale:W/v0.width});
+          const c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height; box.appendChild(c); await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise; } }
+      tab.querySelector('.sol-open').onclick=()=>{ if(doc){ dr.hidden?show():dr.hidden=true; return; } pop.hidden=!pop.hidden; if(!pop.hidden) pop.querySelector('input').focus(); };
+      tab.querySelector('.sol-handle').onclick=()=>hidden(false);
+      pop.querySelector('.sol-go').onclick=()=>unlock(pop.querySelector('input').value);
+      pop.querySelector('input').addEventListener('keydown',e=>{ if(e.key==='Enter') unlock(e.target.value); if(e.key==='Escape') pop.hidden=true; });
+      pop.querySelector('.sol-hide').onclick=()=>hidden(true);
+      dr.querySelector('.sol-close').onclick=()=>{ dr.hidden=true; };
+      dr.querySelector('.sol-lock').onclick=lock;
+      dr.querySelector('.sol-hide2').onclick=()=>{ lock(); hidden(true); };
+      addEventListener('keydown',e=>{ if(e.key==='Escape'&&!dr.hidden) dr.hidden=true; });
+    }
   }
   window.Lesson={ mount(cfg){ window.__LESSON=cfg;
     document.title=cfg.pageTitle||document.title;
@@ -92,6 +129,9 @@
           p.appendChild(b); });
         s.appendChild(p); }
       if(t.meaning) s.appendChild(part('meaning',t.meaning.text,t.meaning.fig,builds));
+      /* quick check inside the lecture: a few MCQs on this topic */
+      if(t.check){ const p=el('div',{class:'lpart lp-check','data-part':'check'}); p.appendChild(el('span',{class:'ltag'},PARTS.check));
+        const q=el('div'); p.appendChild(q); builds.push(()=>W.quiz(q,t.check)); s.appendChild(p); }
       main.appendChild(s);
     });
 
@@ -103,7 +143,7 @@
         <ol class="lc-how">${(ic.how||['<b>Watch</b> your professor demonstrate the method on the board.','<b>Try</b> it yourself on the handout or in the writing box.','<b>Check</b> the answer together in class. It is not posted online.']).map(x=>`<li>${x}</li>`).join('')}</ol>
         <div class="lc-btns">${ic.live===false?'':'<a class="lc-live" href="live.html" target="_blank" rel="noopener"><span class="lc-dot"></span>Live board</a>'}<button type="button" class="lc-print">Print handout</button></div>`));
       ic.items.forEach((x,i)=>{ const card=el('div',{class:'lc-ex'});
-        card.innerHTML=`<div class="lc-exh"><b>Exercise ${i+1}</b>${x.draw?'<span class="lc-tag">Draw</span>':''}</div><p class="lc-q say">${x.q}</p>${x.tips?`<details class="lc-tips"><summary>Before you start</summary><ol>${x.tips.map(t=>`<li>${t}</li>`).join('')}</ol></details>`:''}<div class="lc-pad"></div><p class="lc-ans">Answer: solved together in class.</p>`;
+        card.innerHTML=`<div class="lc-exh"><b>${x.case?'Case '+x.case:'Exercise '+(i+1)}</b>${x.title?`<span class="lc-title">${x.title}</span>`:''}${x.draw?'<span class="lc-tag">Draw</span>':''}</div><p class="lc-q say">${x.q}</p>${x.fig?`<div class="lc-fig">${x.fig}</div>`:''}${x.guided?`<ol class="lc-guided">${x.guided.map(g=>`<li>${g}</li>`).join('')}</ol>`:''}${x.tips?`<details class="lc-tips"><summary>Before you start</summary><ol>${x.tips.map(t=>`<li>${t}</li>`).join('')}</ol></details>`:''}<div class="lc-pad"></div><p class="lc-ans">${x.case?"Model answer: with your professor (Answers tab)":"Answer: solved together in class."}</p>`;
         sec.querySelector('.lc-paper').appendChild(card);
         builds.push(()=>{ if(window.Pad) Pad.create(card.querySelector('.lc-pad'),{key:'inclass-'+i,bg:x.draw?'grid':'lines',height:x.draw?360:240,name:`week${cfg.week}-exercise${i+1}`}); }); });
       sec.querySelector('.lc-print').addEventListener('click',()=>{
@@ -153,6 +193,7 @@
     document.body.appendChild(main);
     document.body.appendChild(el('p',{class:'support-note'},'This website is interactive course support. It does not replace classes, attendance or class activities.'));
     builds.forEach(b=>{ try{ b(); }catch(e){ console.error(e); } });
+    if(cfg.inClass) solutionsTab(cfg);
 
     /* view: whole page (default) · one section at a time · one part at a time */
     const view=LS.get('view')||'page';

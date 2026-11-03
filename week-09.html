@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=20261027b">
-<link rel="stylesheet" href="assets/lesson.css?v=20261027b">
+<link rel="stylesheet" href="assets/course.css?v=20261103">
+<link rel="stylesheet" href="assets/lesson.css?v=20261103">
 <style>
 :root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.09);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14);--c1:#0F766E;--c2:#B4562F;--c3:#2E7D5B;--c4:#5B3FA8}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#5EEAD4;--c2:#F2A07E;--c3:#7FD3AA;--c4:#B9A3F5}}
@@ -17,17 +17,17 @@
 </style>
 </head>
 <body>
-<script src="assets/supports.js?v=20261027b"></script>
-<script src="assets/course.js?v=20261027b"></script>
-<script src="assets/concept.js?v=20261027b"></script>
-<script src="assets/lesson.js?v=20261027b"></script>
-<script src="assets/pad.js?v=20261027b"></script>
-<script src="assets/credentials.js?v=20261027b"></script>
-<script src="assets/keywords.js?v=20261027b"></script>
-<script src="assets/professor.js?v=20261027b"></script>
-<script src="assets/kb.js?v=20261027b"></script>
-<script src="assets/search-index.js?v=20261027b"></script>
-<script src="assets/assistant.js?v=20261027b"></script>
+<script src="assets/supports.js?v=20261103"></script>
+<script src="assets/course.js?v=20261103"></script>
+<script src="assets/concept.js?v=20261103"></script>
+<script src="assets/lesson.js?v=20261103"></script>
+<script src="assets/pad.js?v=20261103"></script>
+<script src="assets/credentials.js?v=20261103"></script>
+<script src="assets/keywords.js?v=20261103"></script>
+<script src="assets/professor.js?v=20261103"></script>
+<script src="assets/kb.js?v=20261103"></script>
+<script src="assets/search-index.js?v=20261103"></script>
+<script src="assets/assistant.js?v=20261103"></script>
 <script>
 const {svg,card,text,arrow,curveArrow,tick,cross,pill,axis}=CG;
 
@@ -109,7 +109,11 @@ Lesson.mount({
       life:{ text:'From 31 January 2025, Dubai’s Salik toll changed with the time of day: AED 6 at peak hours, AED 4 off-peak, free from 1 to 6 AM. The RTA said its traffic studies showed the need for it.',
         fig:{label:'Around us · Salik variable pricing', html:gSalik, caption:SRC_SALIK}},
       meaning:{ text:'Data does not decide by itself. It rules options out; people then weigh cost, fairness and context, and choose.',
-        fig:{label:'From many options to one decision', html:gFunnel}} },
+        fig:{label:'From many options to one decision', html:gFunnel}},
+      check:[
+        {q:'A shop owner orders stock “because it feels like a busy month”. This decision is…',o:['Gut feeling','Data-informed','Data-driven by an algorithm','Iterated'],a:0,why:'No evidence is used, only a feeling. Data-informed would use sales data plus judgement; an algorithm deciding alone is data-driven; nothing has been measured and changed, so it is not iteration.'},
+        {q:'Which is a data-informed decision?',o:['Using last Ramadan’s sales and staff advice to plan opening hours','Copying a competitor’s opening hours','Letting a spreadsheet choose without anyone checking','Asking only the manager’s opinion'],a:0,why:'It combines evidence (sales) with people’s judgement. Copying a competitor uses no own data; an unchecked spreadsheet leaves out judgement; one opinion is not data.'},
+        {q:'In data-informed decisions, who makes the final choice?',o:['People, using data as evidence','The data, automatically','The newest software','Whoever collects the most data'],a:0,why:'Data informs; people decide and stay accountable. Data and software do not decide on their own, and more data does not make someone the decision-maker.'}] },
     { id:'five-steps', title:'Ask, Acquire, Analyse, Integrate, Iterate',
       def:'Data-informed decision-making follows five steps: <b>Ask</b> a question, <b>Acquire</b> data, <b>Analyse</b> it, <b>Integrate</b> the findings into a decision, and <b>Iterate</b> (Morrow, 2024, Ch. 9).',
       defFig:{label:'The five steps are a cycle', html:gCycle},
@@ -124,12 +128,21 @@ Lesson.mount({
         {name:'Iterate', do:'Measure the result, learn, and adjust. The next question starts the cycle again.', app:'The RTA reported Sheikh Zayed Road traffic about 9% lower (May 2025).'}
       ],
       meaning:{ text:'A decision is not the end. Measuring the result shows whether it worked and raises the next question.',
-        fig:{label:'Iterate · measure the result', html:gResult, caption:SRC_SALIK}} }
+        fig:{label:'Iterate · measure the result', html:gResult, caption:SRC_SALIK}},
+      check:[
+        {q:'“Which hours have the longest queues at the campus café?” is which step?',o:['Ask','Acquire','Integrate','Iterate'],a:0,why:'<b>Ask:</b> it is the question. Acquire would be collecting queue data; Integrate is deciding what to change; Iterate is checking the result after a change.'},
+        {q:'Downloading a data set from Bayanat is which step?',o:['Acquire','Ask','Analyse','Integrate'],a:0,why:'<b>Acquire:</b> getting the data. Ask writes the question; Analyse finds patterns in data you already have; Integrate turns findings into a decision.'},
+        {q:'Noticing that complaints double every Monday is which step?',o:['Analyse','Acquire','Iterate','Ask'],a:0,why:'<b>Analyse:</b> finding a pattern. The data is already collected (not Acquire), nothing has been changed and re-measured (not Iterate), and it is a finding, not a question (not Ask).'}] }
   ],
   inClass:{ live:false,
-    intro:'We work through these together in class, in teams. Use the box below each exercise or the printed handout.',
+    intro:'Two short cases first, then your team project. Use the box below each one or the printed handout.',
     how:['<b>Listen</b> as your professor walks through the five steps on the board.','<b>Try</b> each step for your team’s project idea.','<b>Share</b> and improve together in class. Answers are not posted online.'],
     items:[
+      {case:1, title:'A Carrefour-style hypermarket in Ramadan', q:'The store asks: should it stay open until 2 AM during Ramadan? Customers per hour after iftar, one night. Fictional data.',
+       fig:'<table><thead><tr><th>Hour</th><th>8–9 PM</th><th>9–10 PM</th><th>10–11 PM</th><th>11–12 PM</th><th>12–1 AM</th><th>1–2 AM</th></tr></thead><tbody><tr><td>Customers</td><td>420</td><td>610</td><td>580</td><td>390</td><td>240</td><td>90</td></tr></tbody></table>',
+       guided:['<b>Ask:</b> rewrite the question so it is specific and measurable.','<b>Acquire:</b> what other data would you want, and from where?','<b>Analyse:</b> what pattern do you see after midnight?','<b>Integrate:</b> your decision, with one non-data factor (staff, cost, safety).','<b>Iterate:</b> how will the store check the decision next year?']},
+      {case:2, title:'A campus coffee kiosk, Gen Z customers', q:'The kiosk wants to add oat milk. A one-day poll of 120 students: 46 would buy oat-milk drinks “often”, 38 “sometimes”, 36 “never”. Fictional data.',
+       guided:['What share would buy it often or sometimes?','Is a one-day poll enough? What could bias it?','Make a data-informed decision and say what you would measure after one month.']},
       {q:'Your team’s project: write <b>one Ask question</b> that is clear, specific and measurable.', tips:['Who is affected?','What would “better” look like in numbers?']},
       {q:'<b>Acquire:</b> name two data sources that could answer your question. At least one should be open data (for example from bayanat.ae).'},
       {q:'Draw the five-step cycle and write one line for your project in each step.', draw:true},
