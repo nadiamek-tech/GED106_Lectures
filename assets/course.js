@@ -34,9 +34,13 @@
             answered++; why.hidden=false; why.innerHTML=(ok.includes(oi)?'<b>Correct.</b> ':'<b>Not quite.</b> ')+q.why;
             score.textContent=`Score: ${right} / ${qs.length}`+(answered===qs.length?(right===qs.length?' · full marks':' · review the scenes you missed'):'');
           });
+          b.addEventListener('click',()=>{ try{ localStorage.setItem(key,String(oi)); }catch(e){} });
           opts.appendChild(b);
         });
         box.append(opts,why); wrap.appendChild(box);
+        const key='mcq-lock:'+location.pathname+':'+q.q.replace(/<[^>]+>/g,'').slice(0,80);
+        let prev=null; try{ prev=localStorage.getItem(key); }catch(e){}
+        if(prev!==null){ const pb=opts.querySelectorAll('button')[+prev]; if(pb) pb.click(); }
       });
       wrap.appendChild(score); el.appendChild(wrap);
     },
