@@ -20,7 +20,7 @@
   const set=(k,v)=>{ try{ localStorage.setItem(k,v); }catch(e){} };
   const ink=()=>getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()||'#111';
 
-  function create(el,o={}){
+  function draw(el,o={}){
     const key='pad:'+location.pathname+':'+(o.key||'x'); let bg=get(key+':bg')||o.bg||'grid';
     el.innerHTML=`<div class="pad"><div class="pad-tools"><button type="button" data-t="pen" aria-pressed="true">Pen</button><button type="button" data-t="eraser" aria-pressed="false">Eraser</button><button type="button" class="undo">Undo</button><button type="button" class="clear">Clear</button>
       <select aria-label="Paper"><option value="grid">Graph paper</option><option value="lines">Lined</option><option value="plain">Plain</option></select><span class="sp"></span><button type="button" class="fs">Full screen</button><button type="button" class="save">Save image</button></div>
@@ -59,6 +59,40 @@
     addEventListener('resize',()=>{ clearTimeout(cv._t); cv._t=setTimeout(size,120); });
     new MutationObserver(()=>setTimeout(redraw,30)).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
     requestAnimationFrame(size);
+  }
+  /* Shell: choose Write (pen/finger) or Type (phone keyboard); Hide/Show keeps the page short. */
+  const css2=`
+.pbx{margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-family:var(--f-display)}
+.pbx-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 9px}
+.pbx-bar b{font-size:.9rem;margin-right:4px}
+.pbx-bar button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 12px;font:600 .84rem var(--f-display);cursor:pointer}
+.pbx-bar button[aria-pressed="true"]{background:var(--wk);border-color:var(--wk);color:var(--on-wk,#fff)}
+.pbx-bar .pbx-hide{margin-left:auto;border-radius:8px}
+.pbx-body{padding:0 8px 8px}
+.pbx .pad{margin-top:0}
+.pbx textarea{display:block;width:100%;box-sizing:border-box;min-height:180px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);color:var(--ink);font:1rem/1.6 var(--f-display)}
+.pbx-tt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;font-size:.78rem;color:var(--muted)}
+.pbx-tt button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:4px 10px;font:600 .8rem var(--f-display);cursor:pointer}
+@media print{.pbx-bar{display:none}}`;
+  const st2=document.createElement('style'); st2.textContent=css2; document.head.appendChild(st2);
+  function create(el,o={}){
+    const key='pad:'+location.pathname+':'+(o.key||'x');
+    let mode=get(key+':mode'); if(mode===null) mode=o.open?'write':'';
+    el.innerHTML=`<div class="pbx"><div class="pbx-bar"><b>Your answer</b><button type="button" data-m="write" aria-pressed="false">✎ Write</button><button type="button" data-m="type" aria-pressed="false">⌨ Type</button><button type="button" class="pbx-hide">Hide</button></div>
+      <div class="pbx-body" hidden><div class="pbx-w" hidden></div><div class="pbx-t" hidden><textarea aria-label="Type your answer" placeholder="Type your answer here, like in your phone notes…"></textarea>
+      <div class="pbx-tt"><button type="button" class="pbx-copy">Copy</button><button type="button" class="pbx-dl">Save as file</button><span>Saved on this device only.</span></div></div></div></div>`;
+    const body=el.querySelector('.pbx-body'), w=el.querySelector('.pbx-w'), t=el.querySelector('.pbx-t'), ta=el.querySelector('textarea'), hide=el.querySelector('.pbx-hide');
+    ta.value=get(key+':text')||''; ta.addEventListener('input',()=>set(key+':text',ta.value));
+    el.querySelector('.pbx-copy').onclick=()=>{ try{ navigator.clipboard.writeText(ta.value); }catch(e){ ta.select(); document.execCommand('copy'); } };
+    el.querySelector('.pbx-dl').onclick=()=>{ const a=document.createElement('a'); a.download=(o.name||'my-answer')+'.txt'; a.href=URL.createObjectURL(new Blob([ta.value],{type:'text/plain'})); a.click(); };
+    let built=false;
+    const show=m=>{ mode=m; set(key+':mode',m); body.hidden=!m; hide.hidden=!m;
+      el.querySelectorAll('[data-m]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));
+      w.hidden=m!=='write'; t.hidden=m!=='type';
+      if(m==='write'){ if(!built){ built=true; draw(w,o); } else dispatchEvent(new Event('resize')); } };
+    el.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>show(b.dataset.m));
+    hide.onclick=()=>show('');
+    show(mode);
   }
   window.Pad={create};
 })();
