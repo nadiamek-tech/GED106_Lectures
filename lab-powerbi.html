@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Power BI · First Steps · Guided Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261104">
+<style>
+:root{--wk:#A16207;--wk-soft:rgba(161,98,7,.10);--wk-d:#FACC15;--wk-soft-d:rgba(250,204,21,.14)}
+.pb svg{width:100%;height:auto;display:block}
+.pb{font-family:var(--f-display)}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;font-family:var(--f-display)}
+.two>div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px}
+.two b{display:block;font-size:1.05rem}
+.two ul{margin:6px 0 0;padding-left:1.1em;font-size:.92rem;line-height:1.5}
+.two a{font-weight:700}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 6px;font-family:var(--f-display)}
+.btns a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:700;padding:10px 16px;border-radius:10px;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.btns a.p{background:#107C41;border-color:#107C41;color:#fff}
+.st{display:grid;gap:12px}
+.st>div{border:1px solid var(--line);border-left:5px solid var(--wk);border-radius:12px;background:var(--surface);padding:10px 14px;font-family:var(--f-display)}
+.st b.h{display:block;font-size:1rem;margin-bottom:4px}
+.st ol{margin:4px 0 8px;padding-left:1.2em;line-height:1.6}
+.st kbd,.k{font:700 .82rem var(--f-mono);background:var(--wk-soft);border:1px solid var(--wk);border-radius:6px;padding:1px 6px;color:var(--ink)}
+.vid{display:inline-flex;align-items:center;gap:6px;font:700 .86rem var(--f-display);color:#C4302B;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:var(--bg);margin-top:4px}
+.leg{margin:8px 0 0;padding-left:1.3em;font-family:var(--f-display);line-height:1.6}
+.leg b{color:var(--wk)}
+.yt{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.sk{font:400 .7rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:2px 0 0}
+@media (max-width:640px){.two{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261104"></script>
+<script src="assets/course.js?v=20261104"></script>
+<script src="assets/kb.js?v=20261104"></script>
+<script src="assets/search-index.js?v=20261104"></script>
+<script src="assets/assistant.js?v=20261104"></script>
+<script src="assets/onepage.js?v=20261104"></script>
+<script>
+const {W}=Lecture;
+const F='font-family="Schibsted Grotesk,Arial,sans-serif"';
+const KV='https://www.youtube.com/watch?v=TmhQCQr_DCA', PQ='https://www.youtube.com/watch?v=0aeZX1l4JT4';
+const vid=(u,t,label)=>`<a class="vid" href="${u}${t?'&t='+t:''}" target="_blank" rel="noopener">▶ ${label}</a>`;
+const X=s=>String(s).replace(/&/g,'&amp;');
+/* screen sketch: a simplified Power BI window */
+function win(o){ const Wd=640, H=o.h||300; let s=`<svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="${X(o.aria||o.title)}" ${F}>`;
+  s+=`<rect x="1" y="1" width="${Wd-2}" height="${H-2}" rx="10" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>`;
+  s+=`<rect x="1" y="1" width="${Wd-2}" height="24" rx="10" fill="#F2C811"/><rect x="1" y="14" width="${Wd-2}" height="11" fill="#F2C811"/><text x="14" y="17" font-size="11" font-weight="700" fill="#1a1a1a">${X(o.title)}</text>`;
+  if(o.tabs){ let x=14; o.tabs.forEach(t=>{ const on=t===o.tab, w=t.length*6.4+16; s+=`<text x="${x+8}" y="42" font-size="11" ${on?'font-weight="800" fill="var(--ink)"':'fill="var(--muted)"'}>${X(t)}</text>${on?`<rect x="${x+4}" y="46" width="${w-8}" height="2.5" fill="var(--wk)"/>`:''}`; x+=w; }); }
+  if(o.btns){ let x=14; s+=`<line x1="1" y1="52" x2="${Wd-1}" y2="52" stroke="var(--line)"/>`; o.btns.forEach((b,i)=>{ const w=Math.max(54,b.length*6.2+14), on=(o.hi||[]).includes(i);
+      s+=`<rect x="${x}" y="58" width="${w}" height="28" rx="6" fill="${on?'var(--wk-soft)':'var(--bg)'}" stroke="${on?'var(--wk)':'var(--line)'}" stroke-width="${on?2.5:1}"/><text x="${x+w/2}" y="76" text-anchor="middle" font-size="10.5" font-weight="${on?800:500}" fill="var(--ink)">${X(b)}</text>`;
+      if(on&&o.num) s+=num(x+w-4,58,o.num[(o.hi||[]).indexOf(i)]); x+=w+6; });
+    s+=`<line x1="1" y1="92" x2="${Wd-1}" y2="92" stroke="var(--line)"/>`; }
+  return s+(o.body||'')+`</svg>`; }
+const num=(x,y,n)=>n==null?'':`<circle cx="${x}" cy="${y}" r="10" fill="var(--wk)"/><text x="${x}" y="${y+4}" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">${n}</text>`;
+/* a data grid: rows of cells; bad = [[r,c],...] highlighted red, good = green */
+function grid(x,y,cols,rows,o={}){ const cw=o.cw||cols.map(()=>80), rh=o.rh||19; let s='', cx=x;
+  cols.forEach((c,i)=>{ s+=`<rect x="${cx}" y="${y}" width="${cw[i]}" height="${rh}" fill="var(--wk-soft)" stroke="var(--line)"/><text x="${cx+5}" y="${y+13}" font-size="10" font-weight="800" fill="var(--ink)">${X(c)}</text>`; cx+=cw[i]; });
+  rows.forEach((r,ri)=>{ cx=x; r.forEach((v,ci)=>{ const bad=(o.bad||[]).some(([a,b])=>a===ri&&(b===ci||b<0)), good=(o.good||[]).some(([a,b])=>a===ri&&(b===ci||b<0));
+      s+=`<rect x="${cx}" y="${y+rh*(ri+1)}" width="${cw[ci]}" height="${rh}" fill="${bad?'rgba(220,38,38,.16)':good?'rgba(22,163,74,.14)':'var(--bg)'}" stroke="${bad?'#DC2626':'var(--line)'}"/><text x="${cx+5}" y="${y+rh*(ri+1)+13}" font-size="10" fill="${v==='null'||v==='Error'?'#DC2626':'var(--ink)'}" ${v==='null'?'font-style="italic"':''}>${X(v)}</text>`; cx+=cw[ci]; }); });
+  return s; }
+const RAW=[['Brown Sugar Boba','Tea','420','510','560','480'],['Karak Tea','tea ','380','400','455','470'],['Matcha Latte','TEA','290','340','N/A','330'],['Iced Spanish Latte','Coffee','450','520','540','500'],['null','null','null','null','null','null'],['Cold Brew','coffee','210','260','240','230'],['Mango Smoothie','Smoothie','300','280','220','150'],['Strawberry Milk',' smoothie','180','200','190','160'],['Fresh Lemon Mint','Smoothie','260','230','170','120'],['Mango Smoothie','Smoothie','300','280','220','150']];
+const CW=[150,90,60,60,60,60], COLS=['Item','Category','Sep','Oct','Nov','Dec'];
+
+/* 1 · recap graphic */
+const FLOW=(()=>{ const T=[['Forms','Collect','#008272'],['Excel','Clean · chart','#107C41'],['OneDrive · SharePoint','Store · share','#0364B8'],['Word','Report','#185ABD'],['Power BI','Dashboard','#C69500']];
+  let s=`<svg viewBox="0 0 660 150" role="img" aria-label="Your tools: Forms, Excel, OneDrive and SharePoint, Word, then Power BI" ${F}>`;
+  T.forEach((t,i)=>{ const x=8+i*131, last=i===4; s+=`<rect x="${x}" y="30" width="118" height="74" rx="14" fill="${t[2]}" ${last?'stroke="var(--ink)" stroke-width="3" stroke-dasharray="6 4"':''}/><text x="${x+59}" y="${i===2?60:64}" text-anchor="middle" fill="${last?'#1a1a1a':'#fff'}" font-weight="800" font-size="${i===2?12:16}">${i===2?'OneDrive ·':t[0]}</text>${i===2?`<text x="${x+59}" y="74" text-anchor="middle" fill="#fff" font-weight="800" font-size="12">SharePoint</text>`:''}<text x="${x+59}" y="${i===2?92:86}" text-anchor="middle" fill="${last?'#1a1a1a':'#fff'}" font-size="11">${t[1]}</text>`;
+    if(i<4) s+=`<path d="M${x+120} 67 l9 0" stroke="var(--ink)" stroke-width="2"/><path d="M${x+126} 62 l5 5 -5 5" fill="none" stroke="var(--ink)" stroke-width="2"/>`; });
+  s+=`<text x="${8+4*131+59}" y="20" text-anchor="middle" font-size="12" font-weight="800" fill="var(--wk)">NEW TODAY</text><text x="270" y="134" text-anchor="middle" font-size="12" fill="var(--muted)">Weeks 1–9: you already know these</text><path d="M10 120 H 520" stroke="var(--muted)" stroke-width="1.2"/>`;
+  return s+'</svg>'; })();
+
+/* 2 · tour of Power BI Desktop */
+const TOUR=win({title:'Power BI Desktop', tabs:['File','Home','Insert','Modeling','View','Help'], tab:'Home', btns:['Get data','Transform data','Refresh','New visual','Publish'], hi:[0,1,4], num:[1,1,6], h:320,
+  body:`<rect x="10" y="100" width="34" height="210" rx="6" fill="var(--bg)" stroke="var(--wk)" stroke-width="2"/>${['▦','☰','⧉','ƒ'].map((c,i)=>`<text x="27" y="${128+i*36}" text-anchor="middle" font-size="16" fill="var(--ink)">${c}</text>`).join('')}${num(44,100,2)}
+  <rect x="52" y="100" width="330" height="210" rx="6" fill="var(--bg)" stroke="var(--line)" stroke-dasharray="5 4"/><text x="217" y="210" text-anchor="middle" font-size="13" fill="var(--muted)">Report canvas</text>${num(382,100,3)}
+  <rect x="390" y="100" width="70" height="210" rx="6" fill="var(--bg)" stroke="var(--line)"/><text x="425" y="120" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink)">Filters</text>${num(460,100,4)}
+  <rect x="466" y="100" width="80" height="210" rx="6" fill="var(--bg)" stroke="var(--line)"/><text x="506" y="120" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink)">Visualizations</text>${[0,1,2,3,4,5,6,7,8].map(i=>`<rect x="${474+(i%3)*22}" y="${130+Math.floor(i/3)*22}" width="18" height="18" rx="3" fill="var(--wk-soft)" stroke="var(--line)"/>`).join('')}${num(546,100,5)}
+  <rect x="552" y="100" width="80" height="210" rx="6" fill="var(--bg)" stroke="var(--line)"/><text x="592" y="120" text-anchor="middle" font-size="10" font-weight="700" fill="var(--ink)">Data</text>${['▸ Sales','  Item','  Category','  Month','  Σ Sales'].map((t,i)=>`<text x="560" y="${140+i*16}" font-size="9.5" fill="var(--ink)">${X(t)}</text>`).join('')}${num(626,100,'5')}`});
+
+/* step sketches */
+const S_GET=win({title:'Power BI Desktop', tabs:['File','Home','Insert','Modeling','View'], tab:'Home', btns:['Get data ▾','Transform data','Refresh'], hi:[0], num:[1], h:250,
+  body:`<rect x="14" y="94" width="170" height="140" rx="6" fill="var(--bg)" stroke="var(--line)"/>${['Excel workbook','Power BI semantic models','SQL Server','Text/CSV','Web','More…'].map((t,i)=>`<rect x="18" y="${98+i*22}" width="162" height="20" rx="4" fill="${i===0?'var(--wk-soft)':'none'}" stroke="${i===0?'var(--wk)':'none'}" stroke-width="2"/><text x="26" y="${112+i*22}" font-size="10.5" font-weight="${i===0?800:400}" fill="var(--ink)">${t}</text>`).join('')}${num(184,98,2)}
+  <text x="220" y="150" font-size="12" fill="var(--muted)">Then choose the file</text><text x="220" y="168" font-size="12" font-weight="700" fill="var(--ink)">GED106_PowerBI_Bubble_Tea.xlsx</text>${num(208,146,3)}`});
+const S_NAV=win({title:'Navigator', h:260, body:`<text x="18" y="48" font-size="11" fill="var(--muted)">Display options ▾</text>
+  <rect x="16" y="58" width="180" height="22" rx="4" fill="var(--wk-soft)" stroke="var(--wk)" stroke-width="2"/><rect x="24" y="63" width="12" height="12" rx="2" fill="var(--wk)"/><text x="27" y="73" font-size="10" fill="#fff" font-weight="800">✓</text><text x="44" y="73" font-size="11" font-weight="800" fill="var(--ink)">Sales</text>${num(196,58,4)}
+  <rect x="16" y="84" width="180" height="22" rx="4" fill="none"/><rect x="24" y="89" width="12" height="12" rx="2" fill="none" stroke="var(--line)" stroke-width="1.5"/><text x="44" y="99" font-size="11" fill="var(--ink)">Read me</text>
+  ${grid(214,58,['Item','Category','Sep','…'],RAW.slice(0,6).map(r=>[r[0],r[1],r[2],'…']),{cw:[130,80,50,30],rh:18})}
+  <rect x="380" y="220" width="70" height="26" rx="6" fill="var(--bg)" stroke="var(--line)"/><text x="415" y="237" text-anchor="middle" font-size="11" fill="var(--ink)">Load</text>
+  <rect x="458" y="220" width="110" height="26" rx="6" fill="var(--wk-soft)" stroke="var(--wk)" stroke-width="2.5"/><text x="513" y="237" text-anchor="middle" font-size="11" font-weight="800" fill="var(--ink)">Transform Data</text>${num(566,220,5)}`});
+const S_SEE=win({title:'Power Query Editor', tabs:['File','Home','Transform','Add Column','View'], tab:'View', btns:['Column quality','Column distribution','Column profile'], hi:[0], num:[1], h:330,
+  body:grid(14,100,COLS,RAW,{cw:CW,bad:[[1,1],[2,1],[2,4],[4,-1],[5,1],[7,1],[9,-1]]})+`<text x="500" y="128" font-size="10.5" font-weight="800" fill="#DC2626">Red = a problem</text>`});
+const S_BLANK=win({title:'Power Query Editor', tabs:['Home','Transform','Add Column','View'], tab:'Home', btns:['Close & Apply','Choose Columns','Remove Columns','Keep Rows','Remove Rows ▾'], hi:[4], num:[1], h:200,
+  body:`<rect x="410" y="94" width="190" height="96" rx="6" fill="var(--bg)" stroke="var(--line)"/>${['Remove Top Rows','Remove Duplicates','Remove Blank Rows','Remove Errors'].map((t,i)=>`<rect x="414" y="${98+i*22}" width="182" height="20" rx="4" fill="${i===2?'var(--wk-soft)':'none'}" stroke="${i===2?'var(--wk)':'none'}" stroke-width="2"/><text x="422" y="${112+i*22}" font-size="10.5" font-weight="${i===2?800:400}" fill="var(--ink)">${t}</text>`).join('')}${num(598,142,2)}
+  <text x="20" y="130" font-size="12" fill="var(--ink)">Removes the empty row</text><text x="20" y="148" font-size="12" fill="var(--muted)">(all cells null)</text>`});
+const S_DUP=win({title:'Power Query Editor', tabs:['Home','Transform','Add Column','View'], tab:'Home', btns:['Close & Apply','Choose Columns','Remove Columns','Keep Rows','Remove Rows ▾'], hi:[4], num:[2], h:200,
+  body:`<rect x="410" y="94" width="190" height="96" rx="6" fill="var(--bg)" stroke="var(--line)"/>${['Remove Top Rows','Remove Duplicates','Remove Blank Rows','Remove Errors'].map((t,i)=>`<rect x="414" y="${98+i*22}" width="182" height="20" rx="4" fill="${i===1?'var(--wk-soft)':'none'}" stroke="${i===1?'var(--wk)':'none'}" stroke-width="2"/><text x="422" y="${112+i*22}" font-size="10.5" font-weight="${i===1?800:400}" fill="var(--ink)">${t}</text>`).join('')}${num(598,120,3)}
+  <rect x="16" y="104" width="300" height="24" rx="6" fill="var(--wk-soft)" stroke="var(--wk)" stroke-width="2"/><text x="26" y="120" font-size="11" font-weight="800" fill="var(--ink)">Ctrl + A: select ALL columns first</text>${num(316,104,1)}`});
+const S_TXT=win({title:'Power Query Editor', tabs:['Home','Transform','Add Column','View'], tab:'Transform', btns:['Data Type ▾','Replace Values','Format ▾','Split Column','Unpivot Columns ▾'], hi:[2], num:[2], h:230,
+  body:`<rect x="262" y="94" width="170" height="74" rx="6" fill="var(--bg)" stroke="var(--line)"/>${['lowercase','UPPERCASE','Capitalize Each Word','Trim'].map((t,i)=>`<rect x="266" y="${96+i*17}" width="162" height="16" rx="3" fill="${i>=2?'var(--wk-soft)':'none'}" stroke="${i>=2?'var(--wk)':'none'}" stroke-width="1.5"/><text x="274" y="${108+i*17}" font-size="10" font-weight="${i>=2?800:400}" fill="var(--ink)">${t}</text>`).join('')}${num(432,130,3)}
+  ${grid(16,100,['Category'],[['tea '],['TEA'],[' smoothie']],{cw:[100],bad:[[0,0],[1,0],[2,0]]})}<text x="122" y="150" font-size="18" fill="var(--wk)">→</text>${grid(140,100,['Category'],[['Tea'],['Tea'],['Smoothie']],{cw:[100],good:[[0,0],[1,0],[2,0]]})}
+  <text x="16" y="200" font-size="11" fill="var(--muted)">Click the Category header first</text>${num(20,104,1)}`});
+const S_TYPE=win({title:'Power Query Editor', tabs:['Home','Transform','Add Column','View'], tab:'Transform', btns:['Data Type: Any ▾','Replace Values ▾','Format ▾','Unpivot Columns ▾'], hi:[0,1], num:[2,4], h:250,
+  body:`<rect x="14" y="94" width="150" height="40" rx="6" fill="var(--bg)" stroke="var(--line)"/><rect x="18" y="98" width="142" height="16" rx="3" fill="var(--wk-soft)" stroke="var(--wk)" stroke-width="1.5"/><text x="26" y="110" font-size="10" font-weight="800" fill="var(--ink)">1²3  Whole Number</text><text x="26" y="128" font-size="10" fill="var(--ink)">ABC  Text</text>
+  <rect x="160" y="94" width="130" height="40" rx="6" fill="var(--bg)" stroke="var(--line)"/><text x="168" y="110" font-size="10" fill="var(--ink)">Replace Values</text><rect x="164" y="116" width="122" height="16" rx="3" fill="var(--wk-soft)" stroke="var(--wk)" stroke-width="1.5"/><text x="168" y="128" font-size="10" font-weight="800" fill="var(--ink)">Replace Errors → null</text>
+  ${grid(330,100,['Sep','Oct','Nov','Dec'],[['420','510','560','480'],['290','340','Error','330']],{cw:[60,60,60,60],bad:[[1,2]]})}${num(334,104,1)}${num(512,142,3)}
+  <text x="330" y="186" font-size="11" fill="var(--muted)">Select Sep–Dec (Shift + click)</text><text x="330" y="204" font-size="11" fill="var(--muted)">N/A cannot be a number → Error → null</text>`});
+const S_UNP=win({title:'Power Query Editor', tabs:['Home','Transform','Add Column','View'], tab:'Transform', btns:['Data Type ▾','Format ▾','Unpivot Columns ▾'], hi:[2], num:[2], h:300,
+  body:`<text x="16" y="110" font-size="11" font-weight="800" fill="var(--ink)">Before: wide (one column per month)</text>${grid(16,118,['Item','Category','Sep','Oct','…'],[['Karak Tea','Tea','380','400','…'],['Cold Brew','Coffee','210','260','…']],{cw:[80,60,40,40,24],good:[[0,0],[0,1],[1,0],[1,1]]})}${num(20,122,1)}
+  <text x="16" y="200" font-size="10.5" fill="var(--muted)">Select Item + Category (Ctrl + click),</text><text x="16" y="216" font-size="10.5" fill="var(--muted)">then Unpivot Other Columns</text>
+  <text x="270" y="170" font-size="22" fill="var(--wk)">→</text>
+  <text x="300" y="110" font-size="11" font-weight="800" fill="var(--ink)">After: long (one row per item per month)</text>${grid(300,118,['Item','Category','Month','Sales'],[['Karak Tea','Tea','Sep','380'],['Karak Tea','Tea','Oct','400'],['Karak Tea','Tea','Nov','455'],['Karak Tea','Tea','Dec','470'],['Cold Brew','Coffee','Sep','210'],['…','…','…','…']],{cw:[80,60,60,60]})}${num(570,128,3)}
+  <text x="300" y="268" font-size="10.5" fill="var(--muted)">Rename: double-click “Attribute” → Month, “Value” → Sales</text>`});
+const S_MAT=win({title:'Power BI Desktop · Report view', h:280,
+  body:`<rect x="16" y="40" width="370" height="226" rx="6" fill="var(--bg)" stroke="var(--line)"/>${grid(28,54,['Category','Sep','Oct','Nov','Dec','Total'],[['Coffee','660','780','780','730','2,950'],['Smoothie','740','710','580','430','2,460'],['Tea','1,090','1,250','1,015','1,280','4,635'],['Total','2,490','2,740','2,375','2,440','10,045']],{cw:[70,50,50,50,50,62],good:[[3,-1]]})}
+  <text x="28" y="180" font-size="11" fill="var(--muted)">Matrix = the pivot table of Power BI</text>
+  <rect x="400" y="40" width="226" height="226" rx="6" fill="var(--bg)" stroke="var(--line)"/><text x="412" y="58" font-size="10.5" font-weight="800" fill="var(--ink)">Visualizations</text>${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${412+i*25}" y="66" width="20" height="20" rx="3" fill="${i===6?'var(--wk-soft)':'var(--surface)'}" stroke="${i===6?'var(--wk)':'var(--line)'}" stroke-width="${i===6?2.5:1}"/>`).join('')}<text x="${412+6*25+10}" y="80" text-anchor="middle" font-size="11" fill="var(--ink)">▦</text>${num(586,66,1)}
+  ${[['Rows','Category',2],['Columns','Month',3],['Values','Sum of Sales',4]].map(([a,b,n],i)=>`<text x="412" y="${110+i*48}" font-size="10" font-weight="800" fill="var(--muted)">${a}</text><rect x="412" y="${116+i*48}" width="190" height="22" rx="5" fill="var(--wk-soft)" stroke="var(--wk)"/><text x="420" y="${131+i*48}" font-size="10.5" font-weight="700" fill="var(--ink)">${b}</text>${num(604,116+i*48,n)}`).join('')}`});
+
+Lecture.mount({
+  id:'g106-lab-powerbi', course:'GED 106', week:10, clo:'2, 3', short:'Power BI · First Steps',
+  title:'Power BI · First Steps · Guided Lab',
+  meta:'Lab · Week 10 · Guided practice · not graded',
+  scenes:[
+  { nav:'Start here', title:'Power BI · First Steps', kind:'activity', minutes:5,
+    narration:[`Today you meet Power BI: import a file, clean it, reshape it and pivot it. You need a Windows laptop or a lab PC (Power BI Desktop is not available for Mac).`],
+    src:`Guide videos: Kevin Stratvert, <a href="${KV}" target="_blank" rel="noopener">Power BI Tutorial for Beginners</a> and <a href="${PQ}" target="_blank" rel="noopener">How to use Microsoft Power Query</a>.`,
+    fig:{label:`What you need`, html:`<div class="btns"><a class="p" href="assets/powerbi/GED106_PowerBI_Bubble_Tea.xlsx" download>⬇ Practice data (Excel)</a><a href="https://powerbi.microsoft.com/en-us/desktop/" target="_blank" rel="noopener">Power BI Desktop ↗</a><a href="https://app.powerbi.com" target="_blank" rel="noopener">Power BI web ↗</a></div>`}},
+
+  { nav:'Recap', title:'Your toolkit so far', kind:'lecture', minutes:5, wide:true,
+    narration:[`You collect with Forms, clean and chart in Excel, store and share in OneDrive and SharePoint, and report in Word. Power BI joins them into one interactive dashboard.`],
+    fig:{label:`From data to dashboard`, html:`<div class="pb">${FLOW}</div>`}},
+
+  { nav:'Desktop or web', title:'Power BI Desktop and Power BI web', kind:'lecture', minutes:5, wide:true,
+    narration:[`Two versions, one job. Build and clean in Desktop; publish and share on the web.`],
+    fig:{label:`Two versions`, html:`<div class="two"><div><b>Power BI Desktop</b><small>Free app · Windows only</small><ul><li>Import and clean data (Power Query)</li><li>Build the report and visuals</li><li>Save as a .pbix file</li></ul><p><a href="https://powerbi.microsoft.com/en-us/desktop/" target="_blank" rel="noopener">Download ↗</a></p></div>
+      <div><b>Power BI web (service)</b><small>app.powerbi.com · any browser · CUD account</small><ul><li>Open reports that were published</li><li>Share with your team and comment</li><li>Pin visuals to a dashboard</li></ul><p><a href="https://app.powerbi.com" target="_blank" rel="noopener">Open ↗</a></p></div></div>`}},
+
+  { nav:'Tour', title:'A tour of Power BI Desktop', kind:'lecture', minutes:5, wide:true,
+    narration:[`Six areas to know before you click anything.`],
+    fig:{label:`Power BI Desktop · screen sketch`, html:`<div class="pb">${TOUR}</div><ol class="leg"><li><b>Home ribbon:</b> Get data, Transform data</li><li><b>Views:</b> Report, Table, Model, DAX query</li><li><b>Canvas:</b> where visuals go</li><li><b>Filters</b></li><li><b>Visualizations</b> and <b>Data</b>: chart types and your columns</li><li><b>Publish:</b> send to Power BI web</li></ol>${vid(KV,867,'Kevin · Layout tour (14:27)')}`}},
+
+  { nav:'1 · Import', title:'Step 1 · Import the data', kind:'activity', minutes:5, wide:true,
+    narration:[`Bring the Excel file in, but open it in Power Query first so you can fix it.`],
+    fig:{label:`Get data → Excel workbook → Transform Data`, html:`<div class="st"><div><b class="h">Get data</b><ol><li><span class="k">Home</span> → <span class="k">Get data</span> → <span class="k">Excel workbook</span></li><li>Choose <b>GED106_PowerBI_Bubble_Tea.xlsx</b></li></ol><div class="pb">${S_GET}</div></div>
+      <div><b class="h">Navigator</b><ol start="3"><li>Tick <b>Sales</b></li><li>Click <span class="k">Transform Data</span>, not Load</li></ol><div class="pb">${S_NAV}</div>${vid(KV,360,'Kevin · Get data from a spreadsheet (6:00)')}</div></div>`}},
+
+  { nav:'2 · See', title:'Step 2 · See the data', kind:'activity', minutes:5, wide:true,
+    narration:[`You are now in the Power Query Editor. Turn on Column quality and look for problems before you fix anything.`],
+    fig:{label:`View → Column quality`, html:`<div class="pb">${S_SEE}</div><p class="sk">Screen sketch</p>`, build:(el)=>{ const d=document.createElement('div'); el.appendChild(d); W.practice(d,[{q:'How many different problems can you find? Name them.',hint:'Four: (1) one blank row (all null); (2) one duplicate row: Mango Smoothie appears twice; (3) messy Category text: “tea ”, “TEA”, “coffee”, “ smoothie”; (4) “N/A” in Matcha Latte, November, a text value in a number column.'}],{label:'Show answer',prefix:'',numbered:false}); }}},
+
+  { nav:'3 · Fix', title:'Step 3 · Fix the data', kind:'activity', minutes:15, wide:true,
+    narration:[`Four fixes, in this order. Each one is recorded under Applied Steps on the right, so you can undo it.`],
+    fig:{label:`Four fixes in Power Query`, html:`<div class="st">
+      <div><b class="h">a · Remove the blank row</b><ol><li><span class="k">Home</span> → <span class="k">Remove Rows</span> → <span class="k">Remove Blank Rows</span></li></ol><div class="pb">${S_BLANK}</div></div>
+      <div><b class="h">b · Remove the duplicate</b><ol><li>Click the table, press <span class="k">Ctrl + A</span> (all columns)</li><li><span class="k">Remove Rows</span> → <span class="k">Remove Duplicates</span></li></ol><div class="pb">${S_DUP}</div></div>
+      <div><b class="h">c · Clean the Category text</b><ol><li>Click the <b>Category</b> header</li><li><span class="k">Transform</span> → <span class="k">Format</span> → <span class="k">Trim</span></li><li>Again <span class="k">Format</span> → <span class="k">Capitalize Each Word</span></li></ol><div class="pb">${S_TXT}</div></div>
+      <div><b class="h">d · Make months numbers</b><ol><li>Select <b>Sep</b> to <b>Dec</b> (Shift + click)</li><li><span class="k">Data Type</span> → <span class="k">Whole Number</span>: N/A becomes <b>Error</b></li><li><span class="k">Replace Values ▾</span> → <span class="k">Replace Errors</span> → type <b>null</b></li></ol><div class="pb">${S_TYPE}</div>${vid(KV,460,'Kevin · Transform data (7:40)')} ${vid(PQ,420,'Kevin · Power Query transforms (7:00)')}</div></div>`}},
+
+  { nav:'4 · Unpivot', title:'Step 4 · Unpivot the months', kind:'activity', minutes:5, wide:true,
+    narration:[`One column per month is easy to read but hard to chart. Unpivot turns the four month columns into two: Month and Sales.`],
+    fig:{label:`Transform → Unpivot Other Columns`, html:`<div class="st"><div><ol><li>Select <b>Item</b> and <b>Category</b> (Ctrl + click)</li><li><span class="k">Transform</span> → <span class="k">Unpivot Columns ▾</span> → <span class="k">Unpivot Other Columns</span></li><li>Rename <b>Attribute</b> → <b>Month</b>, <b>Value</b> → <b>Sales</b></li><li><span class="k">Home</span> → <span class="k">Close &amp; Apply</span></li></ol><div class="pb">${S_UNP}</div></div></div>`,
+      build:(el)=>{ const d=document.createElement('div'); el.appendChild(d); W.practice(d,[{q:'Open <b>Table view</b> (left bar). How many rows do you have? Why not 8 × 4 = 32?',hint:'<b>31 rows.</b> Unpivot skips empty (null) cells, and Matcha Latte has no November value. 8 items × 4 months = 32, minus 1 = 31.'}],{label:'Show answer',prefix:'',numbered:false}); }}},
+
+  { nav:'5 · Pivot', title:'Step 5 · Pivot it with a Matrix', kind:'activity', minutes:10, wide:true,
+    narration:[`In Report view the Matrix visual is the Power BI pivot table. Same data, any layout you choose.`],
+    fig:{label:`Visualizations → Matrix`, html:`<div class="st"><div><ol><li>Click <span class="k">Matrix</span> in Visualizations</li><li><b>Rows:</b> Category</li><li><b>Columns:</b> Month</li><li><b>Values:</b> Sales</li></ol><div class="pb">${S_MAT}</div><p class="sk">Screen sketch · months may show in A–Z order; that is fine for today</p></div></div>`,
+      build:(el)=>{ const d=document.createElement('div'); el.appendChild(d); W.practice(d,[{q:'Check your totals. Is your Smoothie total 2,460? If you see 3,410, what went wrong?',hint:'Correct totals: Tea 4,635 · Coffee 2,950 · Smoothie 2,460 · Total 10,045. <b>3,410</b> means the duplicate Mango Smoothie row (950 cups) is still there: go back to Transform data and remove duplicates. If you see Tea split into “tea” and “TEA”, Step 3c was skipped.'}],{label:'Show answer',prefix:'',numbered:false}); }}},
+
+  { nav:'Check', title:'Check yourself', kind:'check', minutes:5,
+    narration:[`One try per question.`],
+    fig:{label:`Quick check`, build:el=>W.quiz(el,[
+      {q:'You clicked Load instead of Transform Data. How do you reach Power Query now?',o:['Delete the file and start again','Home → Transform data','Report view → Matrix','Publish to the web'],a:1,why:'<b>Transform data</b> reopens Power Query at any time. No need to start again; Matrix is a visual, not the editor; publishing only shares the report.'},
+      {q:'You ran Remove Duplicates with only the Item column selected. What is the risk?',o:['None','Two different rows with the same item name are removed too','The blank row stays','Months become text'],a:1,why:'<b>Selected columns decide what counts as a duplicate.</b> With Item only, any rows sharing a name are treated as copies, even with different sales. Blank rows and types are separate steps.'},
+      {q:'A classmate’s Matrix shows Smoothie 3,410 and two rows “Tea” and “tea”. Which steps were missed?',o:['Unpivot only','Remove Duplicates and Trim/Capitalize','Change type only','Close & Apply only'],a:1,why:'<b>3,410</b> = 2,460 + the duplicate 950; “tea” vs “Tea” means text was not cleaned. Unpivot, types and Close & Apply would not cause these two errors.'}])}},
+
+  { nav:'Keep going', title:'Keep going · Kevin’s videos and open project', kind:'activity', minutes:0, wide:true,
+    narration:[`Optional, not graded. Kevin builds a full dashboard from his free Kevin Cookie Company workbook. Follow along with his file.`],
+    fig:{label:`Power BI Tutorial for Beginners · Kevin Stratvert`, html:`<div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/TmhQCQr_DCA" title="Power BI Tutorial for Beginners, Kevin Stratvert" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+      <div class="btns" style="margin-top:10px"><a href="https://1drv.ms/x/s!AmxrofZZlZ-whJlAigx1zFltyTiC2g?e=e3YVTq" target="_blank" rel="noopener">Kevin Cookie Company data ↗</a><a href="https://www.youtube.com/watch?v=VaOhNqNtGGE" target="_blank" rel="noopener">▶ Power BI for Beginners 2025</a><a href="${PQ}" target="_blank" rel="noopener">▶ Power Query</a><a href="https://learn.microsoft.com/en-us/training/modules/get-started-with-power-bi/" target="_blank" rel="noopener">Microsoft Learn · Get started with Power BI ↗</a></div>`}}
+  ]
+});
+</script>
+</body>
+</html>
