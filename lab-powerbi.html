@@ -128,9 +128,9 @@ Lecture.mount({
   meta:'Lab · Week 10 · Guided practice · not graded',
   scenes:[
   { nav:'Start here', title:'Power BI · First Steps', kind:'activity', minutes:5,
-    narration:[`Today you meet Power BI: import a file, clean it, reshape it and pivot it. You need a Windows laptop or a lab PC (Power BI Desktop is not available for Mac).`],
+    narration:[`Task 1: follow Kevin with his Cookie Company data. Task 2: do it yourself with the bubble tea data. You need a Windows laptop or a lab PC (Power BI Desktop is not available for Mac).`],
     src:`Guide videos: Kevin Stratvert, <a href="${KV}" target="_blank" rel="noopener">Power BI Tutorial for Beginners</a> and <a href="${PQ}" target="_blank" rel="noopener">How to use Microsoft Power Query</a>.`,
-    fig:{label:`What you need`, html:`<div class="btns"><a class="p" href="assets/powerbi/GED106_PowerBI_Bubble_Tea.xlsx" download>⬇ Practice data (Excel)</a><a href="https://powerbi.microsoft.com/en-us/desktop/" target="_blank" rel="noopener">Power BI Desktop ↗</a><a href="https://app.powerbi.com" target="_blank" rel="noopener">Power BI web ↗</a></div>`}},
+    fig:{label:`What you need`, html:`<div class="btns"><a class="p" href="https://1drv.ms/x/s!AmxrofZZlZ-whJlAigx1zFltyTiC2g?e=e3YVTq" target="_blank" rel="noopener">⬇ Task 1 · Kevin Cookie Company data</a><a class="p" href="assets/powerbi/GED106_PowerBI_Bubble_Tea.xlsx" download>⬇ Task 2 · Bubble tea data</a><a href="https://powerbi.microsoft.com/en-us/desktop/" target="_blank" rel="noopener">Power BI Desktop ↗</a><a href="https://app.powerbi.com" target="_blank" rel="noopener">Power BI web ↗</a></div>`}},
 
   { nav:'Recap', title:'Your toolkit so far', kind:'lecture', minutes:5, wide:true,
     narration:[`You collect with Forms, clean and chart in Excel, store and share in OneDrive and SharePoint, and report in Word. Power BI joins them into one interactive dashboard.`],
@@ -145,16 +145,27 @@ Lecture.mount({
     narration:[`Six areas to know before you click anything.`],
     fig:{label:`Power BI Desktop · screen sketch`, html:`<div class="pb">${TOUR}</div><ol class="leg"><li><b>Home ribbon:</b> Get data, Transform data</li><li><b>Views:</b> Report, Table, Model, DAX query</li><li><b>Canvas:</b> where visuals go</li><li><b>Filters</b></li><li><b>Visualizations</b> and <b>Data</b>: chart types and your columns</li><li><b>Publish:</b> send to Power BI web</li></ol>${vid(KV,867,'Kevin · Layout tour (14:27)')}`}},
 
-  { nav:'1 · Import', title:'Step 1 · Import the data', kind:'activity', minutes:5, wide:true,
-    narration:[`Bring the Excel file in, but open it in Power Query first so you can fix it.`],
+  { nav:'Task 1 · Kevin', title:'Task 1 · Follow Kevin: Kevin Cookie Company', kind:'activity', minutes:25, wide:true,
+    narration:[`Watch one part, pause, do it in your Power BI, then go to the next part. Kevin’s screen is from 2021: some buttons look slightly different today.`],
+    fig:{label:`Power BI Tutorial for Beginners · Kevin Stratvert`, html:`<div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/TmhQCQr_DCA" title="Power BI Tutorial for Beginners, Kevin Stratvert" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+      <div class="btns" style="margin-top:10px"><a class="p" href="https://1drv.ms/x/s!AmxrofZZlZ-whJlAigx1zFltyTiC2g?e=e3YVTq" target="_blank" rel="noopener">⬇ Kevin Cookie Company data</a></div>
+      <div class="st">
+      <div><b class="h">1 · Open the data</b><ol><li>Open Kevin’s link → <span class="k">Download</span> → save to OneDrive › GED106 › Power BI</li><li>In Power BI: <span class="k">Get data</span> → <span class="k">Excel workbook</span> → choose the file</li></ol>${vid(KV,262,'Sample data (4:20)')} ${vid(KV,360,'Get data (6:00)')}</div>
+      <div><b class="h">2 · Clean it in Power Query</b><ol><li>Click <span class="k">Transform Data</span></li><li>Repeat what Kevin changes, then <span class="k">Close &amp; Apply</span></li></ol>${vid(KV,460,'Transform data (7:40)')}</div>
+      <div><b class="h">3 · Build the report</b><ol><li>Add a title</li><li>Add 2–3 visuals: drag fields from the Data pane</li><li>Add one slicer</li></ol>${vid(KV,1000,'Title (16:40)')} ${vid(KV,1040,'Visuals (17:20)')} ${vid(KV,1330,'Slicer (22:10)')}</div>
+      <div><b class="h">4 · Save</b><ol><li><span class="k">File</span> → <span class="k">Save as</span> → <b>Kevin_Cookies.pbix</b> in OneDrive</li></ol>${vid(KV,1500,'Save and publish (25:00)')}</div></div>
+      <p class="sk">Skip 10:10–14:27 (data from the web and merging) for now: optional</p>`}},
+
+  { nav:'2 · Import', title:'Task 2 · Step 1 · Import the bubble tea data', kind:'activity', minutes:5, wide:true,
+    narration:[`Now on your own, with messier data. Open it in Power Query first so you can fix it.`],
     fig:{label:`Get data → Excel workbook → Transform Data`, html:`<div class="st"><div><b class="h">Get data</b><ol><li><span class="k">Home</span> → <span class="k">Get data</span> → <span class="k">Excel workbook</span></li><li>Choose <b>GED106_PowerBI_Bubble_Tea.xlsx</b></li></ol><div class="pb">${S_GET}</div></div>
       <div><b class="h">Navigator</b><ol start="3"><li>Tick <b>Sales</b></li><li>Click <span class="k">Transform Data</span>, not Load</li></ol><div class="pb">${S_NAV}</div>${vid(KV,360,'Kevin · Get data from a spreadsheet (6:00)')}</div></div>`}},
 
-  { nav:'2 · See', title:'Step 2 · See the data', kind:'activity', minutes:5, wide:true,
+  { nav:'2 · See', title:'Task 2 · Step 2 · See the data', kind:'activity', minutes:5, wide:true,
     narration:[`You are now in the Power Query Editor. Turn on Column quality and look for problems before you fix anything.`],
     fig:{label:`View → Column quality`, html:`<div class="pb">${S_SEE}</div><p class="sk">Screen sketch</p>`, build:(el)=>{ const d=document.createElement('div'); el.appendChild(d); W.practice(d,[{q:'How many different problems can you find? Name them.',hint:'Four: (1) one blank row (all null); (2) one duplicate row: Mango Smoothie appears twice; (3) messy Category text: “tea ”, “TEA”, “coffee”, “ smoothie”; (4) “N/A” in Matcha Latte, November, a text value in a number column.'}],{label:'Show answer',prefix:'',numbered:false}); }}},
 
-  { nav:'3 · Fix', title:'Step 3 · Fix the data', kind:'activity', minutes:15, wide:true,
+  { nav:'2 · Fix', title:'Task 2 · Step 3 · Fix the data', kind:'activity', minutes:15, wide:true,
     narration:[`Four fixes, in this order. Each one is recorded under Applied Steps on the right, so you can undo it.`],
     fig:{label:`Four fixes in Power Query`, html:`<div class="st">
       <div><b class="h">a · Remove the blank row</b><ol><li><span class="k">Home</span> → <span class="k">Remove Rows</span> → <span class="k">Remove Blank Rows</span></li></ol><div class="pb">${S_BLANK}</div></div>
@@ -162,12 +173,12 @@ Lecture.mount({
       <div><b class="h">c · Clean the Category text</b><ol><li>Click the <b>Category</b> header</li><li><span class="k">Transform</span> → <span class="k">Format</span> → <span class="k">Trim</span></li><li>Again <span class="k">Format</span> → <span class="k">Capitalize Each Word</span></li></ol><div class="pb">${S_TXT}</div></div>
       <div><b class="h">d · Make months numbers</b><ol><li>Select <b>Sep</b> to <b>Dec</b> (Shift + click)</li><li><span class="k">Data Type</span> → <span class="k">Whole Number</span>: N/A becomes <b>Error</b></li><li><span class="k">Replace Values ▾</span> → <span class="k">Replace Errors</span> → type <b>null</b></li></ol><div class="pb">${S_TYPE}</div>${vid(KV,460,'Kevin · Transform data (7:40)')} ${vid(PQ,420,'Kevin · Power Query transforms (7:00)')}</div></div>`}},
 
-  { nav:'4 · Unpivot', title:'Step 4 · Unpivot the months', kind:'activity', minutes:5, wide:true,
+  { nav:'2 · Unpivot', title:'Task 2 · Step 4 · Unpivot the months', kind:'activity', minutes:5, wide:true,
     narration:[`One column per month is easy to read but hard to chart. Unpivot turns the four month columns into two: Month and Sales.`],
     fig:{label:`Transform → Unpivot Other Columns`, html:`<div class="st"><div><ol><li>Select <b>Item</b> and <b>Category</b> (Ctrl + click)</li><li><span class="k">Transform</span> → <span class="k">Unpivot Columns ▾</span> → <span class="k">Unpivot Other Columns</span></li><li>Rename <b>Attribute</b> → <b>Month</b>, <b>Value</b> → <b>Sales</b></li><li><span class="k">Home</span> → <span class="k">Close &amp; Apply</span></li></ol><div class="pb">${S_UNP}</div></div></div>`,
       build:(el)=>{ const d=document.createElement('div'); el.appendChild(d); W.practice(d,[{q:'Open <b>Table view</b> (left bar). How many rows do you have? Why not 8 × 4 = 32?',hint:'<b>31 rows.</b> Unpivot skips empty (null) cells, and Matcha Latte has no November value. 8 items × 4 months = 32, minus 1 = 31.'}],{label:'Show answer',prefix:'',numbered:false}); }}},
 
-  { nav:'5 · Pivot', title:'Step 5 · Pivot it with a Matrix', kind:'activity', minutes:10, wide:true,
+  { nav:'2 · Pivot', title:'Task 2 · Step 5 · Pivot it with a Matrix', kind:'activity', minutes:10, wide:true,
     narration:[`In Report view the Matrix visual is the Power BI pivot table. Same data, any layout you choose.`],
     fig:{label:`Visualizations → Matrix`, html:`<div class="st"><div><ol><li>Click <span class="k">Matrix</span> in Visualizations</li><li><b>Rows:</b> Category</li><li><b>Columns:</b> Month</li><li><b>Values:</b> Sales</li></ol><div class="pb">${S_MAT}</div><p class="sk">Screen sketch · months may show in A–Z order; that is fine for today</p></div></div>`,
       build:(el)=>{ const d=document.createElement('div'); el.appendChild(d); W.practice(d,[{q:'Check your totals. Is your Smoothie total 2,460? If you see 3,410, what went wrong?',hint:'Correct totals: Tea 4,635 · Coffee 2,950 · Smoothie 2,460 · Total 10,045. <b>3,410</b> means the duplicate Mango Smoothie row (950 cups) is still there: go back to Transform data and remove duplicates. If you see Tea split into “tea” and “TEA”, Step 3c was skipped.'}],{label:'Show answer',prefix:'',numbered:false}); }}},
@@ -179,10 +190,9 @@ Lecture.mount({
       {q:'You ran Remove Duplicates with only the Item column selected. What is the risk?',o:['None','Two different rows with the same item name are removed too','The blank row stays','Months become text'],a:1,why:'<b>Selected columns decide what counts as a duplicate.</b> With Item only, any rows sharing a name are treated as copies, even with different sales. Blank rows and types are separate steps.'},
       {q:'A classmate’s Matrix shows Smoothie 3,410 and two rows “Tea” and “tea”. Which steps were missed?',o:['Unpivot only','Remove Duplicates and Trim/Capitalize','Change type only','Close & Apply only'],a:1,why:'<b>3,410</b> = 2,460 + the duplicate 950; “tea” vs “Tea” means text was not cleaned. Unpivot, types and Close & Apply would not cause these two errors.'}])}},
 
-  { nav:'Keep going', title:'Keep going · Kevin’s videos and open project', kind:'activity', minutes:0, wide:true,
-    narration:[`Optional, not graded. Kevin builds a full dashboard from his free Kevin Cookie Company workbook. Follow along with his file.`],
-    fig:{label:`Power BI Tutorial for Beginners · Kevin Stratvert`, html:`<div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/TmhQCQr_DCA" title="Power BI Tutorial for Beginners, Kevin Stratvert" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
-      <div class="btns" style="margin-top:10px"><a href="https://1drv.ms/x/s!AmxrofZZlZ-whJlAigx1zFltyTiC2g?e=e3YVTq" target="_blank" rel="noopener">Kevin Cookie Company data ↗</a><a href="https://www.youtube.com/watch?v=VaOhNqNtGGE" target="_blank" rel="noopener">▶ Power BI for Beginners 2025</a><a href="${PQ}" target="_blank" rel="noopener">▶ Power Query</a><a href="https://learn.microsoft.com/en-us/training/modules/get-started-with-power-bi/" target="_blank" rel="noopener">Microsoft Learn · Get started with Power BI ↗</a></div>`}}
+  { nav:'Keep going', title:'Keep going · more from Kevin', kind:'activity', minutes:0, wide:true,
+    narration:[`Optional, not graded. Finish Kevin’s web data and merge parts, then try his newer videos.`],
+    fig:{label:`Continue learning`, html:`<div class="btns"><a href="${KV}&t=610" target="_blank" rel="noopener">▶ Web data and merge (10:10)</a><a href="https://www.youtube.com/watch?v=VaOhNqNtGGE" target="_blank" rel="noopener">▶ Power BI for Beginners 2025</a><a href="${PQ}" target="_blank" rel="noopener">▶ Power Query</a><a href="https://learn.microsoft.com/en-us/training/modules/get-started-with-power-bi/" target="_blank" rel="noopener">Microsoft Learn · Get started with Power BI ↗</a></div>`}}
   ]
 });
 </script>
