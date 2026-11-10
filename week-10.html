@@ -18,7 +18,7 @@
 </head>
 <body>
 <script src="assets/supports.js?v=20261103"></script>
-<script src="assets/course.js?v=20261103b"></script>
+<script src="assets/course.js?v=20261110"></script>
 <script src="assets/concept.js?v=20261103"></script>
 <script src="assets/lesson.js?v=20261103"></script>
 <script src="assets/pad.js?v=20261103p"></script>
@@ -112,7 +112,7 @@ Lesson.mount({
       check:[
         {q:'A gym counts members every month for 2 years and wants to see which month peaks each year. Best chart?',o:['24 bars, one per month','Line chart with one line per year','Pie chart of the 24 months','Histogram of monthly members'],a:1,why:'<b>One line per year:</b> keeps time order and lets you compare the two years month by month. 24 bars hide the yearly pattern; months are not parts of one whole (pie); a histogram loses the time order.'},
         {q:'Inditex sales (€ bn): Zara 27.8, Bershka 2.9, Stradivarius 2.7, Pull&Bear 2.5, Massimo Dutti 2.0, Oysho 0.8. Question: “How do the smaller brands compare?” Best choice?',o:['Pie chart of all six brands','Sorted bar chart of all six brands','Sorted bar chart of the five smaller brands, with a note on Zara','Line chart of the six brands'],a:2,why:'<b>Five smaller brands:</b> Zara is about 10× bigger and flattens the other bars. A pie makes five small slices look alike; six bars still squash the small ones; a line suggests a time order between brands.'},
-        {q:'Which is a message title?',o:['Water sales, Weeks 1–12','Chart 2: hypermarket data','Water sales doubled by Week 8, then fell','Water bottles sold (units)'],a:2,why:'<b>It states what to see.</b> “Water sales, Weeks 1–12” names the topic only; “Chart 2” is a label; “Water bottles sold (units)” is an axis title.'}] },
+        {q:'Which is the best title for this chart?',o:['Water sales, Weeks 1–12','Chart 2: hypermarket data','Water sales doubled by Week 8, then fell','Water bottles sold (units)'],a:[0,2],why:'<b>Both 1 and 3 work.</b> “Water sales, Weeks 1–12” is a clear chart title: what and when. “Water sales doubled by Week 8, then fell” states the finding: use it as the headline or the message under the title. “Chart 2” is only a label; “Water bottles sold (units)” is an axis title.'}] },
 
     { id:'types', title:'Different types of graphs',
       def:'Five purposes cover most charts: <b>compare</b> (bar), <b>change over time</b> (line), <b>part of a whole</b> (pie or stacked bar), <b>distribution</b> (histogram) and <b>relationship</b> (scatter).',
