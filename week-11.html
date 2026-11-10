@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 Week 11 · Dashboards and Data Stories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261110">
+<link rel="stylesheet" href="assets/lesson.css?v=20261110">
+<style>
+:root{--wk:#0E7490;--wk-soft:rgba(14,116,144,.09);--wk-d:#67E8F9;--wk-soft-d:rgba(103,232,249,.14);--c1:#0E7490;--c2:#B4562F;--c3:#2E7D5B;--c4:#5B3FA8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#67E8F9;--c2:#F2A07E;--c3:#7FD3AA;--c4:#B9A3F5}}
+:root[data-theme="dark"]{--c1:#67E8F9;--c2:#F2A07E;--c3:#7FD3AA;--c4:#B9A3F5}
+.lfig svg,.lc-fig svg,.lc-build svg{width:100%;height:auto;display:block}
+.dstep{display:grid;gap:10px;margin:10px 0}
+.dstep>div{border:1px solid var(--line);border-left:5px solid var(--wk);border-radius:12px;background:var(--surface);padding:10px 14px;font-family:var(--f-display)}
+.dstep b{color:var(--wk)}
+.dstep p{margin:4px 0 0;font-size:.93rem}
+.dstep .why{color:var(--muted)}
+.bad-list{margin:8px 0 0;padding-left:1.4em;font-family:var(--f-display);font-size:.93rem;line-height:1.55}
+.bad-list b{color:var(--bad)}
+.dtbl{overflow-x:auto}.dtbl table{font-size:.85rem}
+.rel{font-family:var(--f-display);font-size:.93rem}
+.ins{border:1px solid var(--good);background:rgba(22,163,74,.07);border-radius:12px;padding:10px 14px;font-family:var(--f-display);margin-top:10px}
+.ins b{color:var(--good)}
+.lc-build h4{font:800 1rem var(--f-display);margin:16px 0 6px}
+/* builder */
+.bd{font-family:var(--f-display)}
+.bd-pal{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.bd-chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:7px 12px;font:700 .9rem var(--f-display);cursor:grab;user-select:none;touch-action:manipulation}
+.bd-chip[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft);outline:2px solid var(--wk)}
+.bd-chip svg{width:22px;height:22px}
+.bd-tip{font-size:.85rem;color:var(--muted);margin:0 0 4px}
+.bd-board{border:2px solid var(--line);border-radius:14px;background:var(--surface);padding:12px}
+.bd-title{width:100%;box-sizing:border-box;font:800 1.15rem var(--f-display);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);color:var(--ink);margin-bottom:10px}
+.bd-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:10px}
+.bd-grid .wide{grid-column:span 1}
+.bd-slot{border:2px dashed var(--line);border-radius:12px;min-height:190px;padding:8px 10px;background:var(--bg);display:flex;flex-direction:column;gap:4px;transition:border-color .15s,background .15s}
+.bd-slot.over{border-color:var(--wk);background:var(--wk-soft)}
+.bd-slot.filled{border-style:solid}
+.bd-q{font-weight:800;font-size:.9rem}
+.bd-q small{display:block;font-weight:400;color:var(--muted)}
+.bd-viz{flex:1;display:grid;place-items:center;color:var(--muted);font-size:.85rem;text-align:center}
+.bd-viz svg{width:100%;height:auto;max-height:220px}
+.bd-v{font-size:.84rem;border-radius:8px;padding:6px 9px;margin-top:4px}
+.bd-v.good{background:rgba(22,163,74,.12)}.bd-v.ok{background:rgba(202,138,4,.14)}.bd-v.poor{background:rgba(220,38,38,.12)}
+.bd-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.bd-act button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 14px;font:700 .92rem var(--f-display);cursor:pointer}
+.bd-act button.p{background:var(--wk);border-color:var(--wk);color:var(--on-wk,#fff)}
+.bd-score{font-weight:800;margin-top:8px}
+@media (max-width:700px){.bd-grid{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<script src="assets/supports.js?v=20261110"></script>
+<script src="assets/course.js?v=20261110"></script>
+<script src="assets/concept.js?v=20261110"></script>
+<script src="assets/lesson.js?v=20261110"></script>
+<script src="assets/pad.js?v=20261110"></script>
+<script src="assets/credentials.js?v=20261110"></script>
+<script src="assets/keywords.js?v=20261110"></script>
+<script src="assets/professor.js?v=20261110"></script>
+<script src="assets/kb.js?v=20261110"></script>
+<script src="assets/search-index.js?v=20261110"></script>
+<script src="assets/assistant.js?v=20261110"></script>
+<script>
+const {svg,card,text,arrow,pill,axis}=CG;
+const F='font-family="Schibsted Grotesk,Arial,sans-serif"';
+const E=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const fmt=v=>typeof v==='number'?v.toLocaleString('en-US'):v;
+const C=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--muted)','var(--line)'];
+const t=(x,y,s,o={})=>`<text x="${x}" y="${y}" ${F} font-size="${o.s||10}" ${o.a?`text-anchor="${o.a}"`:''} font-weight="${o.w||400}" fill="${o.c||'var(--ink)'}">${E(s)}</text>`;
+
+/* ---------- mini charts drawn inside a box (x,y,w,h) ---------- */
+function cCard(x,y,w,h,val,lab,o={}){ return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${o.bg||'var(--wk-soft)'}"/>`+t(x+w/2,y+h/2+4,val,{a:'middle',s:Math.min(26,h*.42),w:800,c:o.c||'var(--c1)'})+t(x+w/2,y+h/2+4+Math.min(18,h*.3),lab,{a:'middle',s:10,c:'var(--muted)'}); }
+function cBar(x,y,w,h,rows,o={}){ const L=o.l||w*.36, mx=Math.max(...rows.map(r=>r[1])), bh=h/rows.length; let s='';
+  rows.forEach(([k,v],i)=>{ const bw=(w-L-36)*v/mx, yy=y+i*bh+bh*.16, col=o.rainbow?C[i%4]:(i===0&&!o.flat?'var(--c1)':'var(--c1)'), op=o.rainbow?1:(i===0?1:.5);
+    s+=t(x+L-5,yy+bh*.5,k,{a:'end',s:Math.min(10,bh*.55)})+`<rect x="${x+L}" y="${yy}" width="${bw}" height="${bh*.68}" rx="2" fill="${col}" fill-opacity="${op}"/>`+t(x+L+bw+4,yy+bh*.5,fmt(v),{s:Math.min(9.5,bh*.5),c:'var(--muted)'}); });
+  return s; }
+function cCol(x,y,w,h,rows,o={}){ const mn=o.min||0, mx=Math.max(...rows.map(r=>r[1])), cw=w/rows.length, B=16; let s=`<line x1="${x}" y1="${y+h-B}" x2="${x+w}" y2="${y+h-B}" stroke="var(--muted)"/>`;
+  rows.forEach(([k,v],i)=>{ const bh=(h-B-14)*(v-mn)/(mx-mn), xx=x+i*cw+cw*.16; s+=`<rect x="${xx}" y="${y+h-B-bh}" width="${cw*.68}" height="${bh}" rx="2" fill="${o.rainbow?C[i%4]:'var(--c1)'}" fill-opacity="${o.hi!=null&&o.hi!==i?.45:1}"/>`+t(xx+cw*.34,y+h-4,k,{a:'middle',s:Math.min(9,cw*.28),c:'var(--muted)'}); });
+  return s; }
+function cLine(x,y,w,h,rows,o={}){ const vals=rows.map(r=>r[1]), mn=o.min??0, mx=Math.max(...vals)*1.1, B=16, X=i=>x+12+(w-24)*i/(vals.length-1), Y=v=>y+h-B-(h-B-8)*(v-mn)/(mx-mn);
+  return `<line x1="${x}" y1="${y+h-B}" x2="${x+w}" y2="${y+h-B}" stroke="var(--muted)"/><polyline points="${vals.map((v,i)=>X(i)+','+Y(v)).join(' ')}" fill="none" stroke="var(--c1)" stroke-width="2.4"/>`+vals.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="2.8" fill="var(--c1)"/>`).join('')+rows.map(([k],i)=>t(X(i),y+h-4,k,{a:'middle',s:9,c:'var(--muted)'})).join(''); }
+function cDonut(x,y,w,h,rows,o={}){ const cx=x+(o.legend===false?w/2:w*.32), cy=y+h/2, r=Math.min(o.legend===false?w/2:w*.3,h/2)-4, tot=rows.reduce((a,b)=>a+b[1],0); let a0=-Math.PI/2, s='';
+  rows.forEach(([k,v],i)=>{ const a1=a0+2*Math.PI*v/tot, l=(a1-a0)>Math.PI?1:0; s+=`<path d="M${cx},${cy} L${cx+r*Math.cos(a0)},${cy+r*Math.sin(a0)} A${r},${r} 0 ${l} 1 ${cx+r*Math.cos(a1)},${cy+r*Math.sin(a1)} Z" fill="${C[i%C.length]}" stroke="var(--surface)" stroke-width="1.5"/>`; a0=a1; });
+  if(o.hole!==false) s+=`<circle cx="${cx}" cy="${cy}" r="${r*.55}" fill="var(--surface)"/>`;
+  if(o.legend!==false) rows.forEach(([k,v],i)=>{ const ly=y+h/2-rows.length*7+i*14+4; s+=`<rect x="${x+w*.66}" y="${ly-7}" width="8" height="8" fill="${C[i%C.length]}"/>`+t(x+w*.66+12,ly,`${k} ${Math.round(v/tot*100)}%`,{s:9.5}); });
+  return s; }
+function cTable(x,y,w,h,rows,o={}){ const rh=Math.min(16,h/(rows.length+1)); let s=`<rect x="${x}" y="${y}" width="${w}" height="${rh}" fill="var(--wk-soft)"/>`+t(x+6,y+rh*.72,o.h1||'Item',{s:9,w:800})+t(x+w-6,y+rh*.72,o.h2||'Value',{a:'end',s:9,w:800});
+  rows.forEach(([k,v],i)=>{ s+=t(x+6,y+rh*(i+1.72),k,{s:9})+t(x+w-6,y+rh*(i+1.72),fmt(v),{a:'end',s:9})+`<line x1="${x}" y1="${y+rh*(i+2)}" x2="${x+w}" y2="${y+rh*(i+2)}" stroke="var(--line)"/>`; }); return s; }
+const panel=(x,y,w,h,title,inner,o={})=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(--surface)" stroke="${o.bad?'var(--bad)':'var(--line)'}" ${o.bad?'stroke-width="1.8"':''}/>`+(title?t(x+8,y+15,title,{s:10.5,w:800}):'')+inner;
+const badge=(x,y,n,col)=>`<circle cx="${x}" cy="${y}" r="10" fill="${col||'var(--bad)'}"/>`+t(x,y+4,n,{a:'middle',s:11,w:800,c:'#fff'});
+
+/* ================= Case 1 data: campus coffee shop (fictional) ================= */
+const CF_ITEMS=[['Iced Spanish Latte',6840],['Cappuccino',4950],['Matcha Latte',3960],['Croissant',2700],['Cookie',1860],['Water',920]];
+const CF_WEEKS=[['W1',4620],['W2',5180],['W3',5890],['W4',5540]];
+const CF_HOURS=[['8',190],['9',160],['10',120],['11',140],['12',230],['1',180],['2',100],['3',60]];
+const CF_PAY=[['Card',54],['Apple Pay',38],['Cash',8]];
+const CF_ROWS=[['01 Oct','Wed','08:14','Cappuccino','Drink','1','16','Card'],['01 Oct','Wed','08:15','Croissant','Food','2','12','Card'],['01 Oct','Wed','12:31','Iced Spanish Latte','Drink','1','19','Apple Pay'],['02 Oct','Thu','09:02','Matcha Latte','Drink','1','18','Cash'],['…','…','…','…','…','…','…','…']];
+const tbl=(h,rows)=>`<div class="dtbl"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+
+const DASH_GOOD=svg(700,470,
+  `<rect x="2" y="2" width="696" height="466" rx="12" fill="var(--bg)" stroke="var(--line)"/>`+
+  t(16,32,'Midterm week was our best week; lunch is the rush hour',{s:16,w:800})+t(16,50,'Bean There campus café · October 2026 · AED',{s:10.5,c:'var(--muted)'})+
+  panel(540,14,146,40,'',`<rect x="548" y="22" width="62" height="24" rx="6" fill="var(--wk-soft)" stroke="var(--wk)"/>${t(579,38,'All',{a:'middle',s:10,w:700})}<rect x="614" y="22" width="64" height="24" rx="6" fill="var(--bg)" stroke="var(--line)"/>${t(646,38,'Drinks · Food',{a:'middle',s:9})}`)+
+  cCard(16,64,212,64,'AED 21,230','Revenue')+cCard(244,64,212,64,'1,180','Orders')+cCard(472,64,214,64,'AED 18.0','Average order')+
+  panel(16,140,330,150,'Revenue by week (AED)',cLine(26,162,310,120,CF_WEEKS,{min:4000}))+
+  panel(356,140,330,150,'Top items by revenue (AED)',cBar(364,160,316,124,CF_ITEMS,{l:112}))+
+  panel(16,300,430,156,'Orders by hour (8 AM–4 PM)',cCol(26,320,410,128,CF_HOURS,{hi:4}))+
+  panel(456,300,230,156,'How customers pay',cDonut(462,318,220,130,CF_PAY)),
+  'A good dashboard: message title, three KPI cards, a line by week, sorted bars by item, columns by hour and a donut for payment');
+
+const DASH_BAD=svg(700,470,
+  `<rect x="2" y="2" width="696" height="466" rx="12" fill="var(--bg)" stroke="var(--line)"/>`+t(16,32,'Dashboard 1',{s:16,w:800})+badge(132,27,1)+
+  panel(16,48,200,190,'Sales by item',cDonut(20,70,192,160,CF_ITEMS,{hole:false,legend:false}),{bad:1})+badge(210,54,2)+
+  panel(226,48,250,190,'Revenue by week',cDonut(232,70,240,160,CF_WEEKS,{hole:false}),{bad:1})+badge(470,54,3)+
+  panel(486,48,200,190,'Items',cLine(494,74,186,150,CF_ITEMS.map(([k,v])=>[k.split(' ')[0],v]),{min:0}),{bad:1})+badge(680,54,4)+
+  panel(16,248,330,208,'Orders by hour',cCol(26,268,310,180,CF_HOURS.slice().sort((a,b)=>b[1]-a[1]),{min:50,rainbow:true}),{bad:1})+badge(340,254,5)+
+  panel(356,248,160,98,'',cCard(362,256,148,84,'21230','Total')) +badge(510,254,6)+
+  panel(526,248,160,98,'',cCard(532,256,148,84,'1180','Count'))+
+  panel(356,356,330,100,'Payment',cTable(364,374,314,76,CF_PAY.map(([k,v])=>[k,v+'%'])),{bad:0}),
+  'A poor dashboard with six numbered mistakes');
+
+/* ================= Case 2: Carrefour-style hypermarket ================= */
+const REL=svg(640,230,
+  card(230,70,180,96,'var(--c1)',{r:10,op:.08})+t(320,92,'Sales',{a:'middle',s:14,w:800})+t(320,110,'Date · StoreID · ProductID',{a:'middle',s:10})+t(320,126,'Units',{a:'middle',s:10})+t(320,154,'one row = one product sold',{a:'middle',s:9.5,c:'var(--muted)'})+
+  card(8,70,170,96,'var(--c2)',{r:10,op:.08})+t(93,92,'Products',{a:'middle',s:14,w:800})+t(93,110,'ProductID · Product',{a:'middle',s:10})+t(93,126,'Category · Price',{a:'middle',s:10})+t(93,154,'one row = one product',{a:'middle',s:9.5,c:'var(--muted)'})+
+  card(462,70,170,96,'var(--c3)',{r:10,op:.08})+t(547,92,'Stores',{a:'middle',s:14,w:800})+t(547,110,'StoreID · Store',{a:'middle',s:10})+t(547,126,'City',{a:'middle',s:10})+t(547,154,'one row = one store',{a:'middle',s:9.5,c:'var(--muted)'})+
+  `<line x1="178" y1="118" x2="230" y2="118" stroke="var(--ink)" stroke-width="2"/><line x1="410" y1="118" x2="462" y2="118" stroke="var(--ink)" stroke-width="2"/>`+
+  t(186,110,'1',{s:12,w:800,c:'var(--c2)'})+t(218,110,'*',{s:14,w:800,c:'var(--c1)'})+t(416,110,'*',{s:14,w:800,c:'var(--c1)'})+t(452,110,'1',{s:12,w:800,c:'var(--c3)'})+
+  t(204,140,'ProductID',{a:'middle',s:9,c:'var(--muted)'})+t(436,140,'StoreID',{a:'middle',s:9,c:'var(--muted)'})+
+  t(320,206,'One product → many sales rows (1 → *) · One store → many sales rows (1 → *)',{a:'middle',s:11,c:'var(--muted)'})+t(320,30,'Revenue = Units × Price',{a:'middle',s:13,w:800,c:'var(--c1)'}),
+  'Three tables: Products and Stores each link to many rows of Sales');
+const slot=(x,y,w,h,L,q)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(--bg)" stroke="var(--wk)" stroke-width="2" stroke-dasharray="6 5"/>`+t(x+w/2,y+h/2-4,L,{a:'middle',s:22,w:800,c:'var(--wk)'})+t(x+w/2,y+h/2+16,q,{a:'middle',s:10,c:'var(--muted)'});
+const DASH_HALF=svg(700,430,
+  `<rect x="2" y="2" width="696" height="426" rx="12" fill="var(--bg)" stroke="var(--line)"/>`+t(16,32,'Fresh food drives our sales; Mirdif leads the stores',{s:16,w:800})+t(16,50,'Carrefour-style hypermarket · 3 stores · 8 weeks · AED',{s:10.5,c:'var(--muted)'})+
+  slot(520,12,166,44,'E','filter by city')+
+  cCard(16,64,212,58,'AED 484k','Revenue')+cCard(244,64,212,58,'31,900','Units sold')+cCard(472,64,214,58,'AED 15.2','Average price')+
+  slot(16,134,330,140,'A','Which category earns most?')+slot(356,134,330,140,'B','How did revenue change, 8 weeks?')+
+  slot(16,284,330,132,'C','Which store sells most?')+slot(356,284,330,132,'D','Own brand vs other brands?'),
+  'Half-built dashboard: title and KPI cards done; slots A to E empty');
+
+/* ================= Case 3 data: student food-delivery orders (fictional) ================= */
+const FD={
+  q1:{q:'How much did students spend?',sub:'Total, Sep–Dec',type:'single',val:'AED 126,700',rows:[['Total spend (AED)',126700]],best:['card'],ok:['table'],
+     why:{card:'One number → a card. Big, clear, no axis needed.',table:'Works, but a whole table for one number is heavy.',bar:'A bar for one number has nothing to compare with.',column:'One column compares with nothing.',line:'A line needs at least two points in time.',pie:'A pie of one slice is a full circle: it says nothing.',scatter:'Scatter needs two numerical variables.'}},
+  q2:{q:'How did orders change by month?',sub:'Sep → Dec',type:'time',rows:[['Sep',820],['Oct',960],['Nov',1140],['Dec',700]],best:['line','column'],ok:['table','bar'],
+     why:{line:'Change over time → line: rise to November, drop in December (exams, holidays).',column:'Columns in time order show the same rise and drop.',bar:'Horizontal bars work, but time reads better left to right.',table:'Exact numbers, but the trend is hard to see.',pie:'Months are not parts of one whole; the trend disappears.',card:'A card shows one number, not a change.',scatter:'Months are categories, not a numerical variable.'}},
+  q3:{q:'Which cuisine do students order most?',sub:'5 cuisines',type:'cat',rows:[['Shawarma',1050],['Burgers',930],['Pizza',680],['Sushi',520],['Healthy bowls',440]],best:['bar'],ok:['column','table'],
+     why:{bar:'Compare categories → sorted bars: Shawarma first, the gaps are clear.',column:'Columns compare too; long names fit better in horizontal bars.',table:'Exact, but slower to compare.',pie:'Five similar slices are hard to compare by eye.',line:'A line suggests an order between cuisines that does not exist.',card:'A card shows one number only.',scatter:'Cuisine is a category, not a number.'}},
+  q4:{q:'When do students order?',sub:'Share of orders · 3 parts',type:'part',rows:[['Lunch',1231],['Dinner',1665],['Late night',724]],best:['pie'],ok:['bar','column','table'],
+     why:{pie:'Three parts of one whole (100%) → donut: dinner is almost half.',bar:'Bars compare well; the “share of the whole” is less visible.',column:'Columns compare well; the share of 100% is less visible.',table:'Exact, but no picture of the share.',line:'Times of day are not a trend here; a line misleads.',card:'One card cannot show three parts.',scatter:'Needs two numerical variables.'}}
+};
+const TYPES=[['card','Card'],['bar','Bar'],['column','Column'],['line','Line'],['pie','Donut'],['table','Table'],['scatter','Scatter']];
+const ICON={card:'<rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><text x="12" y="16" font-size="8" text-anchor="middle" fill="currentColor" font-weight="800">123</text>',
+  bar:'<rect x="3" y="4" width="16" height="4" fill="currentColor"/><rect x="3" y="10" width="11" height="4" fill="currentColor"/><rect x="3" y="16" width="7" height="4" fill="currentColor"/>',
+  column:'<rect x="4" y="10" width="4" height="10" fill="currentColor"/><rect x="10" y="4" width="4" height="16" fill="currentColor"/><rect x="16" y="13" width="4" height="7" fill="currentColor"/>',
+  line:'<polyline points="3,18 9,11 14,14 21,5" fill="none" stroke="currentColor" stroke-width="2.4"/>',
+  pie:'<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="5"/>',
+  table:'<rect x="3" y="4" width="18" height="16" fill="none" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/><line x1="3" y1="15" x2="21" y2="15" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="4" x2="12" y2="20" stroke="currentColor" stroke-width="1.5"/>',
+  scatter:'<circle cx="6" cy="17" r="2" fill="currentColor"/><circle cx="10" cy="12" r="2" fill="currentColor"/><circle cx="15" cy="13" r="2" fill="currentColor"/><circle cx="18" cy="6" r="2" fill="currentColor"/>'};
+function render(type,d){ const W=360,H=200; let s='';
+  const rows=d.type==='cat'?d.rows:d.rows;
+  if(type==='card') s=d.type==='single'?cCard(10,40,W-20,120,d.val,'Total spend'):cCard(10,40,W-20,120,fmt(rows[0][1]),rows[0][0]+' only?');
+  else if(type==='bar') s=cBar(8,10,W-16,H-20,rows,{l:100});
+  else if(type==='column') s=cCol(8,10,W-16,H-14,rows.map(([k,v])=>[k.length>8?k.slice(0,7)+'…':k,v]));
+  else if(type==='line') s=rows.length<2?t(W/2,H/2,'Only one point: no line',{a:'middle',s:13,c:'var(--bad)'}):cLine(8,10,W-16,H-14,rows.map(([k,v])=>[k.length>8?k.slice(0,7)+'…':k,v]));
+  else if(type==='pie') s=cDonut(8,10,W-16,H-20,rows);
+  else if(type==='table') s=cTable(20,10,W-40,H-20,rows,{h1:'',h2:'Orders'});
+  else if(type==='scatter') s=t(W/2,H/2-8,'Scatter needs two',{a:'middle',s:13,w:700,c:'var(--bad)'})+t(W/2,H/2+12,'numerical variables',{a:'middle',s:13,w:700,c:'var(--bad)'});
+  return svg(W,H,s,type+' chart'); }
+function builder(el){
+  el.innerHTML=`<div class="bd"><p class="bd-tip">Drag a chart onto a box, or tap a chart, then tap a box. Change your mind? Drop another one.</p>
+  <div class="bd-pal" role="toolbar" aria-label="Chart types">${TYPES.map(([k,l])=>`<button type="button" class="bd-chip" draggable="true" data-t="${k}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg>${l}</button>`).join('')}</div>
+  <div class="bd-board"><input class="bd-title" aria-label="Dashboard title" placeholder="Write your dashboard title: the message, not the topic">
+  <div class="bd-grid">${Object.keys(FD).map(k=>`<div class="bd-slot" data-k="${k}" tabindex="0" role="button" aria-label="${FD[k].q}"><div class="bd-q">${FD[k].q}<small>${FD[k].sub}</small></div><div class="bd-viz">Drop a chart here</div><div class="bd-v" hidden></div></div>`).join('')}</div></div>
+  <div class="bd-act"><button type="button" class="p bd-check">Check my dashboard</button><button type="button" class="bd-reset">Start again</button></div><p class="bd-score" aria-live="polite"></p></div>`;
+  const KEY='g106-w11-builder'; let st={}; try{ st=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){}
+  const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(st)); }catch(e){} };
+  let picked=null; const chips=[...el.querySelectorAll('.bd-chip')], slots=[...el.querySelectorAll('.bd-slot')], score=el.querySelector('.bd-score'), title=el.querySelector('.bd-title');
+  title.value=st._title||''; title.addEventListener('input',()=>{ st._title=title.value; save(); });
+  const verdict=(k,ty)=>{ const d=FD[k]; return d.best.includes(ty)?'good':d.ok.includes(ty)?'ok':'poor'; };
+  const place=(slot,ty,show)=>{ const k=slot.dataset.k; st[k]=ty; save(); slot.classList.add('filled'); slot.querySelector('.bd-viz').innerHTML=render(ty,FD[k]);
+    const v=slot.querySelector('.bd-v'); if(show){ const r=verdict(k,ty); v.className='bd-v '+r; v.innerHTML=`<b>${r==='good'?'Best choice':r==='ok'?'Works, not the best':'Poor fit'}:</b> ${FD[k].why[ty]}`; v.hidden=false; } else v.hidden=true; score.textContent=''; };
+  chips.forEach(c=>{ c.addEventListener('dragstart',e=>{ e.dataTransfer.setData('text/plain',c.dataset.t); });
+    c.addEventListener('click',()=>{ picked=picked===c.dataset.t?null:c.dataset.t; chips.forEach(x=>x.setAttribute('aria-pressed',x.dataset.t===picked)); }); });
+  slots.forEach(s=>{ s.addEventListener('dragover',e=>{ e.preventDefault(); s.classList.add('over'); }); s.addEventListener('dragleave',()=>s.classList.remove('over'));
+    s.addEventListener('drop',e=>{ e.preventDefault(); s.classList.remove('over'); const ty=e.dataTransfer.getData('text/plain'); if(ty) place(s,ty,false); });
+    const tap=()=>{ if(picked){ place(s,picked,false); picked=null; chips.forEach(x=>x.setAttribute('aria-pressed','false')); } };
+    s.addEventListener('click',tap); s.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tap(); } }); });
+  slots.forEach(s=>{ if(st[s.dataset.k]) place(s,st[s.dataset.k],false); });
+  el.querySelector('.bd-check').addEventListener('click',()=>{ let n=0, f=0; slots.forEach(s=>{ const ty=st[s.dataset.k]; if(ty){ f++; place(s,ty,true); if(verdict(s.dataset.k,ty)==='good') n++; } });
+    const tt=(title.value||'').trim();
+    score.innerHTML=f<4?`Fill all four boxes first (${f} of 4).`:`${n} of 4 best choices. ${tt?(tt.split(' ').length>=5?'Title: good, it reads like a message.':'Title: make it a message, e.g. “Students order most at dinner, and Shawarma wins”.'):'Add a title that states the message.'}`; });
+  el.querySelector('.bd-reset').addEventListener('click',()=>{ st={}; save(); title.value=''; slots.forEach(s=>{ s.classList.remove('filled'); s.querySelector('.bd-viz').textContent='Drop a chart here'; s.querySelector('.bd-v').hidden=true; }); score.textContent=''; });
+}
+
+/* ================= concept graphics ================= */
+const gAnatomy=svg(560,250,
+  `<rect x="6" y="6" width="548" height="238" rx="12" fill="var(--surface)" stroke="var(--line)"/>`+
+  `<rect x="18" y="16" width="330" height="26" rx="6" fill="var(--wk-soft)" stroke="var(--wk)"/>`+t(28,34,'1 · Title = the message',{s:12,w:800})+
+  `<rect x="390" y="16" width="152" height="26" rx="6" fill="var(--bg)" stroke="var(--line)"/>`+t(466,34,'5 · Slicer (filter)',{a:'middle',s:11,w:700})+
+  [0,1,2].map(i=>cCard(18+i*176,52,166,42,['AED 21k','1,180','AED 18'][i],'2 · KPI card')).join('')+
+  panel(18,104,262,130,'3 · Main chart',cLine(28,126,242,100,[['W1',4],['W2',5],['W3',6],['W4',5.5]],{min:3}))+
+  panel(290,104,252,130,'4 · Supporting chart',cBar(298,124,236,104,[['A',7],['B',5],['C',4],['D',3]],{l:24})),
+  'Dashboard parts: title, KPI cards, main chart, supporting chart, slicer');
+const gScreen=svg(560,240,
+  `<rect x="150" y="4" width="260" height="232" rx="22" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>`+t(280,30,'Screen Time · this week',{a:'middle',s:12,w:800})+
+  t(280,62,'4 h 12 min',{a:'middle',s:24,w:800,c:'var(--c1)'})+t(280,78,'Daily average · ↓ 8% from last week',{a:'middle',s:9.5,c:'var(--muted)'})+
+  cCol(168,86,224,70,[['M',5],['T',4.5],['W',4],['T',3.8],['F',4.4],['S',5.2],['S',3.6]])+
+  cBar(168,164,224,62,[['TikTok',95],['Instagram',62],['WhatsApp',40]],{l:62})+
+  t(70,64,'Card',{a:'middle',s:12,w:800,c:'var(--wk)'})+arrow(98,62,176,62,'var(--wk)',1.6)+t(70,126,'Column',{a:'middle',s:12,w:800,c:'var(--wk)'})+arrow(104,124,170,124,'var(--wk)',1.6)+t(70,194,'Bar',{a:'middle',s:12,w:800,c:'var(--wk)'})+arrow(92,192,170,192,'var(--wk)',1.6)+
+  t(490,120,'Fictional numbers',{a:'middle',s:10,c:'var(--muted)'}),
+  'A phone Screen Time report is a dashboard: one card, one column chart, one bar chart');
+const gQV=svg(560,230,[['One number','Card'],['Compare categories','Bar (sorted)'],['Change over time','Line or column'],['Part of a whole (2–4)','Donut'],['Exact details','Table · Matrix'],['Let the user filter','Slicer']].map(([q,v],i)=>{ const y=8+i*37; return card(8,y,250,30,'var(--c2)',{r:8,op:.08})+t(20,y+20,q,{s:12,w:700})+arrow(262,y+15,300,y+15,'var(--muted)',1.8)+card(304,y,248,30,'var(--c1)',{r:8,op:.12})+t(316,y+20,v,{s:12,w:800,c:'var(--c1)'}); }).join(''),'Question type to visual: one number card, compare bar, time line, part donut, details table, filter slicer');
+const gZ=svg(560,250,
+  `<rect x="6" y="6" width="548" height="238" rx="12" fill="var(--surface)" stroke="var(--line)"/>`+
+  [[18,16,360,34,'Title + message'],[392,16,150,34,'Slicers'],[18,60,170,46,'KPI'],[195,60,170,46,'KPI'],[372,60,170,46,'KPI'],[18,116,300,120,'Main chart · biggest'],[328,116,214,120,'Supporting']].map(([x,y,w,h,l],i)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="var(--wk-soft)" stroke="var(--line)"/>`+t(x+w/2,y+h/2+4,l,{a:'middle',s:11,w:700})).join('')+
+  `<path d="M40 34 L520 34 L60 88 L520 88 L60 176 L500 176" fill="none" stroke="var(--c2)" stroke-width="3" stroke-dasharray="8 6" opacity=".9"/>`+t(540,190,'Z',{a:'end',s:26,w:800,c:'var(--c2)'}),
+  'Readers scan in a Z: title and filters, then KPI cards, then the main chart');
+const gStory=svg(560,260,
+  `<circle cx="210" cy="100" r="80" fill="var(--c1)" fill-opacity=".22"/><circle cx="350" cy="100" r="80" fill="var(--c2)" fill-opacity=".22"/><circle cx="280" cy="180" r="80" fill="var(--c3)" fill-opacity=".22"/>`+
+  t(180,80,'Data',{a:'middle',s:15,w:800})+t(380,80,'Narrative',{a:'middle',s:15,w:800})+t(280,226,'Visuals',{a:'middle',s:15,w:800})+
+  t(280,62,'Explain',{a:'middle',s:11,w:700,c:'var(--muted)'})+t(214,156,'Enlighten',{a:'middle',s:11,w:700,c:'var(--muted)'})+t(348,156,'Engage',{a:'middle',s:11,w:700,c:'var(--muted)'})+
+  t(280,128,'CHANGE',{a:'middle',s:13,w:800,c:'var(--wk)'}),
+  'Data story: data, narrative and visuals together lead to change');
+
+Lesson.mount({
+  course:'GED 106', week:11, clo:'CLO 2, CLO 4', title:'Dashboards and Data Stories',
+  pageTitle:'GED 106 Week 11 · Dashboards and Data Stories',
+  chapter:'Data Visualization Made Simple (Sosulski, 2019), Chapter 3 · Effective Data Storytelling (Dykes, 2019)',
+  intro:'Power BI makes drag and drop easy. The skill is choosing: the right visual for each question, in the right place, telling one story.',
+  how:'Every topic: <b>Definition</b> → <b>Around us</b> → <b>The framework, step by step</b> → <b>What it means</b> → <b>Quick check</b>.',
+  topics:[
+    { id:'dashboard', title:'What a dashboard is, and choosing its visuals',
+      def:'A <b>dashboard</b> shows, on one screen, the few numbers and charts that answer one audience’s key questions, so they can monitor and decide at a glance.',
+      defFig:{label:'The parts of a dashboard', html:gAnatomy},
+      life:{ text:'Your phone’s Screen Time report is a dashboard: one big number, one column chart by day and one bar chart of top apps. Three questions, three visuals.',
+        fig:{label:'Around us · Screen Time', html:gScreen}},
+      caseLabel:'Applied · Screen Time', stepsNote:'From data to dashboard, in five steps.',
+      steps:[
+        {name:'Know your data', do:'What is one row? Which columns are categories, numbers, dates?', app:'One row = minutes in one app on one day.'},
+        {name:'Ask 3–5 questions', do:'What does the user need to know?', app:'How long per day? Which day? Which app?'},
+        {name:'One visual per question', do:'Match each question to a visual type.', app:'Card · column by day · sorted bar by app.'},
+        {name:'Arrange', do:'Most important top-left; details lower.', app:'Daily average first, apps last.'},
+        {name:'Test with the user', do:'Can they answer each question in 5 seconds?', app:'“Which app took most time?” → TikTok.'}
+      ],
+      meaning:{ text:'Every visual must answer a question. If a chart answers no question, remove it.',
+        fig:{label:'Question → visual', html:gQV}},
+      check:[
+        {q:'A manager wants to see this month’s revenue and how it compares with the target. Best visual?',o:['Pie chart of revenue by product','A card or KPI visual with the target','A table of every sale','A scatter plot'],a:1,why:'<b>Card / KPI:</b> one number against a target. A pie answers “which product?”; a table is detail; a scatter needs two numerical variables.'},
+        {q:'Your sales table has columns Date, Item, Units, Price. Which is a <b>category</b>?',o:['Units','Price','Item','Date'],a:2,why:'<b>Item</b> is a category (names). Units and Price are numbers; Date is time, used for trends.'},
+        {q:'A dashboard has 11 visuals and no slicer. What is the first fix?',o:['Add more colours','Remove visuals that answer no key question','Make every chart 3-D','Add a second title'],a:1,why:'<b>Fewer visuals:</b> keep only those answering the 3–5 questions. Colours, 3-D or extra titles add clutter.'}]},
+
+    { id:'layout', title:'Organizing the dashboard',
+      def:'People scan a screen in a <b>Z</b>: top-left first. Put the message and key numbers there, the main chart next, details last.',
+      defFig:{label:'The Z reading path', html:gZ},
+      life:{ text:'A Careem or Uber receipt follows the same order: the total fare first and biggest, then the trip map, then the details.'},
+      caseLabel:'Layout rules', stepsNote:'Six rules for a clear page.',
+      steps:[
+        {name:'Title', do:'Top-left. Write the message, not the topic.', app:'“Lunch is our rush hour”, not “Sales dashboard”.'},
+        {name:'KPI cards', do:'Top row, 3–4 cards, with units.', app:'AED 21,230 · 1,180 orders · AED 18.0.'},
+        {name:'Main chart', do:'Biggest, under the cards, on the left.', app:'Revenue by week.'},
+        {name:'Supporting charts', do:'Right and bottom; smaller.', app:'Top items, orders by hour, payment.'},
+        {name:'Slicers', do:'Top or left, where filters are expected.', app:'Category: Drinks · Food.'},
+        {name:'Colour and space', do:'One main colour; highlight one thing; ≤ 6 visuals; leave space.', app:'Peak hour in strong colour, others light.'}
+      ],
+      meaning:{ text:'Same data, different order: when the title and KPIs sit top-left, the reader gets the answer in seconds. See Case 1 below for a full good and poor example.'},
+      check:[
+        {q:'Where should the most important number go?',o:['Bottom-right','Top-left, in a KPI card','Inside the legend','In the page footer'],a:1,why:'<b>Top-left:</b> the first place the eye lands in a Z scan. Bottom-right is seen last; legends and footers are for details.'},
+        {q:'Which is the best dashboard title?',o:['Dashboard 1','Sales report Q3','Fresh food drives 40% of sales','Charts'],a:2,why:'<b>A message title</b> tells the finding. The others only name the page.'},
+        {q:'All six charts use six different bright colours. The problem?',o:['None: colour is fun','Colour should carry meaning; one main colour plus one highlight','Charts must be black and white','Colours slow Power BI'],a:1,why:'<b>Colour = meaning.</b> Rainbow colours compete for attention. Black and white is not required; speed is not the issue.'}]},
+
+    { id:'story', title:'The three components of a data story',
+      def:'A <b>data story</b> combines <b>data</b>, <b>visuals</b> and a <b>narrative</b>. Together they can drive <b>change</b>: a decision or an action.',
+      defFig:{label:'Data · narrative · visuals', html:gStory, caption:'After Brent Dykes, <i>Effective Data Storytelling</i> (Wiley, 2019).'},
+      life:{ text:'Spotify Wrapped is a data story: your data, simple visuals, and a narrative (“You were in the top 1% of listeners”) that makes you share it.'},
+      caseLabel:'Applied · campus café', stepsNote:'Build the story in three parts.',
+      steps:[
+        {name:'Data', do:'The right numbers for the question.', app:'Orders by hour, October.'},
+        {name:'Visual', do:'The clearest chart, with one highlight.', app:'Columns by hour; 12–1 PM highlighted.'},
+        {name:'Narrative', do:'Setup → insight → action.', app:'“Lunch brings 230 orders an hour: add a second barista 12–2 PM.”'}
+      ],
+      meaning:{ text:'Data with a narrative but no visual explains; data with visuals but no narrative enlightens; narrative and visuals without data only engage. All three lead to change.'},
+      check:[
+        {q:'A dashboard has correct data and clear charts but no title message or notes. Which component is missing?',o:['Data','Visuals','Narrative','Nothing'],a:2,why:'<b>Narrative:</b> nothing tells the reader what it means or what to do. Data and visuals are there.'},
+        {q:'Which narrative ends with an action?',o:['Sales were 21,230 AED.','Lunch is the busiest hour.','Lunch brings 230 orders an hour, so add a second barista from 12 to 2 PM.','Here is our data.'],a:2,why:'<b>Setup → insight → action.</b> The first states a number, the second an insight with no action, the last says nothing.'},
+        {q:'An influencer posts a moving story about café prices with no numbers. In Dykes’ terms it can…',o:['Change','Explain','Engage','Enlighten'],a:2,why:'<b>Engage:</b> narrative and visuals without data. Explain needs data and narrative; enlighten needs data and visuals; change needs all three.'}]}
+  ],
+  inClass:{ live:false,
+    intro:'Three cases, from solved to your own. Case 1: follow the reasoning. Case 2: choose the missing visuals. Case 3: build it yourself.',
+    how:['<b>Case 1</b> · read the data, follow each step and its reason, spot the six mistakes.','<b>Case 2</b> · understand the tables and links, then choose a visual for each empty box.','<b>Case 3</b> · drag and drop your own dashboard, then check it.'],
+    items:[
+      {case:1, title:'Solved · Bean There campus café', noPad:true, ans:'Solved above. Discuss the six mistakes with your professor.',
+       q:'The café owner asks: how much did we sell in October, is it growing, what sells, when are we busy, and how do people pay? Fictional data.',
+       fig:`<h4 style="font:800 1rem var(--f-display);margin:4px 0 6px">The data · one row = one item sold</h4>`+tbl(['Date','Day','Time','Item','Category','Qty','Price (AED)','Payment'],CF_ROWS)+`<p class="rel">2,400 rows. Categories: Item, Category, Payment · Numbers: Qty, Price · Time: Date, Time. <b>Revenue = Qty × Price.</b></p>`,
+       build:(el)=>{ el.innerHTML=`<h4>The dashboard, step by step</h4><div class="dstep">
+        <div><b>1 · KPI cards</b> · Revenue, Orders, Average order<p class="why">Why: three single numbers answer “how much?”. Cards, top row, with units.</p></div>
+        <div><b>2 · Line · revenue by week</b><p class="why">Why: “is it growing?” is change over time. W3 (midterms) peaks at AED 5,890.</p></div>
+        <div><b>3 · Sorted bars · top items</b><p class="why">Why: compare 6 items. Sorted, so Iced Spanish Latte (AED 6,840, 32%) reads first.</p></div>
+        <div><b>4 · Columns · orders by hour</b><p class="why">Why: hours keep their time order (not sorted). One highlight: 12–1 PM, 230 orders.</p></div>
+        <div><b>5 · Donut · payment</b><p class="why">Why: three parts of 100%. Cash is only 8%.</p></div>
+        <div><b>6 · Slicer · Drinks or Food</b><p class="why">Why: the owner can filter every visual at once.</p></div>
+        <div><b>7 · Title = message</b><p class="why">Why: the reader gets the story in one line, before any chart.</p></div></div>
+        <h4>The good dashboard</h4>${DASH_GOOD}
+        <div class="ins"><b>The story:</b> midterm week was the best week; lunch is the rush hour; one drink brings a third of revenue. <b>Action:</b> two baristas 12–2 PM, and stock more Iced Spanish Latte before exams.</div>
+        <h4>The same data, done wrong</h4>${DASH_BAD}
+        <ol class="bad-list"><li><b>“Dashboard 1”</b>: a topic, not a message.</li><li><b>Pie of 6 items</b>: similar slices, no labels, cannot compare.</li><li><b>Pie of weeks</b>: weeks are time; a pie hides the trend.</li><li><b>Line of items</b>: items have no order; the line invents a trend.</li><li><b>Hours sorted, axis from 50, rainbow colours</b>: time order lost, gaps exaggerated, colour means nothing.</li><li><b>Cards with no units or names</b>: “21230 Total” of what? AED? Add units and labels.</li></ol>`; }},
+
+      {case:2, title:'Half-built · Carrefour-style hypermarket', noPad:true,
+       q:'The manager of three stores wants one dashboard for 8 weeks of sales. Fictional data.',
+       fig:`<h4 style="font:800 1rem var(--f-display);margin:4px 0 6px">The data · three tables, linked</h4>${REL}`+tbl(['Table','Example row'],[['Sales','03 Nov · S2 · P014 · 6 units'],['Products','P014 · Labneh 500 g · Fresh food · AED 9.50'],['Stores','S2 · Mirdif · Dubai']]),
+       guided:['Which column links Sales to Products? And Sales to Stores?','Why is Price kept in Products, not in every Sales row?','How do you calculate Revenue for one Sales row?','Which slot (A–E) needs data from all three tables?'],
+       build:(el,W)=>{ el.innerHTML=`<h4>The half-built dashboard</h4>${DASH_HALF}<h4>Your choices · one try each</h4><div class="c2q"></div>`; W.quiz(el.querySelector('.c2q'),[
+        {q:'<b>A</b> · Which category earns most? (6 categories)',o:['Pie chart','Sorted bar chart','Line chart','Card'],a:1,why:'<b>Sorted bars</b> compare 6 categories at a glance. A pie of 6 is hard to compare; a line invents an order; a card shows one number.'},
+        {q:'<b>B</b> · How did revenue change over 8 weeks?',o:['Donut','Table','Line chart','Sorted bar chart'],a:2,why:'<b>Line:</b> change over time, weeks in order. A donut hides the trend; a table hides the shape; sorting breaks time order.'},
+        {q:'<b>C</b> · Which store sells most? (3 stores)',o:['Column or bar chart','Line chart','Scatter plot','Gauge'],a:0,why:'<b>Column/bar:</b> compare 3 categories. Stores have no time order (line); scatter needs two numbers; a gauge shows one value against a target.'},
+        {q:'<b>D</b> · Own brand vs other brands, share of revenue?',o:['Line chart','Donut','Table of all products','Scatter plot'],a:1,why:'<b>Donut:</b> 2 parts of one whole. Line = time; a full table is detail; scatter = two numbers.'},
+        {q:'<b>E</b> · Let the manager see one city only?',o:['A second title','A legend','A slicer on City','A bigger chart'],a:2,why:'<b>Slicer:</b> filters every visual at once. Titles, legends and size do not filter.'}]); }},
+
+      {case:3, title:'Your turn · student food-delivery orders', noPad:true, ans:'Check your dashboard above, then compare with your professor (Answers tab).',
+       q:'One semester of food-delivery orders by CUD students: 3,620 orders. Fictional data. Read the data, then build the dashboard below.',
+       fig:tbl(['OrderID','Date','Time of day','Cuisine','Amount (AED)','Delivery (min)'],[['1001','02 Sep','Lunch','Shawarma','28','24'],['1002','02 Sep','Late night','Burgers','41','31'],['1003','03 Sep','Dinner','Sushi','64','38'],['…','…','…','…','…','…']])+
+         `<p class="rel">Summaries · Orders by month: Sep 820 · Oct 960 · Nov 1,140 · Dec 700 · By cuisine: Shawarma 1,050 · Burgers 930 · Pizza 680 · Sushi 520 · Healthy bowls 440 · By time: Lunch 1,231 · Dinner 1,665 · Late night 724 · Total spend AED 126,700.</p>`,
+       build:builder}
+    ]},
+  takeaways:{ label:'Week 11 on one page', mindmap:{center:'Dashboards and data stories', branches:[
+    {t:'Know the data',items:['One row = ?','Category · number · time']},
+    {t:'Question → visual',items:['Card · bar · line','Donut · table · slicer']},
+    {t:'Layout',items:['Z: title, KPIs, main','≤ 6 visuals']},
+    {t:'Title',items:['The message','Not the topic']},
+    {t:'Colour',items:['One main colour','One highlight']},
+    {t:'Data story',items:['Data + visuals + narrative','→ change']}]}},
+  quiz:[
+    {q:'In Power BI you drag “Month” onto a donut. What should you choose instead to show the trend?',o:['A slicer','A line chart','A card','A table with totals only'],a:1,why:'<b>Line:</b> months are time. A slicer filters, a card shows one number, a totals table hides the trend.'},
+    {q:'Sales, Products and Stores tables are linked. Which key links Sales to Products?',o:['Price','ProductID','Category','Units'],a:1,why:'<b>ProductID</b> appears in both tables. Price and Category live only in Products; Units only in Sales.'},
+    {q:'Which dashboard order follows the Z pattern?',o:['Details, then KPIs, then title','Title and KPIs on top, main chart next, details last','Slicers in the centre, title at the bottom','Random, the user will search'],a:1,why:'<b>Top-left first:</b> title and KPIs, then the main chart, then details. The others hide the message.'},
+    {q:'A dashboard shows the right charts but its title is “Sales Dashboard”. Fix it:',o:['Make the font bigger','Write the finding, e.g. “Weekend sales doubled after the app launch”','Add a logo','Remove the title'],a:1,why:'<b>Message title</b> = the narrative in one line. Font, logos or no title do not tell the story.'}
+  ],
+  practiceLabel:'Show model answer',
+  practice:[
+    {q:'Pick an app you use every day (banking, fitness, Screen Time). Sketch its dashboard: which visuals, and which question does each answer?', hint:'Example, a fitness app: card = steps today (how much?); column by day = this week (which day?); ring/donut = goal reached (part of 100%). Each visual answers one question.'},
+    {q:'For your team project data set, write 3 questions and the visual you will use for each, then a message title.', hint:'Example: “Which emirate has most visitors?” → sorted bar; “How did visitors change 2015–2024?” → line; “Share of business vs leisure?” → donut. Title: “Dubai receives two-thirds of UAE visitors”.'}
+  ],
+  next:'Next: Week 12, begin your data and analytics journey. Bring your project data set.'
+});
+</script>
+</body>
+</html>

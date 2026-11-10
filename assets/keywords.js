@@ -19,5 +19,15 @@ window.KEYWORDS={
     ['Scatter plot','Dots that show a link between two numbers.','Study hours vs score.'],
     ['Message title','A title that says what to see.','“Zara brings most of the sales”.'],
     ['Truncated axis','An axis that does not start at zero; it exaggerates gaps.','92 vs 95 looks huge.']
+  ],
+  11:[
+    ['Dashboard','One screen with the few numbers and charts that answer key questions.','Phone Screen Time report.'],
+    ['KPI card','One key number, big, with its unit.','AED 21,230 revenue.'],
+    ['Slicer','A Power BI filter that filters every visual.','Drinks or Food.'],
+    ['Matrix','The Power BI pivot table.','Category × Month.'],
+    ['Z pattern','Readers scan top-left first, then across and down.','Title and KPIs on top.'],
+    ['Relationship','A link between two tables through a key column.','ProductID in Sales and Products.'],
+    ['One-to-many','One row in one table matches many rows in another.','One product, many sales.'],
+    ['Data story','Data + visuals + narrative, leading to change.','Spotify Wrapped.']
   ]
 };
