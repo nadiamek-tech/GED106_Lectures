@@ -48,7 +48,7 @@ window.COURSE={
     {w:'8', lec:['Data ethics 2','week-08.html'], ev:['mid']},
     {w:'9', lec:['Data-informed decision-making','week-09.html'], lab:['Solved example, then Graded Lab 1','lab-09-solved.html'], ev:['lab9']},
     {w:'10', lec:['Charts and graphics','week-10.html'], lab:['Power BI first steps · then project scoping','lab-powerbi.html']},
-    {w:'11', lec:['Dashboards and data stories','week-11.html'], lab:'Drafting project reports', ev:['quiz2']},
+    {w:'11', lec:['Dashboards and data stories','week-11.html'], lab:['Project lab · choose, design, build','lab-11.html'], ev:['quiz2']},
     {w:'12', lec:'Begin your data and analytics journey', lab:'Feedback and refinement', ev:['lab12']},
     {w:'13', lec:'Planning capstone projects', lab:'Presentation skills', ev:['draft']},
     {w:'14', lec:'Developing data projects', lab:'Final project presentation'},
