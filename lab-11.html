@@ -77,7 +77,7 @@
 <script src="assets/search-index.js?v=20261111"></script>
 <script src="assets/assistant.js?v=20261111"></script>
 <script src="assets/onepage.js?v=20261111b"></script>
-<script src="assets/projects.js?v=20261111b"></script>
+<script src="assets/projects.js?v=20261111c"></script>
 <script>
 const {W}=Lecture;
 let pick=null; try{ pick=localStorage.getItem('g106-proj'); }catch(e){}
@@ -92,8 +92,8 @@ function chooser(el){
     <div class="row"><b>Open data</b><span>${p.src}</span><b>One row is</b><span>${p.row}</span><b>Key columns</b><span><code>${p.cols}</code></span></div>
     <b style="color:var(--wk)">Questions to guide your study</b><ol>${p.qs.map((q,i)=>`<li>${q} <span class="hint">→ ${p.viz[i]}</span></li>`).join('')}</ol>
     <p class="note"><b>Power BI tip:</b> ${p.tip}</p>
-    <div class="btns"><a class="x" href="${p.url}" target="_blank" rel="noopener">Open the data ↗</a><button type="button" class="p pick">${pick===p.id?'✓ Our project':'Choose this project'}</button></div>
-    <p class="hint">Kaggle: sign in with any free account, then Download. Write a fourth question of your own.</p>`;
+    <div class="btns"><a class="x" href="${p.url}" target="_blank" rel="noopener">Open the data ↗</a>${p.alt?`<a href="${p.alt[1]}" target="_blank" rel="noopener">${p.alt[0]} ↗</a>`:''}<a href="https://www.google.com/search?q=${encodeURIComponent(p.src.split(' · ').slice(1).join(' ')+' dataset download')}" target="_blank" rel="noopener">Backup: search it ↗</a><button type="button" class="p pick">${pick===p.id?'✓ Our project':'Choose this project'}</button></div>
+    <p class="hint">${p.url.includes('kaggle')?'Kaggle: sign in free with Google or your CUD email, then click <b>Download</b>. If Kaggle is blocked on campus Wi-Fi, use your phone’s data or the backup link.':p.url.includes('mavenanalytics')?'Maven Analytics: click <b>Download</b> (free, no sign-in needed).':p.url.includes('huggingface')?'Hugging Face: open <b>Files and versions</b> → download the CSV.':'Free, no sign-in needed: look for <b>Download</b> or <b>CSV</b>.'} Write a fourth question of your own.</p>`;
     det.querySelector('.pick').onclick=()=>{ pick=p.id; try{ localStorage.setItem('g106-proj',p.id); }catch(e){} paint(); show(p.id); document.dispatchEvent(new CustomEvent('g106proj')); }; };
   const paint=()=>{ el.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===sec));
     grid.innerHTML=P.filter(p=>p.sec===sec).map((p,i)=>`<button type="button" class="pcard" data-id="${p.id}" aria-pressed="${pick===p.id}"><small>${i+1} · ${p.th}</small><b>${p.t}</b><span>${p.src.split(' · ')[0]}</span>${tname(p.id)?`<span class="tm">${esc(tname(p.id))}</span>`:''}</button>`).join('');
