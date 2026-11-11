@@ -93,3 +93,6 @@ function sketchPNG(d){ return new Promise((res,rej)=>{ const C={'--bg':'#FFFFFF'
   img.onerror=rej; img.src=url; }); }
 
 const getP=id=>P.find(x=>x.id===id);
+
+/* Teams per project, published by the professor (id: 'Team name'). Empty until teams are confirmed. */
+const TEAMS={};

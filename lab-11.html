@@ -31,6 +31,17 @@
 .btns .p{background:var(--wk);border-color:var(--wk);color:var(--on-wk,#fff)}
 .btns .x{background:#107C41;border-color:#107C41;color:#fff}
 .hint{font-size:.88rem;color:var(--muted);margin:6px 0 0}
+/* teams table */
+.tt{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.tt-t{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.93rem}
+.tt-t th{background:var(--wk-soft);text-align:left;padding:8px 10px;font:800 .8rem var(--f-display);border-bottom:1px solid var(--line)}
+.tt-t td{padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tt-t td small{color:var(--muted)}
+.tt-t input[type=text],.tt-t input:not([type]){width:100%;box-sizing:border-box;font:600 .93rem var(--f-display);padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.tt-t input[type=checkbox]{width:20px;height:20px;accent-color:var(--wk)}
+.tt-t tr.taken td:first-child{box-shadow:inset 4px 0 0 var(--wk)}
+.tt-t tr.taken{background:var(--wk-soft)}
+.pcard .tm{display:inline-block;margin-top:6px;font:800 .72rem var(--f-display);background:var(--wk);color:var(--on-wk,#fff);border-radius:999px;padding:2px 9px}
 /* design tool */
 .dz{font-family:var(--f-display)}
 .dz-form{display:grid;gap:8px}
@@ -65,12 +76,13 @@
 <script src="assets/kb.js?v=20261111"></script>
 <script src="assets/search-index.js?v=20261111"></script>
 <script src="assets/assistant.js?v=20261111"></script>
-<script src="assets/onepage.js?v=20261111"></script>
-<script src="assets/projects.js?v=20261111"></script>
+<script src="assets/onepage.js?v=20261111b"></script>
+<script src="assets/projects.js?v=20261111b"></script>
 <script>
 const {W}=Lecture;
 let pick=null; try{ pick=localStorage.getItem('g106-proj'); }catch(e){}
 
+const tname=id=>{ let T={}; try{ T=JSON.parse(localStorage.getItem('g106-teams')||'{}')||{}; }catch(e){} return (T[id]&&T[id].team)||TEAMS[id]||''; };
 function chooser(el){
   let sec=(pick&&getP(pick)?getP(pick).sec:'201');
   el.innerHTML=`<div class="pj"><div class="sec-tabs" role="group" aria-label="Your section"><button type="button" data-s="201">Section 201</button><button type="button" data-s="202">Section 202</button></div><div class="pgrid"></div><div class="pdet" hidden></div></div>`;
@@ -84,12 +96,36 @@ function chooser(el){
     <p class="hint">Kaggle: sign in with any free account, then Download. Write a fourth question of your own.</p>`;
     det.querySelector('.pick').onclick=()=>{ pick=p.id; try{ localStorage.setItem('g106-proj',p.id); }catch(e){} paint(); show(p.id); document.dispatchEvent(new CustomEvent('g106proj')); }; };
   const paint=()=>{ el.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===sec));
-    grid.innerHTML=P.filter(p=>p.sec===sec).map((p,i)=>`<button type="button" class="pcard" data-id="${p.id}" aria-pressed="${pick===p.id}"><small>${i+1} · ${p.th}</small><b>${p.t}</b><span>${p.src.split(' · ')[0]}</span></button>`).join('');
+    grid.innerHTML=P.filter(p=>p.sec===sec).map((p,i)=>`<button type="button" class="pcard" data-id="${p.id}" aria-pressed="${pick===p.id}"><small>${i+1} · ${p.th}</small><b>${p.t}</b><span>${p.src.split(' · ')[0]}</span>${tname(p.id)?`<span class="tm">${esc(tname(p.id))}</span>`:''}</button>`).join('');
     grid.querySelectorAll('.pcard').forEach(c=>c.onclick=()=>{ grid.querySelectorAll('.pcard').forEach(x=>x.setAttribute('aria-pressed',x===c||x.dataset.id===pick)); show(c.dataset.id); det.scrollIntoView({behavior:'smooth',block:'nearest'}); }); };
   el.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{ sec=b.dataset.s; det.hidden=true; paint(); });
   paint(); if(pick&&getP(pick)&&getP(pick).sec===sec) show(pick);
+  document.addEventListener('g106teams',paint);
 }
 
+
+/* ---------- teams and projects table ---------- */
+function teamsTable(el){
+  const KEYT='g106-teams'; let T={}; try{ T=JSON.parse(localStorage.getItem(KEYT)||'{}')||{}; }catch(e){}
+  const save=()=>{ try{ localStorage.setItem(KEYT,JSON.stringify(T)); }catch(e){} document.dispatchEvent(new CustomEvent('g106teams')); };
+  let sec=(pick&&getP(pick)?getP(pick).sec:'201');
+  const val=(id,f)=>(T[id]&&T[id][f])||(f==='team'&&TEAMS[id])||'';
+  const draw=()=>{ el.innerHTML=`<div class="pj"><div class="sec-tabs" role="group" aria-label="Section"><button type="button" data-s="201">Section 201</button><button type="button" data-s="202">Section 202</button></div>
+    <div class="tt"><table class="tt-t"><thead><tr><th style="width:4%">#</th><th style="width:30%">Project</th><th style="width:22%">Team name</th><th>Members</th><th style="width:12%">Data opened</th></tr></thead><tbody>
+    ${P.filter(p=>p.sec===sec).map((p,i)=>`<tr data-id="${p.id}" class="${val(p.id,'team')?'taken':''}"><td>${i+1}</td><td><b>${p.t}</b><br><small>${p.src}</small></td><td><input data-f="team" value="${esc(val(p.id,'team'))}" placeholder="Team name" aria-label="Team name for ${p.t}"></td><td><input data-f="mem" value="${esc(val(p.id,'mem'))}" placeholder="Names" aria-label="Members for ${p.t}"></td><td style="text-align:center"><input type="checkbox" data-f="ok" ${val(p.id,'ok')?'checked':''} aria-label="Data opened for ${p.t}"></td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="btns"><button type="button" class="p xl">⬇ Download (Excel)</button><button type="button" class="pr">Print</button><span class="hint tt-n"></span></div></div>`;
+    el.querySelectorAll('[data-s]').forEach(b=>{ b.setAttribute('aria-pressed',b.dataset.s===sec); b.onclick=()=>{ sec=b.dataset.s; draw(); }; });
+    el.querySelectorAll('tbody tr').forEach(tr=>tr.querySelectorAll('[data-f]').forEach(i=>{ const ev=i.type==='checkbox'?'change':'input';
+      i.addEventListener(ev,()=>{ const id=tr.dataset.id; T[id]=T[id]||{}; T[id][i.dataset.f]=i.type==='checkbox'?i.checked:i.value; tr.classList.toggle('taken',!!val(id,'team')); save(); count(); }); }));
+    el.querySelector('.xl').onclick=()=>{ const rows=[['Section','#','Project','Data source','Team name','Members','Data opened']];
+      ['201','202'].forEach(s=>P.filter(p=>p.sec===s).forEach((p,i)=>rows.push([s,i+1,p.t,p.src,val(p.id,'team'),val(p.id,'mem'),val(p.id,'ok')?'Yes':''])));
+      const csv='\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+      const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='GED106_Project_Teams.csv'; a.click(); };
+    el.querySelector('.pr').onclick=()=>{ const w=window.open('','_blank'); if(!w) return; w.document.write(`<title>GED 106 · Project teams</title><style>body{font:12px Arial;margin:20px}h2{color:#0E7490}table{border-collapse:collapse;width:100%;margin-bottom:18px}td,th{border:1px solid #999;padding:6px;text-align:left}th{background:#E3F1F5}</style>`+['201','202'].map(s=>`<h2>GED 106 · Section ${s} · Project teams</h2><table><tr><th>#</th><th>Project</th><th>Team</th><th>Members</th></tr>${P.filter(p=>p.sec===s).map((p,i)=>`<tr><td>${i+1}</td><td>${p.t}</td><td>${esc(val(p.id,'team'))}</td><td>${esc(val(p.id,'mem'))}</td></tr>`).join('')}</table>`).join('')); w.document.close(); w.print(); };
+    count(); };
+  const count=()=>{ const n=P.filter(p=>p.sec===sec&&val(p.id,'team')).length; el.querySelector('.tt-n').textContent=`${n} of 10 projects taken in Section ${sec} · saved in this browser`; };
+  draw(); }
 function designer(el){
   const KEY='g106-sketch'; let d=null; try{ d=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
   const fresh=()=>{ const p=getP(pick); return {pid:pick,title:'',sub:p?p.t+' · '+p.src:'',slicer:'',kpi:['','',''],q:p?[...p.qs,'Your own question']:['','','',''],v:p?[...p.viz.map(toViz),'Card']:['Line','Bar (sorted)','Column','Donut']}; };
@@ -139,10 +175,14 @@ Lecture.mount({
   title:'Project Lab · Choose, Design and Build Your Dashboard',
   meta:'Lab · Week 11 · Drafting project reports',
   scenes:[
-  { nav:'Start here', title:'Your project in five steps', kind:'activity', minutes:5,
+  { nav:'Start here', title:'Your project in five steps', kind:'activity', minutes:5, wide:true,
     narration:[`Work in your project team. Choose one project, sketch the dashboard, build it in Power BI, collect 10 peer reviews, then write the report.`],
     src:`Revise: <a href="week-11.html">Week 11 · Dashboards</a> · <a href="lab-powerbi.html">Power BI first steps</a>.`,
     fig:{label:`Watch first · 1-minute guide`, html:`<video controls playsinline preload="metadata" poster="assets/video/lab11-guide.jpg" style="width:100%;border-radius:12px;display:block;background:#000" aria-label="Guide video: the five steps of the project lab, with subtitles"><source src="assets/video/lab11-guide.mp4" type="video/mp4"></video>`, build:el=>{ const d=document.createElement('div'); d.style.marginTop='12px'; el.appendChild(d); W.agenda(d,[[`1 · Choose a project`,15,'a'],[`2 · Sketch the dashboard`,20,'a'],[`3 · Build in Power BI`,45,'a'],[`4 · 10 peer reviews`,20,'a'],[`Submit the draft`,5,'c']]); }} },
+
+  { nav:'Teams', title:'Teams and projects', kind:'activity', minutes:5, wide:true,
+    narration:[`One project per team. Write your team name next to your project.`],
+    fig:{label:`Who works on which project`, build:teamsTable} },
 
   { nav:'1 · Choose', title:'Step 1 · Choose your project', kind:'activity', minutes:15, wide:true,
     narration:[`Ten projects per section, all with real open data. Open one, read the guiding questions, then choose it. One project per team.`],
@@ -173,7 +213,7 @@ Lecture.mount({
     narration:[`Your report fills itself from the project and sketch you chose. Complete each section, add your screenshots, and save it as Word.`],
     fig:{label:`Project report builder`, html:`<div class="btns"><a class="p" href="project-report.html">Open our report →</a><a href="project-report.html#p0">See the example</a></div><p class="hint">Nine sections: questions · data · cleaning log · model · dashboard design · findings · data story · peer review · limitations, plus references.</p>`} },
 
-  { nav:'Submit', title:'Before you leave', kind:'check', minutes:5,
+  { nav:'Submit', title:'Before you leave', kind:'check', minutes:5, wide:true,
     narration:[`Save the report as Word and submit the draft on Moodle. Next week you refine it using your 10 reviews.`],
     fig:{label:`Draft checklist`, build:el=>W.quiz(el,[
       {q:'Your dashboard has 9 charts. One reviewer says it is confusing. Best fix?',o:['Add a legend to every chart','Keep only the visuals that answer your 3–4 questions','Make the charts smaller','Add more colours'],a:1,why:'<b>One visual per question:</b> remove the rest. Legends, size and colours do not fix too many charts.'},

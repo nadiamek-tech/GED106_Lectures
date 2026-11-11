@@ -12,6 +12,7 @@
   const css=`
 body.op .toc{display:none!important}
 body.op .shell{grid-template-columns:minmax(0,1fr)!important;max-width:1180px}
+body.op .split.wide{grid-template-columns:minmax(0,1fr)!important;gap:14px}body.op .split.wide .say{max-width:820px}
 body.op-page .stage>.pager,body.op-page .kbd{display:none}
 .op-sec{border-top:1px solid var(--line);padding:30px 0 6px;scroll-margin-top:84px}
 .op-sec:first-child{border-top:0;padding-top:6px}
