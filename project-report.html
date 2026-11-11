@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Project Report · GED 106</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261111">
+<link rel="stylesheet" href="assets/portal.css?v=20261111">
+<style>
+:root{--wk:#0E7490;--wk-soft:rgba(14,116,144,.10);--wk-d:#67E8F9;--wk-soft-d:rgba(103,232,249,.15)}
+body{font-family:var(--f-display);background:var(--bg);color:var(--ink);margin:0}
+.pw{max-width:1000px;margin:0 auto;padding:0 16px 70px}
+.pw h1{font-size:clamp(1.7rem,4vw,2.4rem);margin:22px 0 4px;letter-spacing:-.01em}
+.pw .lead{color:var(--muted);margin:0 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.chips span{border:1.5px solid var(--line);border-radius:999px;padding:5px 12px;font-weight:700;font-size:.92rem}
+.chips b{color:var(--wk)}
+.bar{position:sticky;z-index:30;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(6px);margin-bottom:12px}
+.seg{display:inline-flex;border:1.5px solid var(--wk);border-radius:999px;overflow:hidden}
+.seg button{font:700 .92rem var(--f-display);border:none;background:transparent;color:var(--ink);padding:8px 14px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--wk);color:var(--on-wk,#fff)}
+.bbtn{font:700 .9rem var(--f-display);border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.bbtn:hover{border-color:var(--wk)}
+.bbtn.pri{background:var(--wk);border-color:var(--wk);color:var(--on-wk,#fff)}
+.bbtn[aria-disabled=true]{opacity:.5;pointer-events:none}
+.prog{font:600 .85rem var(--f-mono);color:var(--muted);margin-left:auto}
+.msg{font:600 .85rem var(--f-mono);color:var(--wk);min-height:1.2em;margin:0 0 8px}
+.exnote{display:none;background:var(--wk-soft);border-left:4px solid var(--wk);border-radius:8px;padding:10px 14px;margin:0 0 14px}
+.exmode .exnote{display:block}
+.fillnote{background:var(--wk-soft);border:1.5px dashed var(--wk);border-radius:12px;padding:10px 14px;margin:0 0 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.exmode .fillnote{display:none}
+/* the report: white paper in light and dark */
+.rp{--pa:#0E7490;--pa2:#0B3B4A;--pp:#FFFFFF;--pl:#D5E7EC;--pi:#14202B;--pm:#5D6B78;--pfield:#F6FBFC;display:grid;gap:22px;color:var(--pi)}
+.pg{background:var(--pp);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 30px rgba(10,50,70,.14);padding:40px 46px 46px;scroll-margin-top:130px}
+.pg-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--pa);padding-bottom:10px;margin-bottom:14px}
+.pg-h .n{min-width:34px;height:34px;border-radius:9px;background:var(--pa);color:#fff;display:grid;place-items:center;font-weight:800;padding:0 6px}
+.pg-h h2{margin:0;font-size:1.4rem;color:var(--pa2);flex:1;min-width:180px}
+.pg-h .t{font:600 .75rem var(--f-mono);color:var(--pm);background:#EAF4F7;border-radius:999px;padding:4px 10px}
+.howto{font-size:.92rem;color:var(--pm);margin:-4px 0 14px}
+.howto a{color:var(--pa);font-weight:700}
+.q{margin:0 0 12px}
+.q>label,.lbl{display:block;font-weight:700;font-size:.93rem;margin-bottom:4px;color:var(--pi)}
+.q>label span{color:var(--pa);margin-right:6px}
+.fld{width:100%;box-sizing:border-box;font:400 1rem/1.55 'Source Serif 4',Georgia,serif;color:var(--pi);background:var(--pfield);border:1.5px dashed #B9D6DE;border-radius:8px;padding:7px 9px;resize:none;overflow:hidden;display:block;min-height:2.4em}
+.fld:focus{outline:none;border-style:solid;border-color:var(--pa);background:#fff}
+.fld::placeholder{color:#93A5B0;font-family:var(--f-display);font-size:.9rem}
+input.fld{min-height:0;font-family:var(--f-display);font-weight:600}
+.view{font:400 1rem/1.55 'Source Serif 4',Georgia,serif;white-space:pre-line;padding:2px 0}
+.view.empty{color:#93A5B0;font-style:italic}
+.cover{min-height:440px;display:grid;align-content:space-between;gap:22px;background:linear-gradient(160deg,#E3F1F5 0,#fff 55%);border-top:10px solid var(--pa)}
+.cover .k{font:600 .78rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--pa)}
+.cover h1{font-size:clamp(1.6rem,4vw,2.5rem);margin:8px 0 0;color:var(--pa2);line-height:1.1}
+.cover h1 .fld{font-size:inherit;font-weight:800;color:var(--pa2)}
+.meta{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px 14px;align-items:center;max-width:680px}
+.meta dt{font:600 .74rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--pm)}
+.meta dd{margin:0;font-weight:600}
+.tw{overflow-x:auto}
+table.g{width:100%;border-collapse:collapse;font-size:.92rem}
+table.g th{background:#E3F1F5;color:var(--pa2);text-align:left;font:700 .78rem var(--f-display);padding:6px;border:1px solid var(--pl)}
+table.g td{border:1px solid var(--pl);padding:4px;vertical-align:top}
+table.g td .fld{border:0;background:transparent;font-size:.92rem;padding:4px}
+table.g td .view{font-size:.92rem;padding:4px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ins{border-left:5px solid var(--pa);background:#F6FBFC;border-radius:8px;padding:10px 12px;margin:0 0 12px}
+.ins b.h{color:var(--pa);display:block;margin-bottom:4px}
+.story{display:grid;gap:8px}
+.story .q{border:1px solid var(--pl);border-radius:10px;padding:8px 10px;margin:0}
+.rate{display:grid;grid-template-columns:minmax(0,1fr) 90px;gap:6px 10px;align-items:center}
+.rate .fld{text-align:center}
+.drop{border:2px dashed #B9D6DE;border-radius:12px;padding:12px;text-align:center;font-weight:700;cursor:pointer;display:block;color:var(--pi);margin:8px 0}
+.drop:hover{border-color:var(--pa)}
+.drop small{display:block;font-weight:500;color:var(--pm)}
+.drop .req{font:700 .7rem var(--f-mono);color:#B4521E}.drop .req.ok{color:#2E7D5B}
+.exmode .drop,.exmode .skb{display:none}
+.fig{margin:8px 0 12px;border:1px solid var(--pl);border-radius:10px;padding:10px;position:relative}
+.fig img{display:block;max-width:100%;border-radius:6px;margin:0 auto}
+.fig .cap{display:flex;gap:8px;align-items:center;margin-top:8px;font:600 .85rem var(--f-display)}
+.fig .cap input{flex:1;min-width:0;font:500 .9rem var(--f-display);border:0;border-bottom:1.5px dashed #B9D6DE;padding:4px 2px;background:transparent;color:var(--pi)}
+.fig .x{position:absolute;top:8px;right:8px;border:1.5px solid var(--pl);background:#fff;color:#B23A2E;border-radius:8px;width:30px;height:30px;cursor:pointer;font-weight:800}
+.ph{height:110px;border-radius:6px;background:repeating-linear-gradient(45deg,#EAF4F7,#EAF4F7 10px,#fff 10px,#fff 20px);display:grid;place-items:center;font-weight:700;color:var(--pm)}
+.refs p{margin:0 0 8px;padding-left:1.4em;text-indent:-1.4em;font:400 .95rem/1.5 'Source Serif 4',Georgia,serif;overflow-wrap:anywhere}
+.sub{background:var(--surface);border:1.5px solid var(--wk);border-radius:18px;padding:20px 22px;display:grid;gap:10px}
+.sub h2{margin:0}
+.sub .acts{display:flex;gap:8px;flex-wrap:wrap}
+#print-root{display:none}
+@media (max-width:720px){
+  .pw{padding:0 0 60px}.pw>h1,.pw>.lead,.pw>.chips,.bar,.exnote,.fillnote,.msg,.sub{margin-left:16px;margin-right:16px}
+  .pg{padding:24px 14px 28px;border-radius:0}.two,.three{grid-template-columns:minmax(0,1fr)}.meta{grid-template-columns:1fr}.prog{margin-left:0;width:100%}}
+@media print{@page{size:A4;margin:14mm} body>*:not(#print-root){display:none!important} #print-root{display:block!important}}
+</style>
+</head>
+<body>
+<div id="hub"></div>
+<main class="pw" id="pw">
+  <h1>Your Project Report</h1>
+  <p class="lead">Write directly on the report. It fills in from the project and sketch you chose in the lab. It saves in this browser; save it as Word or PDF for Moodle.</p>
+  <div class="chips" id="chips"></div>
+  <div class="bar" id="bar">
+    <div class="seg" role="group" aria-label="Show"><button type="button" data-m="edit" aria-pressed="true">Our report</button><button type="button" data-m="ex" aria-pressed="false">Example</button></div>
+    <button type="button" class="bbtn pri" id="dx">Save as Word</button>
+    <button type="button" class="bbtn" id="pdf">Print or PDF</button>
+    <button type="button" class="bbtn" id="save" title="Save everything to a file, to continue on another device or share with your team">Save file</button>
+    <label class="bbtn" title="Open a file you saved before">Open file<input type="file" id="open" accept=".json,application/json" hidden></label>
+    <button type="button" class="bbtn" id="blank" title="An empty Word template with the guiding questions">Blank template</button>
+    <a class="bbtn" href="lab-11.html">← Project lab</a>
+    <span class="prog" id="prog"></span>
+  </div>
+  <p class="msg" id="msg" aria-live="polite"></p>
+  <p class="exnote"><b>Example:</b> a made-up team and a made-up campus café, to show a finished report. Write about your own project.</p>
+  <div class="fillnote" id="fillnote"></div>
+  <div id="doc"></div>
+  <section class="sub" style="margin-top:24px">
+    <h2>Submit the draft</h2>
+    <p style="margin:0">1. Save as Word (or PDF). &nbsp;2. One team member uploads it on Moodle. &nbsp;3. Next lab: refine it with your 10 peer reviews.</p>
+    <div class="acts"><button type="button" class="bbtn pri" id="dx2">Save as Word</button><a class="bbtn" href="https://www.office.com/launch/word" target="_blank" rel="noopener">Open Word online ↗</a></div>
+  </section>
+</main>
+<div id="print-root"></div>
+<footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Eng. Nadia Mek</b></footer>
+<script src="assets/supports.js?v=20261111"></script>
+<script src="assets/course.js?v=20261111"></script>
+<script src="assets/kb.js?v=20261111"></script>
+<script src="assets/search-index.js?v=20261111"></script>
+<script src="assets/assistant.js?v=20261111"></script>
+<script src="assets/professor.js?v=20261111"></script>
+<script src="assets/course-info.js?v=20261111"></script>
+<script src="assets/portal.js?v=20261111"></script>
+<script src="assets/projects.js?v=20261111"></script>
+<script>
+Portal.header('labs');
+const E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='g106-report';
+let D={}; try{ D=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ D={}; }
+const store=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(D)); }catch(e){} };
+const NV=6, NP=6, NQ=4, NI=3;
+const WHY={'Card':'One key number, shown big with its unit.','Bar (sorted)':'Compares categories; sorted so the largest reads first.','Column':'Compares values in a fixed order (time or groups).','Line':'Shows change over time, in time order.','Donut':'Shows parts of one whole (2–4 parts).','Table / Matrix':'Shows exact values across two dimensions.','Scatter':'Shows the relationship between two numerical variables.'};
+const RATE=['The title tells the main message','Key numbers found in 5 seconds','Each chart fits its question','Layout is easy to follow','Labels, units and colours are clear','The recommendation is convincing'];
+
+/* ---------- worked example (fictional) ---------- */
+const EX={title:'Lunch is the rush hour: one month at a campus café',team:'Team Latte',members:'Student A · 2024XXXX\nStudent B · 2024XXXX\nStudent C · 2024XXXX',section:'201',
+ intro:'Students queue for coffee between classes, and the café often runs out of popular drinks. We analysed one month of sales to help the owner plan staff and stock.',aud:'The café owner and the shift manager.',
+ mq:'When is the café busiest, and which products bring most of the revenue?',sq0:'How much revenue did the café make in October, and is it growing week by week?',sq1:'Which items bring the most revenue?',sq2:'At which hours are most orders placed?',
+ dsName:'Bean There café sales, October 2026 (fictional teaching data)',dsPub:'GED 106 course',dsYear:'2026',dsLink:'week-11.html',dsLic:'Teaching use',row:'one item sold in one order',nrows:'2,400',ncols:'8',
+ v0n:'Date',v0t:'Date',v0u:'day',v0r:'Trend by week',v1n:'Time',v1t:'Time',v1u:'hh:mm',v1r:'Orders by hour',v2n:'Item',v2t:'Categorical',v2u:'—',v2r:'Top items',v3n:'Qty',v3t:'Numerical',v3u:'items',v3r:'Revenue',v4n:'Price',v4t:'Numerical',v4u:'AED',v4r:'Revenue',v5n:'Payment',v5t:'Categorical',v5u:'—',v5r:'Payment share',
+ p0s:'Changed Qty and Price to numbers',p0w:'They were read as text, so sums failed.',p1s:'Removed 12 blank rows',p1w:'Empty rows from the till export.',p2s:'Removed 6 duplicate rows',p2w:'The same order was exported twice.',p3s:'Trimmed and capitalised Item names',p3w:'“latte ” and “Latte” were counted as two items.',p4s:'Added Revenue = Qty × Price',p4w:'The owner asks for money, not units.',p5s:'Added Hour = hour of Time',p5w:'To group orders by hour.',before:'2,418',after:'2,400',
+ tables:'One table: Sales (2,400 rows).',rel:'None needed: one table.',calc:'Revenue = [Qty] * [Price] (custom column)\nAverage order = DIVIDE(SUM(Revenue), DISTINCTCOUNT(OrderID)) (measure)',
+ q0:'Is revenue growing week by week?',z0:'Line',y0:'Weeks must stay in time order; the line shows the rise to midterm week.',q1:'Which items bring the most revenue?',z1:'Bar (sorted)',y1:'Six items compared; sorted so the top seller reads first.',q2:'At which hours are most orders placed?',z2:'Column',y2:'Hours kept in time order; the 12–1 PM peak is highlighted.',q3:'How do customers pay?',z3:'Donut',y3:'Three parts of 100%.',
+ layout:'Message title top-left; three KPI cards (revenue, orders, average order) on top; the weekly line as the main chart; supporting charts on the right and bottom; one Category slicer top-right. One colour, one highlight.',
+ i0f:'Revenue peaked in Week 3 (midterms) at AED 5,890, 27% above Week 1 (AED 4,620).',i0m:'Exam weeks bring more customers: students study on campus.',i1f:'Iced Spanish Latte brings AED 6,840, 32% of all revenue.',i1m:'One drink carries the business; running out of it costs the most.',i2f:'12–1 PM has 230 orders, the highest hour, 19% of the day.',i2m:'Lunch is the rush hour; queues there lose customers.',
+ setup:'The café has one barista all day and often runs out of its best drink.',insight:'Lunch brings the most orders, midterm week the most revenue, and one drink a third of sales.',action:'Add a second barista from 12 to 2 PM and order 30% more Iced Spanish Latte stock before exam weeks.',
+ nrev:'11',r0:'3.4',r1:'4.5',r2:'4.2',r3:'4.0',r4:'3.6',r5:'3.9',strong:'The KPI cards and the hour chart are clear.',change:'The title was too general; units were missing on the cards.',resp:'We rewrote the title as a message and added AED to every card.',
+ lim:'One month only; fictional data; no customer survey. Next: compare with November and add a short customer survey on waiting time.',refs:''};
+
+/* ---------- prefill from the lab ---------- */
+function prefill(force){ let pid=null, sk=null; try{ pid=localStorage.getItem('g106-proj'); sk=JSON.parse(localStorage.getItem('g106-sketch')||'null'); }catch(e){}
+  const p=pid&&getP(pid); if(!p&&!sk) return 0; let n=0; const put=(k,v)=>{ if(v!=null&&v!==''&&(force||!String(D[k]||'').trim())){ D[k]=v; n++; } };
+  if(p){ put('section',p.sec); put('mq',p.qs[0]); p.qs.forEach((q,i)=>put('sq'+i,q)); put('dsName',p.src.split(' · ').slice(1).join(' · ')||p.src); put('dsPub',p.src.split(' · ')[0]); put('dsLink',p.url); put('row',p.row);
+    p.cols.split(/,|·/).map(s=>s.trim()).filter(Boolean).slice(0,NV).forEach((c,i)=>put('v'+i+'n',c));
+    const tip=p.tip.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+    [['Changed each column to the right data type','So numbers can be summed and dates sorted.'],['Removed blank rows and errors','Empty or broken rows distort totals.'],['Removed duplicate rows','The same record counted twice inflates results.'],['Kept only the columns we need','A smaller, clearer model.'],[tip.split(':')[0].slice(0,90),tip]].forEach(([s,w],i)=>{ put('p'+i+'s',s); put('p'+i+'w',w); }); }
+  const qs=sk&&sk.q?sk.q:(p?[...p.qs,'']:[]), vs=sk&&sk.v?sk.v:(p?p.viz.map(toViz):[]);
+  for(let i=0;i<NQ;i++){ if(qs[i]&&qs[i]!=='Your own question') put('q'+i,qs[i]); if(vs[i]){ put('z'+i,vs[i]); put('y'+i,WHY[vs[i]]); } }
+  if(sk&&sk.title) put('title',sk.title); else if(p) put('title',p.t);
+  if(sk) put('layout',`Message title top-left; KPI cards on top${sk.kpi&&sk.kpi.some(Boolean)?' ('+sk.kpi.filter(Boolean).join(', ')+')':''}; the main chart under the cards; supporting charts on the right and bottom${sk.slicer?'; a '+sk.slicer+' slicer top-right':''}.`);
+  store(); return n; }
+
+/* ---------- images (this browser only) ---------- */
+const IDB={db:null,open(){ return this.db?Promise.resolve(this.db):new Promise((res,rej)=>{ try{ const r=indexedDB.open('g106-report',1); r.onupgradeneeded=()=>r.result.createObjectStore('img',{keyPath:'id'}); r.onsuccess=()=>{ this.db=r.result; res(r.result); }; r.onerror=()=>rej(r.error); }catch(e){ rej(e); } }); },
+  all(){ return this.open().then(db=>new Promise(res=>{ const q=db.transaction('img').objectStore('img').getAll(); q.onsuccess=()=>res((q.result||[]).sort((a,b)=>a.t-b.t)); q.onerror=()=>res([]); })).catch(()=>[]); },
+  put(o){ return this.open().then(db=>new Promise(res=>{ const tx=db.transaction('img','readwrite'); tx.objectStore('img').put(o); tx.oncomplete=()=>res(); tx.onerror=()=>res(); })).catch(()=>{}); },
+  del(id){ return this.open().then(db=>new Promise(res=>{ const tx=db.transaction('img','readwrite'); tx.objectStore('img').delete(id); tx.oncomplete=()=>res(); })).catch(()=>{}); },
+  clear(){ return this.open().then(db=>new Promise(res=>{ const tx=db.transaction('img','readwrite'); tx.objectStore('img').clear(); tx.oncomplete=()=>res(); })).catch(()=>{}); }};
+let IMGS=[];
+const shrink=file=>new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>{ const im=new Image(); im.onload=()=>{ const m=1500,s=Math.min(1,m/Math.max(im.width,im.height)); const c=document.createElement('canvas'); c.width=Math.round(im.width*s); c.height=Math.round(im.height*s); const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0,c.width,c.height); res({src:c.toDataURL('image/jpeg',.86),w:c.width,h:c.height}); }; im.onerror=rej; im.src=fr.result; }; fr.onerror=rej; fr.readAsDataURL(file); });
+const SLOTS={sketch:'Dashboard sketch',pq:'Power Query · Applied Steps',model:'Model view',dash:'Final dashboard',i0:'Evidence for insight 1',i1:'Evidence for insight 2',i2:'Evidence for insight 3',forms:'Peer review · Forms summary'};
+const REQ=['dash','forms'];
+
+/* ---------- render ---------- */
+let mode='edit';
+const src=()=>mode==='ex'?EX:D;
+const V=k=>String(src()[k]||'').trim();
+function F(k,ph,rows=2,tag='textarea'){ if(mode==='ex') return `<div class="view${V(k)?'':' empty'}">${E(V(k))||'—'}</div>`;
+  return tag==='input'?`<input class="fld" data-k="${k}" value="${E(D[k]||'')}" placeholder="${E(ph)}" aria-label="${E(ph)}">`:`<textarea class="fld" data-k="${k}" rows="${rows}" placeholder="${E(ph)}" aria-label="${E(ph)}">${E(D[k]||'')}</textarea>`; }
+const H=(n,t,tag)=>`<div class="pg-h"><span class="n">${n}</span><h2>${t}</h2>${tag?`<span class="t">${tag}</span>`:''}</div>`;
+const Q=(k,lab,ph,rows=2)=>`<div class="q"><label>${lab}</label>${F(k,ph||lab,rows)}</div>`;
+const drop=(slot,hint,multi)=>`<label class="drop">${SLOTS[slot]} ${REQ.includes(slot)?`<span class="req" data-req="${slot}">required</span>`:''}<small>${hint}</small><input type="file" accept="image/*" data-slot="${slot}" ${multi?'multiple':''} hidden></label><div data-figs="${slot}"></div>`;
+function draw(){
+  const doc=document.getElementById('doc');
+  doc.innerHTML=`<div class="rp">
+  <section class="pg cover" id="p0"><div><span class="k">GED 106 · Smart Decisions: Data Literacy &amp; Visualization · Project report</span><h1>${mode==='ex'?E(EX.title):F('title','Report title: your main message',1,'input')}</h1></div>
+   <dl class="meta"><dt>Team</dt><dd>${F('team','Team name',1,'input')}</dd><dt>Members</dt><dd>${F('members','Name · Student ID (one per line)',3)}</dd><dt>Section</dt><dd>${F('section','201 or 202',1,'input')}</dd><dt>Instructor</dt><dd>Eng. Nadia Mek</dd><dt>Tool</dt><dd>Microsoft Power BI Desktop</dd></dl></section>
+
+  <section class="pg" id="p1">${H('1','Introduction and research questions','≈ 150 words')}
+   ${Q('intro','Why this topic? What problem or decision does it help?','',3)}${Q('aud','Who will use the dashboard?','',1)}
+   ${Q('mq','Main research question (clear, specific, measurable)','',2)}
+   <div class="lbl">Supporting questions</div><div class="three">${[0,1,2].map(i=>F('sq'+i,'Supporting question '+(i+1),3)).join('')}</div></section>
+
+  <section class="pg" id="p2">${H('2','The data','source and variables')}
+   <div class="two">${Q('dsName','Data set name','',1)}${Q('dsPub','Publisher or platform','',1)}${Q('dsYear','Year or period covered','',1)}${Q('dsLic','Licence or terms of use','',1)}</div>
+   ${Q('dsLink','Link','',1)}
+   <div class="three">${Q('row','One row is…','',1)}${Q('nrows','Number of rows','',1)}${Q('ncols','Number of columns','',1)}</div>
+   <div class="lbl">Key variables</div><div class="tw"><table class="g"><tr><th>Column</th><th>Type</th><th>Unit</th><th>Used for</th></tr>${Array.from({length:NV},(_,i)=>`<tr><td>${F('v'+i+'n','Column',1)}</td><td>${F('v'+i+'t','Categorical · Numerical · Date',1)}</td><td>${F('v'+i+'u','Unit',1)}</td><td>${F('v'+i+'r','Which question or chart',1)}</td></tr>`).join('')}</table></div></section>
+
+  <section class="pg" id="p3">${H('3','Data preparation in Power Query','cleaning log')}
+   <p class="howto">Every step you applied, and why. It must match the Applied Steps pane.</p>
+   <div class="tw"><table class="g"><tr><th style="width:4%">#</th><th style="width:44%">Step</th><th>Why</th></tr>${Array.from({length:NP},(_,i)=>`<tr><td>${i+1}</td><td>${F('p'+i+'s','What you did',1)}</td><td>${F('p'+i+'w','Why it was needed',1)}</td></tr>`).join('')}</table></div>
+   <div class="two" style="margin-top:12px">${Q('before','Rows before cleaning','',1)}${Q('after','Rows after cleaning','',1)}</div>
+   ${drop('pq','Screenshot of the Applied Steps pane (right side of Power Query)')}</section>
+
+  <section class="pg" id="p4">${H('4','Data model and calculations','')}
+   ${Q('tables','Tables loaded','',1)}${Q('rel','Relationships (key column, one-to-many)','',2)}${Q('calc','Calculated columns and measures, with their formula','',3)}
+   ${drop('model','Optional: screenshot of Model view')}</section>
+
+  <section class="pg" id="p5">${H('5','Dashboard design','sketch → build')}
+   <p class="howto">One visual per question. Your sketch from the lab, then the reason for each choice.</p>
+   <button type="button" class="bbtn skb" id="skb">Insert my sketch from the lab</button>${drop('sketch','Or upload a photo of a paper sketch')}
+   <div class="tw"><table class="g"><tr><th style="width:36%">Question</th><th style="width:18%">Visual</th><th>Why this visual</th></tr>${Array.from({length:NQ},(_,i)=>`<tr><td>${F('q'+i,'Question',2)}</td><td>${F('z'+i,'Visual',1)}</td><td>${F('y'+i,'Reason',2)}</td></tr>`).join('')}</table></div>
+   <div style="margin-top:12px">${Q('layout','Layout, colour and slicer choices','',3)}</div>
+   ${drop('dash','Screenshot of your Power BI dashboard')}</section>
+
+  <section class="pg" id="p6">${H('6','Findings','3 insights')}
+   <p class="howto">Each insight: one finding with a number, then what it means. Add the chart as evidence.</p>
+   ${[0,1,2].map(i=>`<div class="ins"><b class="h">Insight ${i+1}</b>${Q('i'+i+'f','Finding (with a number)','',2)}${Q('i'+i+'m','What it means','',2)}${drop('i'+i,'Optional: the chart that shows it')}</div>`).join('')}</section>
+
+  <section class="pg" id="p7">${H('7','Data story and recommendation','data + visuals + narrative')}
+   <div class="story">${Q('setup','Setup · the situation','',2)}${Q('insight','Insight · what the data shows','',2)}${Q('action','Action · what should be done, by whom, when','',2)}</div></section>
+
+  <section class="pg" id="p8">${H('8','Peer review','10 reviews or more')}
+   ${Q('nrev','Number of reviews received','',1)}
+   <div class="lbl">Average rating (1–5)</div><div class="rate">${RATE.map((r,i)=>`<span>${r}</span>${F('r'+i,'1–5',1,'input')}`).join('')}</div>
+   <div style="margin-top:12px">${Q('strong','Strongest point (most common)','',2)}${Q('change','Most requested change','',2)}${Q('resp','What we changed, or will change','',2)}</div>
+   ${drop('forms','Screenshot of the Microsoft Forms summary')}</section>
+
+  <section class="pg" id="p9">${H('9','Limitations and next steps','')}${Q('lim','What the data cannot tell, and what you would do next','',3)}</section>
+
+  <section class="pg refs" id="pR">${H('R','References','APA 7')}<div id="refs"></div>${mode==='edit'?Q('refs','Other references (one per line)','',2):''}</section></div>`;
+  doc.querySelectorAll('textarea.fld').forEach(grow); drawFigs(); drawRefs(); counts(); fillNote(); }
+const grow=t=>{ t.style.height='auto'; t.style.height=(t.scrollHeight+2)+'px'; };
+function refs(){ const r=[]; const n=V('dsName'), p=V('dsPub'), y=V('dsYear')||'n.d.', l=V('dsLink');
+  if(n) r.push(`${p||'Publisher'}. (${y}). ${n} [Data set]. ${l}`);
+  r.push('Klidas, A., & Hanegan, K. (2022). Data literacy in practice. Packt.','Sosulski, K. (2019). Data visualization made simple. Routledge.','Dykes, B. (2019). Effective data storytelling. Wiley.');
+  V('refs').split(/\n+/).filter(Boolean).forEach(x=>r.push(x)); return r; }
+function drawRefs(){ const b=document.getElementById('refs'); if(b) b.innerHTML=refs().map(x=>`<p>${E(x)}</p>`).join(''); }
+function drawFigs(){
+  document.querySelectorAll('[data-figs]').forEach(box=>{ const s=box.dataset.figs;
+    if(mode==='ex'){ box.innerHTML=['dash','forms','sketch'].includes(s)?`<div class="fig"><div class="ph">${SLOTS[s]}</div><div class="cap">${SLOTS[s]}</div></div>`:''; return; }
+    box.innerHTML=IMGS.filter(m=>m.slot===s).map(m=>`<figure class="fig"><img src="${m.src}" alt="${E(SLOTS[s])}"><div class="cap">Figure ·<input data-cap="${m.id}" value="${E(m.cap||'')}" placeholder="${E(SLOTS[s])}" aria-label="Caption"></div><button type="button" class="x" data-del="${m.id}" aria-label="Remove">✕</button></figure>`).join(''); });
+  document.querySelectorAll('[data-req]').forEach(r=>{ const ok=IMGS.some(m=>m.slot===r.dataset.req); r.textContent=ok?'added ✓':'required'; r.className='req'+(ok?' ok':''); }); }
+function counts(){ if(mode!=='edit'){ document.getElementById('prog').textContent=''; return; }
+  const parts=[V('title')&&V('team')&&V('members'),V('mq')&&V('intro'),V('dsName')&&V('row')&&V('v0t'),V('p0s')&&V('after'),V('tables'),V('z0')&&IMGS.some(m=>m.slot==='dash'),V('i0f')&&V('i1f')&&V('i2f'),V('action'),V('nrev')&&IMGS.some(m=>m.slot==='forms'),V('lim')];
+  document.getElementById('prog').textContent=`${parts.filter(Boolean).length} of 10 parts complete`; }
+function fillNote(){ const n=document.getElementById('fillnote'); let pid=null; try{ pid=localStorage.getItem('g106-proj'); }catch(e){} const p=pid&&getP(pid);
+  n.innerHTML=p?`<span>Your lab project: <b>${E(p.t)}</b> (Section ${p.sec}).</span><button type="button" class="bbtn" id="refill">Fill again from my lab choices</button>`:`<span>No project chosen yet. <a href="lab-11.html">Choose one in the Project lab</a>, then come back: the report fills itself.</span>`;
+  const b=document.getElementById('refill'); if(b) b.onclick=()=>{ const k=prefill(false); draw(); msg(k?`${k} empty fields filled from your lab choices.`:'Nothing to fill: those fields already have text.'); }; }
+
+/* ---------- output blocks (Word, PDF) ---------- */
+function blocks(blank){ const v=k=>blank?'':V(k), o=[];
+  const qa=(lab,k)=>{ o.push({h3:lab}); o.push({p:v(k)||(blank?'…':'')}); };
+  o.push({h:'1. Introduction and research questions'}); qa('Why this topic',  'intro'); qa('Audience','aud'); qa('Main research question','mq'); o.push({h3:'Supporting questions'}); o.push({list:[0,1,2].map(i=>v('sq'+i)||'…')});
+  o.push({h:'2. The data'}); o.push({table:[['Data set',v('dsName')],['Publisher',v('dsPub')],['Period',v('dsYear')],['Licence',v('dsLic')],['Link',v('dsLink')],['One row is',v('row')],['Rows × columns',`${v('nrows')} × ${v('ncols')}`]],key:true});
+  o.push({h3:'Key variables'}); o.push({table:[['Column','Type','Unit','Used for']].concat(Array.from({length:NV},(_,i)=>['n','t','u','r'].map(x=>v('v'+i+x))).filter(r=>blank||r.some(Boolean))),head:true});
+  o.push({h:'3. Data preparation in Power Query'}); o.push({table:[['#','Step','Why']].concat(Array.from({length:NP},(_,i)=>[String(i+1),v('p'+i+'s'),v('p'+i+'w')]).filter(r=>blank||r[1]||r[2])),head:true});
+  o.push({p:`Rows before cleaning: ${v('before')||'…'} · after: ${v('after')||'…'}`}); o.push({img:'pq'});
+  o.push({h:'4. Data model and calculations'}); qa('Tables','tables'); qa('Relationships','rel'); qa('Calculated columns and measures','calc'); o.push({img:'model'});
+  o.push({h:'5. Dashboard design'}); o.push({img:'sketch'}); o.push({table:[['Question','Visual','Why this visual']].concat(Array.from({length:NQ},(_,i)=>[v('q'+i),v('z'+i),v('y'+i)]).filter(r=>blank||r.some(Boolean))),head:true}); qa('Layout, colour and slicer','layout'); o.push({img:'dash'});
+  o.push({h:'6. Findings'}); [0,1,2].forEach(i=>{ o.push({h3:`Insight ${i+1}`}); o.push({p:v('i'+i+'f')||'…'}); o.push({p:v('i'+i+'m')||'…'}); o.push({img:'i'+i}); });
+  o.push({h:'7. Data story and recommendation'}); o.push({table:[['Setup',v('setup')],['Insight',v('insight')],['Action',v('action')]],key:true});
+  o.push({h:'8. Peer review'}); o.push({p:`Reviews received: ${v('nrev')||'…'}`}); o.push({table:[['Criterion','Average (1–5)']].concat(RATE.map((r,i)=>[r,v('r'+i)])),head:true}); qa('Strongest point','strong'); qa('Most requested change','change'); qa('What we changed','resp'); o.push({img:'forms'});
+  o.push({h:'9. Limitations and next steps'}); o.push({p:v('lim')||'…'});
+  o.push({h:'References'}); (blank?['Publisher. (Year). Data set name [Data set]. Link']:[]).concat(blank?refs().slice(1,4):refs()).forEach(r=>o.push({ref:r}));
+  return o.flatMap(b=>b.img?(blank?[]:IMGS.filter(m=>m.slot===b.img).map(m=>({fig:m}))):[b]); }
+function loadDocx(){ return window.docx?Promise.resolve(window.docx):new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='assets/vendor/docx.umd.js'; s.onload=()=>res(window.docx); s.onerror=rej; document.head.appendChild(s); }); }
+async function makeDocx(blank){
+  const d=await loadDocx(); const {Document,Packer,Paragraph,TextRun,HeadingLevel,Table,TableRow,TableCell,WidthType,ImageRun,PageBreak,Footer,Header,AlignmentType,PageNumber,ShadingType,BorderStyle}=d;
+  const TEAL='0E7490', DARK='0B3B4A', SOFT='E3F1F5', v=k=>blank?'':V(k);
+  const cell=(t,o={})=>new TableCell({shading:o.sh?{type:ShadingType.CLEAR,color:'auto',fill:o.sh}:undefined,margins:{top:60,bottom:60,left:100,right:100},children:String(t||(blank?' ':'')).split('\n').map(x=>new Paragraph({children:[new TextRun({text:x,bold:!!o.b,color:o.c,size:21})]}))});
+  const k=[];
+  k.push(new Paragraph({children:[new TextRun({text:'GED 106 · SMART DECISIONS: DATA LITERACY & VISUALIZATION',size:20,color:TEAL,bold:true})],spacing:{before:1800,after:200},border:{top:{style:BorderStyle.SINGLE,size:48,color:TEAL,space:12}}}));
+  k.push(new Paragraph({children:[new TextRun({text:'Project report',size:28,color:'5D6B78'})],spacing:{after:120}}));
+  k.push(new Paragraph({children:[new TextRun({text:v('title')||(blank?'Report title: your main message':'Project report'),bold:true,size:52,color:DARK})],spacing:{after:600}}));
+  k.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[['Team',v('team')],['Members',v('members')],['Section',v('section')],['Instructor','Eng. Nadia Mek'],['Tool','Microsoft Power BI Desktop'],['Date',blank?'':new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})]].map(([a,b])=>new TableRow({children:[cell(a,{b:1,sh:SOFT,c:DARK}),cell(b)]}))}));
+  k.push(new Paragraph({children:[new PageBreak()]}));
+  for(const b of blocks(blank)){
+    if(b.h) k.push(new Paragraph({heading:HeadingLevel.HEADING_1,children:[new TextRun({text:b.h,color:TEAL,bold:true,size:32})],spacing:{before:360,after:120},border:{bottom:{style:BorderStyle.SINGLE,size:8,color:TEAL,space:4}}}));
+    else if(b.h3) k.push(new Paragraph({heading:HeadingLevel.HEADING_3,children:[new TextRun({text:b.h3,color:DARK,bold:true,size:24})],spacing:{before:160,after:40}}));
+    else if(b.p!=null) b.p.split(/\n+/).forEach(x=>k.push(new Paragraph({children:[new TextRun(x)],spacing:{after:120}})));
+    else if(b.list) b.list.forEach((x,i)=>k.push(new Paragraph({children:[new TextRun(`${i+1}. ${x}`)],spacing:{after:60},indent:{left:360}})));
+    else if(b.ref) k.push(new Paragraph({children:[new TextRun(b.ref)],spacing:{after:100},indent:{left:720,hanging:720}}));
+    else if(b.table) { k.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:b.table.map((r,i)=>new TableRow({children:r.map((c,j)=>cell(c,(b.head&&i===0)?{b:1,sh:TEAL,c:'FFFFFF'}:(b.key&&j===0)?{b:1,sh:SOFT,c:DARK}:{}))}))})); k.push(new Paragraph({text:'',spacing:{after:120}})); }
+    else if(b.fig){ const m=b.fig, bin=atob(m.src.split(',')[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); const w=Math.min(600,m.w);
+      k.push(new Paragraph({alignment:AlignmentType.CENTER,children:[new ImageRun({data:u,type:'jpg',transformation:{width:w,height:Math.round(m.h*w/m.w)}})],spacing:{before:120}}));
+      k.push(new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({text:`Figure · ${m.cap||SLOTS[m.slot]}`,italics:true,size:19,color:'5D6B78'})],spacing:{after:200}})); } }
+  const doc=new Document({creator:v('team')||'GED 106 team',title:'GED 106 Project report',styles:{default:{document:{run:{font:'Calibri',size:22}}}},
+    sections:[{properties:{titlePage:true},headers:{default:new Header({children:[new Paragraph({alignment:AlignmentType.RIGHT,children:[new TextRun({text:`GED 106 · ${v('team')||'Project report'}`,size:16,color:'5D6B78'})]})]})},
+      footers:{default:new Footer({children:[new Paragraph({alignment:AlignmentType.CENTER,children:[new TextRun({children:['Page ',PageNumber.CURRENT],size:16,color:'5D6B78'})]})]})},children:k}]});
+  const blob=await Packer.toBlob(doc); dl(blob,blank?'GED106_Project_Report_Template.docx':`${(V('team')||'Team').replace(/[^\w\- ]+/g,'').replace(/\s+/g,'_')}_GED106_Project_Report.docx`); }
+function dl(blob,name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },800); }
+function printPDF(){ const r=document.getElementById('print-root');
+  const b=blocks(false).map(x=>x.h?`<h2>${E(x.h)}</h2>`:x.h3?`<h4>${E(x.h3)}</h4>`:x.p!=null?`<p>${E(x.p).replace(/\n/g,'<br>')}</p>`:x.list?`<ol>${x.list.map(i=>`<li>${E(i)}</li>`).join('')}</ol>`:x.ref?`<p class="rf">${E(x.ref)}</p>`:x.fig?`<figure><img src="${x.fig.src}" alt=""><figcaption>Figure · ${E(x.fig.cap||SLOTS[x.fig.slot])}</figcaption></figure>`:x.table?`<table>${x.table.map((row,i)=>`<tr>${row.map((c,j)=>`<${(x.head&&i===0)||(x.key&&j===0)?'th':'td'}>${E(c).replace(/\n/g,'<br>')}</${(x.head&&i===0)||(x.key&&j===0)?'th':'td'}>`).join('')}</tr>`).join('')}</table>`:'').join('');
+  r.innerHTML=`<style>#print-root{font:10.5pt/1.5 Calibri,Arial,sans-serif;color:#14202B}#print-root h1{font:800 26pt Arial;color:#0B3B4A;margin:0 0 30pt}#print-root h2{font:700 15pt Arial;color:#0E7490;border-bottom:1.5pt solid #0E7490;padding-bottom:3pt;margin:18pt 0 6pt}#print-root h4{font:700 11pt Arial;color:#0B3B4A;margin:8pt 0 2pt}#print-root table{border-collapse:collapse;width:100%;margin:4pt 0 8pt}#print-root td,#print-root th{border:1px solid #B9D6DE;padding:4pt;vertical-align:top;text-align:left}#print-root tr:first-child th{background:#0E7490;color:#fff}#print-root th{background:#E3F1F5;color:#0B3B4A}#print-root img{max-width:100%;max-height:120mm;display:block;margin:0 auto}#print-root figcaption{text-align:center;font-style:italic;color:#5D6B78;font-size:9pt}#print-root .rf{padding-left:2em;text-indent:-2em}#print-root .cv{min-height:250mm;display:flex;flex-direction:column;justify-content:center;break-after:page;border-top:10pt solid #0E7490;padding-top:20pt}#print-root .cv .k{color:#0E7490;font-weight:700;letter-spacing:.08em;font-size:9pt}</style>
+  <div class="cv"><p class="k">GED 106 · SMART DECISIONS: DATA LITERACY &amp; VISUALIZATION</p><p style="color:#5D6B78;font-size:13pt;margin:0">Project report</p><h1>${E(V('title')||'Project report')}</h1><table>${[['Team',V('team')],['Members',V('members')],['Section',V('section')],['Instructor','Eng. Nadia Mek'],['Tool','Microsoft Power BI Desktop']].map(([a,c])=>`<tr><th>${a}</th><td>${E(c).replace(/\n/g,'<br>')}</td></tr>`).join('')}</table></div>${b}`;
+  setTimeout(()=>window.print(),150); }
+
+/* ---------- wiring ---------- */
+const msg=t=>{ const m=document.getElementById('msg'); m.textContent=t; clearTimeout(msg.t); msg.t=setTimeout(()=>m.textContent='',5000); };
+const docEl=document.getElementById('doc'), pw=document.getElementById('pw');
+docEl.addEventListener('input',e=>{ const f=e.target.closest('[data-k]'); if(f){ D[f.dataset.k]=f.value; store(); if(f.tagName==='TEXTAREA') grow(f); counts(); if(/^ds|^refs/.test(f.dataset.k)) drawRefs(); return; }
+  const c=e.target.closest('[data-cap]'); if(c){ const m=IMGS.find(x=>x.id===c.dataset.cap); if(m){ m.cap=c.value; IDB.put(m); } } });
+docEl.addEventListener('click',e=>{ const x=e.target.closest('[data-del]'); if(x){ IDB.del(x.dataset.del).then(()=>{ IMGS=IMGS.filter(m=>m.id!==x.dataset.del); drawFigs(); counts(); }); return; }
+  if(e.target.closest('#skb')){ let sk=null; try{ sk=JSON.parse(localStorage.getItem('g106-sketch')||'null'); }catch(x){}
+    if(!sk){ msg('No sketch found in this browser. Make one in the Project lab, Step 2.'); return; }
+    sketchPNG(sk).then(async r=>{ IMGS=IMGS.filter(m=>m.slot!=='sketch'||m.auto!==1); const o={id:'sk'+Date.now(),slot:'sketch',auto:1,src:r.src,w:r.w,h:r.h,cap:'Dashboard sketch (Project lab)',t:Date.now()}; IMGS.push(o); await IDB.put(o); drawFigs(); msg('Sketch added.'); }).catch(()=>msg('The sketch could not be drawn in this browser.')); } });
+docEl.addEventListener('change',async e=>{ const f=e.target.closest('input[type=file]'); if(!f) return;
+  for(const file of [...f.files]){ try{ const r=await shrink(file); const o={id:'i'+Date.now()+Math.random().toString(36).slice(2,6),slot:f.dataset.slot,src:r.src,w:r.w,h:r.h,cap:'',t:Date.now()}; IMGS.push(o); await IDB.put(o); }catch(x){ msg('That image could not be read. Try a PNG or JPG.'); } }
+  f.value=''; drawFigs(); counts(); });
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{ mode=b.dataset.m; document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b)); pw.classList.toggle('exmode',mode==='ex'); draw(); }));
+const doDocx=async blank=>{ msg('Preparing your Word file…'); try{ await makeDocx(blank); msg('Saved. Check your Downloads folder.'); }catch(e){ console.error(e); msg('Word export did not work in this browser. Use Print or PDF.'); } };
+document.getElementById('dx').onclick=()=>doDocx(false); document.getElementById('dx2').onclick=()=>doDocx(false); document.getElementById('blank').onclick=()=>doDocx(true);
+document.getElementById('pdf').onclick=printPDF;
+document.getElementById('save').onclick=()=>{ dl(new Blob([JSON.stringify({v:1,app:'g106-report',data:D,imgs:IMGS})],{type:'application/json'}),`${(D.team||'team').replace(/[^\w\- ]+/g,'').replace(/\s+/g,'_')}_GED106_Report.json`); msg('File saved. Share it with your team: they open it here to continue.'); };
+document.getElementById('open').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(async t=>{ try{ const o=JSON.parse(t); if(!o||!o.data) throw 0; D=o.data; store(); await IDB.clear(); IMGS=o.imgs||[]; for(const m of IMGS) await IDB.put(m); mode='edit'; draw(); msg('Opened. Your report is back.'); }catch(x){ msg('This is not a GED 106 report file.'); } }); e.target.value=''; });
+document.getElementById('chips').innerHTML=`<span>Team</span><span>Draft · <b>Week 11–12</b></span><span>Final · <b>20%</b>, Weeks 14–15</span><span>CLO <b>3, 4, 5</b></span><span><b>9</b> sections + references</span>`;
+const fixBar=()=>{ const h=document.getElementById('hub'); document.getElementById('bar').style.top=(h?h.offsetHeight:0)+'px'; }; fixBar(); addEventListener('resize',fixBar);
+if(!Object.keys(D).length) prefill(false);
+draw();
+IDB.all().then(a=>{ IMGS=a; drawFigs(); counts(); });
+</script>
+</body>
+</html>
