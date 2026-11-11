@@ -139,10 +139,10 @@ Lecture.mount({
   title:'Project Lab · Choose, Design and Build Your Dashboard',
   meta:'Lab · Week 11 · Drafting project reports',
   scenes:[
-  { nav:'Start here', title:'Your project in four steps', kind:'activity', minutes:5,
-    narration:[`Work in your project team. Choose one project, sketch the dashboard, build it in Power BI, then collect 10 peer reviews.`],
+  { nav:'Start here', title:'Your project in five steps', kind:'activity', minutes:5,
+    narration:[`Work in your project team. Choose one project, sketch the dashboard, build it in Power BI, collect 10 peer reviews, then write the report.`],
     src:`Revise: <a href="week-11.html">Week 11 · Dashboards</a> · <a href="lab-powerbi.html">Power BI first steps</a>.`,
-    fig:{label:`Lab plan`, build:el=>W.agenda(el,[[`1 · Choose a project`,15,'a'],[`2 · Sketch the dashboard`,20,'a'],[`3 · Build in Power BI`,45,'a'],[`4 · 10 peer reviews`,20,'a'],[`Submit the draft`,5,'c']])} },
+    fig:{label:`Watch first · 1-minute guide`, html:`<video controls playsinline preload="metadata" poster="assets/video/lab11-guide.jpg" style="width:100%;border-radius:12px;display:block;background:#000" aria-label="Guide video: the five steps of the project lab, with subtitles"><source src="assets/video/lab11-guide.mp4" type="video/mp4"></video>`, build:el=>{ const d=document.createElement('div'); d.style.marginTop='12px'; el.appendChild(d); W.agenda(d,[[`1 · Choose a project`,15,'a'],[`2 · Sketch the dashboard`,20,'a'],[`3 · Build in Power BI`,45,'a'],[`4 · 10 peer reviews`,20,'a'],[`Submit the draft`,5,'c']]); }} },
 
   { nav:'1 · Choose', title:'Step 1 · Choose your project', kind:'activity', minutes:15, wide:true,
     narration:[`Ten projects per section, all with real open data. Open one, read the guiding questions, then choose it. One project per team.`],
