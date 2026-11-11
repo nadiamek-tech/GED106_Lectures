@@ -31,6 +31,10 @@
 .btns .p{background:var(--wk);border-color:var(--wk);color:var(--on-wk,#fff)}
 .btns .x{background:#107C41;border-color:#107C41;color:#fff}
 .hint{font-size:.88rem;color:var(--muted);margin:6px 0 0}
+.rep-top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;border:2px solid var(--wk);background:var(--wk-soft);border-radius:14px;padding:12px 16px;margin:0 0 14px;font-family:var(--f-display)}
+.rep-top b{display:block;font-size:1.1rem}
+.rep-top span{color:var(--muted);font-size:.9rem}
+.rep-top a{background:var(--wk);color:var(--on-wk,#fff);text-decoration:none;font-weight:800;padding:10px 18px;border-radius:10px;white-space:nowrap}
 /* teams table */
 .tt{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
 .tt-t{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.93rem}
@@ -178,7 +182,7 @@ Lecture.mount({
   { nav:'Start here', title:'Your project in five steps', kind:'activity', minutes:5, wide:true,
     narration:[`Work in your project team. Choose one project, sketch the dashboard, build it in Power BI, collect 10 peer reviews, then write the report.`],
     src:`Revise: <a href="week-11.html">Week 11 · Dashboards</a> · <a href="lab-powerbi.html">Power BI first steps</a>.`,
-    fig:{label:`Watch first · 1-minute guide`, html:`<video controls playsinline preload="metadata" poster="assets/video/lab11-guide.jpg" style="width:100%;border-radius:12px;display:block;background:#000" aria-label="Guide video: the five steps of the project lab, with subtitles"><source src="assets/video/lab11-guide.mp4" type="video/mp4"></video>`, build:el=>{ const d=document.createElement('div'); d.style.marginTop='12px'; el.appendChild(d); W.agenda(d,[[`1 · Choose a project`,15,'a'],[`2 · Sketch the dashboard`,20,'a'],[`3 · Build in Power BI`,45,'a'],[`4 · 10 peer reviews`,20,'a'],[`Submit the draft`,5,'c']]); }} },
+    fig:{label:`Watch first · 1-minute guide`, html:`<div class="rep-top"><div><b>Your project report</b><span>Fills itself from your project and sketch · save as Word for Moodle</span></div><a href="project-report.html">Open our report →</a></div><video controls playsinline preload="metadata" poster="assets/video/lab11-guide.jpg" style="width:100%;border-radius:12px;display:block;background:#000" aria-label="Guide video: the five steps of the project lab, with subtitles"><source src="assets/video/lab11-guide.mp4" type="video/mp4"></video>`, build:el=>{ const d=document.createElement('div'); d.style.marginTop='12px'; el.appendChild(d); W.agenda(d,[[`1 · Choose a project`,15,'a'],[`2 · Sketch the dashboard`,20,'a'],[`3 · Build in Power BI`,45,'a'],[`4 · 10 peer reviews`,20,'a'],[`Submit the draft`,5,'c']]); }} },
 
   { nav:'Teams', title:'Teams and projects', kind:'activity', minutes:5, wide:true,
     narration:[`One project per team. Write your team name next to your project.`],
