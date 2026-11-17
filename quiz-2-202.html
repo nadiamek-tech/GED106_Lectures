@@ -87,8 +87,8 @@ body{font-family:var(--f-display)}
 <p class="sub">Covers Weeks 9–11 · Section 202 · Nadia</p>
 <div class="rules">
   <div><small>When</small><b>In class, with your professor’s password</b></div>
-  <div><small>Time</small><b>40 minutes from Start</b></div>
-  <div><small>Grade</small><b>20 marks · 20% of the course</b></div>
+  <div><small>Time</small><b>60 minutes from Start</b></div>
+  <div><small>Grade</small><b>32 marks · counts 20%</b></div>
   <div><small>Parts</small><b>Read a dashboard · Decide · Ethics</b></div>
   <div class="no"><small>Not allowed</small><b>Closed book · no phone · no AI</b><br><span class="gl-tip">Only this page open</span></div>
   <div><small>Submit</small><b>Answer sheet on Moodle</b></div>
@@ -113,7 +113,7 @@ body{font-family:var(--f-display)}
 Portal.header('exams');
 (function(){
   const SEC='202', S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)), tob64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
-  const KEY='g106-q2-'+SEC+'-key', ST='g106-q2-'+SEC+'-state', DUR=40*60*1000, err=document.getElementById('err'), inp=document.getElementById('pw'), gl=document.getElementById('gl'), clock=document.getElementById('clock');
+  const KEY='g106-q2-'+SEC+'-key', ST='g106-q2-'+SEC+'-state', DUR=60*60*1000, err=document.getElementById('err'), inp=document.getElementById('pw'), gl=document.getElementById('gl'), clock=document.getElementById('clock');
   const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const open=(k,x)=>crypto.subtle.decrypt({name:'AES-GCM',iv:b64(x.iv)},k,b64(x.ct));
   async function unwrap(pw,x){ const base=await crypto.subtle.importKey('raw',enc.encode(pw.trim().toUpperCase()),'PBKDF2',false,['deriveKey']);
@@ -125,9 +125,9 @@ Portal.header('exams');
   const shuffle=(a,r)=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
   const mm=ms=>{ const s=Math.max(0,Math.round(ms/1000)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
   let timer=null;
-  function tick(){ if(!st.start||st.done){ clock.innerHTML=st.done?'Submitted. Upload your answer sheet on Moodle.':'The 40 minutes start when you press Start.'; return; }
+  function tick(){ if(!st.start||st.done){ clock.innerHTML=st.done?'Submitted. Upload your answer sheet on Moodle.':'The 60 minutes start when you press Start.'; return; }
     const left=st.start+DUR-Date.now(); if(left<=0){ clock.innerHTML='Time is over. Your answers were submitted.'; submit(true); return; }
-    clock.innerHTML=`Time left <span class="t">${mm(left)}</span> <span>${D?done():0} of ${D?total():14} answered</span>`; }
+    clock.innerHTML=`Time left <span class="t">${mm(left)}</span> <span>${D?done():0} of ${D?total():24} answered</span>`; }
   async function code(txt){ const h=await crypto.subtle.digest('SHA-256',enc.encode(txt+'|'+D.k)); return Array.from(new Uint8Array(h)).slice(0,4).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase(); }
   const all=()=>D.parts.flatMap(p=>p.qs); const total=()=>all().length; const done=()=>all().filter((q,i)=>String((st.ans||{})[i]??'').trim()!=='').length;
   function who(){ gl.innerHTML=`<p class="gl-lead">Three parts: read a dashboard, make a decision, data ethics. Answer in your own words; show you <b>understand</b>. You can change answers until you press <b>Submit</b>.</p>
@@ -157,9 +157,9 @@ Portal.header('exams');
     const lines=D.parts.map(p=>`== ${p.t} (${p.m} marks) ==\n`+p.qs.map(q=>{ const i=n++, a=st.ans[i];
       const ans=q.ty==='mcq'?(a===undefined?'—':L[opts(i).indexOf(a)]+' · '+q.o[a]):(String(a??'').trim()||'—');
       return `${i+1}. [${q.m}] ${q.q}\n   Answer: ${ans}${q.ty!=='text'?((q.ty==='mcq'?a===0:numOk(q,a))?'   ✓':'   ✗'):''}`; }).join('\n')).join('\n\n');
-    const body=`GED 106 · Quiz 2 · Section ${SEC}\nName: ${st.name}\nStudent ID: ${st.id}\nStarted: ${new Date(st.start).toLocaleString('en-GB')}\nSubmitted: ${new Date(st.done).toLocaleString('en-GB')}${st.auto?' (time over)':''}\nAuto-marked: ${st.score} / ${st.auto_max}   ·   Written answers: ${20-st.auto_max} marks, marked by the professor\n\n${lines}`;
+    const body=`GED 106 · Quiz 2 · Section ${SEC}\nName: ${st.name}\nStudent ID: ${st.id}\nStarted: ${new Date(st.start).toLocaleString('en-GB')}\nSubmitted: ${new Date(st.done).toLocaleString('en-GB')}${st.auto?' (time over)':''}\nAuto-marked: ${st.score} / ${st.auto_max}   ·   Written answers: ${all().reduce((a,q)=>a+q.m,0)-st.auto_max} marks, marked by the professor\n\n${lines}`;
     const c=await code(body); const txt=body+`\n\nCheck code: ${c}\n`;
-    gl.innerHTML=`<div class="res"><p style="margin:0">Submitted · ${E(st.name)} · ${E(st.id)}</p><p class="big">${st.score} / ${st.auto_max}</p><p>Auto-marked questions. Your written answers (${20-st.auto_max} marks) are marked by your professor.</p><p>Check code <code>${c}</code></p>
+    gl.innerHTML=`<div class="res"><p style="margin:0">Submitted · ${E(st.name)} · ${E(st.id)}</p><p class="big">${st.score} / ${st.auto_max}</p><p>Auto-marked questions. Your written answers (${all().reduce((a,q)=>a+q.m,0)-st.auto_max} marks) are marked by your professor.</p><p>Check code <code>${c}</code></p>
       <div class="xlb"><button class="btn" id="dl" type="button">Download my answer sheet</button></div><p class="gl-tip">Upload the file to <b>Quiz 2</b> on Moodle now. Do not edit it: the check code will no longer match.</p></div>`;
     gl.querySelector('#dl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'})); a.download=`Quiz2_${SEC}_${st.id.replace(/\W+/g,'')}.txt`; a.click(); };
     tick(); }
