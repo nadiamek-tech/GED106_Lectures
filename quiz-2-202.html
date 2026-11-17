@@ -75,10 +75,11 @@ body{font-family:var(--f-display)}
 .res{border:2px solid var(--wk);border-radius:16px;background:var(--wk-soft);padding:18px 20px;margin:16px 0}
 .res .big{font:800 2.4rem var(--f-display);color:var(--wk)}
 .res code{font:700 1rem var(--f-mono);background:var(--bg);padding:2px 8px;border-radius:6px}
+body.qlock{user-select:none;-webkit-user-select:none}body.qlock textarea,body.qlock input{user-select:text;-webkit-user-select:text}@media print{body{display:none!important}}
 @media (max-width:640px){.who{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
-<body>
+<body class="qlock">
 <div id="hub"></div>
 <main class="pt pt-wrap gl-wrap" id="portal">
 <p style="margin:18px 0 0"><a class="pt-flag" href="assessments.html">← Assessments</a></p>
@@ -126,15 +127,26 @@ Portal.header('exams');
   const mm=ms=>{ const s=Math.max(0,Math.round(ms/1000)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
   let timer=null;
   function tick(){ if(!st.start||st.done){ clock.innerHTML=st.done?'Submitted. Upload your answer sheet on Moodle.':'The 60 minutes start when you press Start.'; return; }
-    const left=st.start+DUR-Date.now(); if(left<=0){ clock.innerHTML='Time is over. Your answers were submitted.'; submit(true); return; }
+    const left=st.start+DUR-Date.now(); if(left<=0){ clock.innerHTML='Time is over. Your answers were submitted.'; submit('time'); return; }
     clock.innerHTML=`Time left <span class="t">${mm(left)}</span> <span>${D?done():0} of ${D?total():24} answered</span>`; }
   async function code(txt){ const h=await crypto.subtle.digest('SHA-256',enc.encode(txt+'|'+D.k)); return Array.from(new Uint8Array(h)).slice(0,4).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase(); }
   const all=()=>D.parts.flatMap(p=>p.qs); const total=()=>all().length; const done=()=>all().filter((q,i)=>String((st.ans||{})[i]??'').trim()!=='').length;
-  function who(){ gl.innerHTML=`<p class="gl-lead">Three parts: read a dashboard, make a decision, data ethics. Answer in your own words; show you <b>understand</b>. You can change answers until you press <b>Submit</b>.</p>
+  const fs=()=>{ try{ const d=document.documentElement; if(!document.fullscreenElement&&d.requestFullscreen) d.requestFullscreen().catch(()=>{}); }catch(e){} };
+  const live=()=>D&&st.start&&!st.done;
+  function leave(why){ if(!live()) return; (st.log=st.log||[]).push({t:Date.now(),why}); save(); submit('left'); }
+  function guard(){ if(guard.on) return; guard.on=true; let grace=Date.now()+1500;
+    document.addEventListener('visibilitychange',()=>{ if(document.hidden) leave('switched tab, app or window'); });
+    window.addEventListener('blur',()=>{ if(Date.now()>grace) setTimeout(()=>{ if(!document.hasFocus()) leave('left the quiz window'); },400); });
+    document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement) leave('left full screen'); else grace=Date.now()+1500; });
+    ['copy','cut','paste','contextmenu','dragstart','drop'].forEach(ev=>document.addEventListener(ev,e=>{ if(live()) e.preventDefault(); }));
+    document.addEventListener('keydown',e=>{ if(!live()) return; const k=e.key.toLowerCase(); if((e.ctrlKey||e.metaKey)&&['c','v','x','p','s','u','f','a'].includes(k)||k==='f12'||k==='printscreen'){ e.preventDefault(); } });
+    window.addEventListener('beforeunload',e=>{ if(live()){ (st.log=st.log||[]).push({t:Date.now(),why:'refreshed or closed the page'}); st.done=Date.now(); st.auto='left'; save(); } }); }
+  async function profOk(pw){ const now=Date.now(); for(const x of S.slots){ if(now<Date.parse(x.from)||now>=Date.parse(x.to)) continue; try{ await unwrap(pw,x); if(pw.trim().toUpperCase().startsWith('PROF')) return true; }catch(e){} } return false; }
+  function who(){ gl.innerHTML=`<p class="gl-lead">Three parts: read a dashboard, make a decision, data ethics. Answer in your own words; show you <b>understand</b>. You can change answers until you press <b>Submit</b>.</p><p class="gl-tip" style="color:var(--bad);font-weight:700">The quiz opens in full screen. If you leave it (another tab, app or window, Esc, refresh), your answers are submitted and the quiz closes.</p>
     <div class="who"><label>Full name<input id="nm" autocomplete="name"></label><label>Student ID<input id="sid" inputmode="numeric"></label><button class="btn" id="go" type="button">Start · ${D.min} min</button></div><p class="err" id="werr"></p>`;
     gl.querySelector('#go').onclick=()=>{ const n=gl.querySelector('#nm').value.trim(), id=gl.querySelector('#sid').value.trim();
       if(n.length<3||id.length<4){ gl.querySelector('#werr').textContent='Write your full name and student ID.'; return; }
-      st={name:n,id,start:Date.now(),ans:{}}; save(); quiz(); }; }
+      fs(); st={name:n,id,start:Date.now(),ans:{},log:[]}; save(); quiz(); }; }
   function opts(i){ const r=rng(hash(SEC+'|'+st.id+'|'+i)); return shuffle([0,1,2,3],r); }
   function quiz(){ let n=0, h=`<p class="gl-lead"><b>${E(st.name)}</b> · ${E(st.id)} · Section ${SEC}</p>`;
     D.parts.forEach(p=>{ h+=`<h2 class="pt-h">${E(p.t)} <small style="font-size:.8rem;color:var(--muted)">· ${p.m} marks</small></h2><p class="pt-i">${E(p.intro)}</p>`+(p.fig?`<div class="dash">${p.fig}</div>`:'');
@@ -147,26 +159,27 @@ Portal.header('exams');
     const cnt=()=>{ gl.querySelector('#cnt').textContent=`${done()} of ${total()} answered`; };
     gl.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{ st.ans[r.name.slice(1)]=+r.value; save(); cnt(); });
     gl.querySelectorAll('input.num,textarea').forEach(x=>x.oninput=()=>{ st.ans[x.dataset.i]=x.value; save(); cnt(); });
-    gl.querySelector('#sub').onclick=()=>{ const d=done(); if(d<total()&&!confirm(`You answered ${d} of ${total()}. Submit anyway?`)) return; submit(false); };
+    const sb=gl.querySelector('#sub'); sb.onclick=()=>{ const d=done(); if(d<total()&&!sb.dataset.sure){ sb.dataset.sure=1; sb.textContent=`${d} of ${total()} answered · press again to submit`; return; } submit(false); };
     cnt(); tick(); }
   const numOk=(q,v)=>{ const x=parseFloat(String(v??'').replace(/[,%\s]/g,'')); return !isNaN(x)&&x>=q.ok[0]&&x<=q.ok[1]; };
-  async function submit(auto){ if(st.done){ result(); return; } st.done=Date.now(); st.auto=!!auto;
+  async function submit(auto){ if(st.done){ result(); return; } st.done=Date.now(); st.auto=auto||false; try{ if(document.fullscreenElement) document.exitFullscreen(); }catch(e){}
     let sc=0, mx=0; all().forEach((q,i)=>{ if(q.ty==='mcq'){ mx+=q.m; if(st.ans[i]===0) sc+=q.m; } else if(q.ty==='num'){ mx+=q.m; if(numOk(q,st.ans[i])) sc+=q.m; } });
     st.score=sc; st.auto_max=mx; save(); result(); }
   async function result(){ const L='ABCD'; let n=0;
     const lines=D.parts.map(p=>`== ${p.t} (${p.m} marks) ==\n`+p.qs.map(q=>{ const i=n++, a=st.ans[i];
       const ans=q.ty==='mcq'?(a===undefined?'—':L[opts(i).indexOf(a)]+' · '+q.o[a]):(String(a??'').trim()||'—');
       return `${i+1}. [${q.m}] ${q.q}\n   Answer: ${ans}${q.ty!=='text'?((q.ty==='mcq'?a===0:numOk(q,a))?'   ✓':'   ✗'):''}`; }).join('\n')).join('\n\n');
-    const body=`GED 106 · Quiz 2 · Section ${SEC}\nName: ${st.name}\nStudent ID: ${st.id}\nStarted: ${new Date(st.start).toLocaleString('en-GB')}\nSubmitted: ${new Date(st.done).toLocaleString('en-GB')}${st.auto?' (time over)':''}\nAuto-marked: ${st.score} / ${st.auto_max}   ·   Written answers: ${all().reduce((a,q)=>a+q.m,0)-st.auto_max} marks, marked by the professor\n\n${lines}`;
+    const body=`GED 106 · Quiz 2 · Section ${SEC}\nName: ${st.name}\nStudent ID: ${st.id}\nStarted: ${new Date(st.start).toLocaleString('en-GB')}\nSubmitted: ${new Date(st.done).toLocaleString('en-GB')}${st.auto==='time'?' (time over)':st.auto==='left'?' (closed: left the quiz page)':''}\nLeft the quiz page: ${(st.log||[]).length?(st.log||[]).map(x=>new Date(x.t).toLocaleTimeString('en-GB')+' '+x.why).join(' · '):'never'}\nAuto-marked: ${st.score} / ${st.auto_max}   ·   Written answers: ${all().reduce((a,q)=>a+q.m,0)-st.auto_max} marks, marked by the professor\n\n${lines}`;
     const c=await code(body); const txt=body+`\n\nCheck code: ${c}\n`;
-    gl.innerHTML=`<div class="res"><p style="margin:0">Submitted · ${E(st.name)} · ${E(st.id)}</p><p class="big">${st.score} / ${st.auto_max}</p><p>Auto-marked questions. Your written answers (${all().reduce((a,q)=>a+q.m,0)-st.auto_max} marks) are marked by your professor.</p><p>Check code <code>${c}</code></p>
+    gl.innerHTML=(st.auto==='left'?`<div class="res" style="border-color:var(--bad);background:rgba(220,38,38,.07)"><b style="color:var(--bad)">Quiz closed: you left the quiz page (${E((st.log||[]).slice(-1)[0]?.why||'')}).</b> Your answers so far were submitted.<div class="lock" style="margin:10px 0 0"><b>Professor only</b><form id="rs" autocomplete="off"><input id="rpw" type="password" aria-label="Professor code" placeholder="Professor code"><button class="btn" type="submit">Reopen</button></form><p class="err" id="rerr"></p></div></div>`:'')+`<div class="res"><p style="margin:0">Submitted · ${E(st.name)} · ${E(st.id)}</p><p class="big">${st.score} / ${st.auto_max}</p><p>Auto-marked questions. Your written answers (${all().reduce((a,q)=>a+q.m,0)-st.auto_max} marks) are marked by your professor.</p><p>Check code <code>${c}</code></p>
       <div class="xlb"><button class="btn" id="dl" type="button">Download my answer sheet</button></div><p class="gl-tip">Upload the file to <b>Quiz 2</b> on Moodle now. Do not edit it: the check code will no longer match.</p></div>`;
+    const rs=gl.querySelector('#rs'); if(rs) rs.onsubmit=async e=>{ e.preventDefault(); const ok=await profOk(gl.querySelector('#rpw').value); if(!ok){ gl.querySelector('#rerr').textContent='Wrong code.'; return; } fs(); st.done=null; st.auto=false; st.resumed=(st.resumed||0)+1; save(); quiz(); };
     gl.querySelector('#dl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'})); a.download=`Quiz2_${SEC}_${st.id.replace(/\W+/g,'')}.txt`; a.click(); };
     tick(); }
   async function show(raw){ const k=await crypto.subtle.importKey('raw',raw,'AES-GCM',false,['decrypt']);
     D=JSON.parse(new TextDecoder().decode(await open(k,S.page))); gl.hidden=false; document.getElementById('lock').hidden=true; err.textContent='';
     try{ sessionStorage.setItem(KEY,tob64(raw)); }catch(e){}
-    if(st.done) result(); else if(st.start) quiz(); else who();
+    if(!st.done&&st.start){ (st.log=st.log||[]).push({t:Date.now(),why:'refreshed or reopened the page'}); save(); await submit('left'); } else if(st.done) result(); else who(); guard();
     clearInterval(timer); timer=setInterval(tick,1000); tick(); }
   async function go(pw){
     if(!window.crypto||!crypto.subtle){ err.textContent='Please open this page in an up-to-date browser (Chrome, Edge or Safari).'; return; }
