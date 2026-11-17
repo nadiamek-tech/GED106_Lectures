@@ -67,6 +67,7 @@ body{font-family:var(--f-display)}
 .qq h3{margin:0 0 10px;font-size:1.05rem;line-height:1.4;display:flex;gap:10px}
 .qq h3 span{flex:none;width:30px;height:30px;border-radius:50%;background:var(--wk);color:var(--on-wk,#fff);display:grid;place-items:center;font-size:.9rem}
 .qq label{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;margin:6px 0;cursor:pointer;background:var(--bg)}
+.qq textarea{width:100%;box-sizing:border-box;min-height:96px;font:1rem/1.5 var(--f-display);padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);resize:vertical}.qq input.num{width:160px;padding:9px 12px;font:700 1.05rem var(--f-mono);border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}.qq .mk{margin-left:auto;font:600 .78rem var(--f-mono);color:var(--muted);white-space:nowrap}.pt-h{font-size:1.35rem;font-weight:800;margin:26px 0 4px}.pt-i{margin:0 0 8px;color:var(--muted)}.dash{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0 4px;background:#fff}.dash svg{display:block;width:100%;height:auto}
 .qq label:has(input:checked){border-color:var(--wk);background:var(--wk-soft)}
 .qq input{margin-top:3px;accent-color:var(--wk)}
 .prog{position:sticky;bottom:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--bg);border-top:1px solid var(--line);padding:10px 0;margin-top:10px}
@@ -81,14 +82,14 @@ body{font-family:var(--f-display)}
 <div id="hub"></div>
 <main class="pt pt-wrap gl-wrap" id="portal">
 <p style="margin:18px 0 0"><a class="pt-flag" href="assessments.html">← Assessments</a></p>
-<h1 class="pg">Quiz 2 · Decisions, Charts and Dashboards</h1>
+<h1 class="pg">Quiz 2 · Read, Decide, Act Ethically</h1>
 <p class="sec-tag">Section 201</p>
 <p class="sub">Covers Weeks 9–11 · Section 201 · Nadia</p>
 <div class="rules">
   <div><small>When</small><b>In class, with your professor’s password</b></div>
-  <div><small>Time</small><b>30 minutes from Start</b></div>
-  <div><small>Grade</small><b>20 questions · 20 marks · 20%</b></div>
-  <div><small>Covers</small><b>Weeks 9–11</b></div>
+  <div><small>Time</small><b>40 minutes from Start</b></div>
+  <div><small>Grade</small><b>20 marks · 20% of the course</b></div>
+  <div><small>Parts</small><b>Read a dashboard · Decide · Ethics</b></div>
   <div class="no"><small>Not allowed</small><b>Closed book · no phone · no AI</b><br><span class="gl-tip">Only this page open</span></div>
   <div><small>Submit</small><b>Answer sheet on Moodle</b></div>
 </div>
@@ -112,7 +113,7 @@ body{font-family:var(--f-display)}
 Portal.header('exams');
 (function(){
   const SEC='201', S=window.SEALED, enc=new TextEncoder(), b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)), tob64=u=>btoa(String.fromCharCode(...new Uint8Array(u)));
-  const KEY='g106-q2-'+SEC+'-key', ST='g106-q2-'+SEC+'-state', DUR=30*60*1000, err=document.getElementById('err'), inp=document.getElementById('pw'), gl=document.getElementById('gl'), clock=document.getElementById('clock');
+  const KEY='g106-q2-'+SEC+'-key', ST='g106-q2-'+SEC+'-state', DUR=40*60*1000, err=document.getElementById('err'), inp=document.getElementById('pw'), gl=document.getElementById('gl'), clock=document.getElementById('clock');
   const E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const open=(k,x)=>crypto.subtle.decrypt({name:'AES-GCM',iv:b64(x.iv)},k,b64(x.ct));
   async function unwrap(pw,x){ const base=await crypto.subtle.importKey('raw',enc.encode(pw.trim().toUpperCase()),'PBKDF2',false,['deriveKey']);
@@ -124,29 +125,41 @@ Portal.header('exams');
   const shuffle=(a,r)=>{ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
   const mm=ms=>{ const s=Math.max(0,Math.round(ms/1000)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
   let timer=null;
-  function tick(){ if(!st.start||st.done){ clock.innerHTML=st.done?'Submitted. Upload your answer sheet on Moodle.':'The 30 minutes start when you press Start.'; return; }
+  function tick(){ if(!st.start||st.done){ clock.innerHTML=st.done?'Submitted. Upload your answer sheet on Moodle.':'The 40 minutes start when you press Start.'; return; }
     const left=st.start+DUR-Date.now(); if(left<=0){ clock.innerHTML='Time is over. Your answers were submitted.'; submit(true); return; }
-    clock.innerHTML=`Time left <span class="t">${mm(left)}</span> <span>${Object.keys(st.ans||{}).length} of 20 answered</span>`; }
+    clock.innerHTML=`Time left <span class="t">${mm(left)}</span> <span>${D?done():0} of ${D?total():14} answered</span>`; }
   async function code(txt){ const h=await crypto.subtle.digest('SHA-256',enc.encode(txt+'|'+D.k)); return Array.from(new Uint8Array(h)).slice(0,4).map(b=>b.toString(16).padStart(2,'0')).join('').toUpperCase(); }
-  function order(){ const r=rng(hash(SEC+'|'+st.id)); return shuffle(D.qs.map((q,i)=>i),r).map(i=>({i,opts:shuffle([0,1,2,3],r)})); }
-  function who(){ gl.innerHTML=`<p class="gl-lead">20 questions, one mark each. Choose one answer per question. You can change answers until you press <b>Submit</b>.</p>
-    <div class="who"><label>Full name<input id="nm" autocomplete="name"></label><label>Student ID<input id="sid" inputmode="numeric"></label><button class="btn" id="go" type="button">Start · 30 min</button></div><p class="err" id="werr"></p>`;
+  const all=()=>D.parts.flatMap(p=>p.qs); const total=()=>all().length; const done=()=>all().filter((q,i)=>String((st.ans||{})[i]??'').trim()!=='').length;
+  function who(){ gl.innerHTML=`<p class="gl-lead">Three parts: read a dashboard, make a decision, data ethics. Answer in your own words; show you <b>understand</b>. You can change answers until you press <b>Submit</b>.</p>
+    <div class="who"><label>Full name<input id="nm" autocomplete="name"></label><label>Student ID<input id="sid" inputmode="numeric"></label><button class="btn" id="go" type="button">Start · ${D.min} min</button></div><p class="err" id="werr"></p>`;
     gl.querySelector('#go').onclick=()=>{ const n=gl.querySelector('#nm').value.trim(), id=gl.querySelector('#sid').value.trim();
       if(n.length<3||id.length<4){ gl.querySelector('#werr').textContent='Write your full name and student ID.'; return; }
       st={name:n,id,start:Date.now(),ans:{}}; save(); quiz(); }; }
-  function quiz(){ const O=order();
-    gl.innerHTML=`<p class="gl-lead"><b>${E(st.name)}</b> · ${E(st.id)} · Section ${SEC}</p>`+O.map((x,n)=>{ const q=D.qs[x.i]; return `<div class="qq" data-q="${x.i}"><h3><span>${n+1}</span>${E(q.q)}</h3>${x.opts.map(o=>`<label><input type="radio" name="q${x.i}" value="${o}" ${st.ans[x.i]===o?'checked':''}> <span>${E(q.o[o])}</span></label>`).join('')}</div>`; }).join('')+
-      `<div class="prog"><b id="cnt"></b><button class="btn" id="sub" type="button">Submit my answers</button></div>`;
-    const cnt=()=>{ gl.querySelector('#cnt').textContent=`${Object.keys(st.ans).length} of 20 answered`; };
-    gl.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{ st.ans[r.name.slice(1)]=+r.value; save(); cnt(); tick(); });
-    gl.querySelector('#sub').onclick=()=>{ const n=Object.keys(st.ans).length; if(n<20&&!confirm(`You answered ${n} of 20. Submit anyway?`)) return; submit(false); };
+  function opts(i){ const r=rng(hash(SEC+'|'+st.id+'|'+i)); return shuffle([0,1,2,3],r); }
+  function quiz(){ let n=0, h=`<p class="gl-lead"><b>${E(st.name)}</b> · ${E(st.id)} · Section ${SEC}</p>`;
+    D.parts.forEach(p=>{ h+=`<h2 class="pt-h">${E(p.t)} <small style="font-size:.8rem;color:var(--muted)">· ${p.m} marks</small></h2><p class="pt-i">${E(p.intro)}</p>`+(p.fig?`<div class="dash">${p.fig}</div>`:'');
+      p.qs.forEach(q=>{ const i=n++, a=st.ans[i]; h+=`<div class="qq" data-i="${i}"><h3><span>${i+1}</span>${E(q.q)}<em class="mk">${q.m} mark${q.m>1?'s':''}</em></h3>`;
+        if(q.ty==='mcq') h+=opts(i).map(o=>`<label><input type="radio" name="q${i}" value="${o}" ${a===o?'checked':''}> <span>${E(q.o[o])}</span></label>`).join('');
+        else if(q.ty==='num') h+=`<input class="num" data-i="${i}" inputmode="decimal" value="${E(a??'')}" placeholder="Number" aria-label="Answer ${i+1}">`;
+        else h+=`<textarea data-i="${i}" placeholder="Write your answer…" aria-label="Answer ${i+1}">${E(a??'')}</textarea>`;
+        h+='</div>'; }); });
+    gl.innerHTML=h+`<div class="prog"><b id="cnt"></b><button class="btn" id="sub" type="button">Submit my answers</button></div>`;
+    const cnt=()=>{ gl.querySelector('#cnt').textContent=`${done()} of ${total()} answered`; };
+    gl.querySelectorAll('input[type=radio]').forEach(r=>r.onchange=()=>{ st.ans[r.name.slice(1)]=+r.value; save(); cnt(); });
+    gl.querySelectorAll('input.num,textarea').forEach(x=>x.oninput=()=>{ st.ans[x.dataset.i]=x.value; save(); cnt(); });
+    gl.querySelector('#sub').onclick=()=>{ const d=done(); if(d<total()&&!confirm(`You answered ${d} of ${total()}. Submit anyway?`)) return; submit(false); };
     cnt(); tick(); }
-  async function submit(auto){ if(st.done){ result(); return; } st.done=Date.now(); st.auto=!!auto; st.score=D.qs.reduce((a,q,i)=>a+(st.ans[i]===0?1:0),0); save(); result(); }
-  async function result(){ const O=order(), letters='ABCD';
-    const lines=O.map((x,n)=>{ const a=st.ans[x.i]; return `${String(n+1).padStart(2)}. Q${x.i+1}: ${a===undefined?'—':letters[x.opts.indexOf(a)]+' · '+D.qs[x.i].o[a]}`; });
-    const body=`GED 106 · Quiz 2 · Section ${SEC}\nName: ${st.name}\nStudent ID: ${st.id}\nStarted: ${new Date(st.start).toLocaleString('en-GB')}\nSubmitted: ${new Date(st.done).toLocaleString('en-GB')}${st.auto?' (time over)':''}\nScore: ${st.score} / 20\n\n${lines.join('\n')}`;
+  const numOk=(q,v)=>{ const x=parseFloat(String(v??'').replace(/[,%\s]/g,'')); return !isNaN(x)&&x>=q.ok[0]&&x<=q.ok[1]; };
+  async function submit(auto){ if(st.done){ result(); return; } st.done=Date.now(); st.auto=!!auto;
+    let sc=0, mx=0; all().forEach((q,i)=>{ if(q.ty==='mcq'){ mx+=q.m; if(st.ans[i]===0) sc+=q.m; } else if(q.ty==='num'){ mx+=q.m; if(numOk(q,st.ans[i])) sc+=q.m; } });
+    st.score=sc; st.auto_max=mx; save(); result(); }
+  async function result(){ const L='ABCD'; let n=0;
+    const lines=D.parts.map(p=>`== ${p.t} (${p.m} marks) ==\n`+p.qs.map(q=>{ const i=n++, a=st.ans[i];
+      const ans=q.ty==='mcq'?(a===undefined?'—':L[opts(i).indexOf(a)]+' · '+q.o[a]):(String(a??'').trim()||'—');
+      return `${i+1}. [${q.m}] ${q.q}\n   Answer: ${ans}${q.ty!=='text'?((q.ty==='mcq'?a===0:numOk(q,a))?'   ✓':'   ✗'):''}`; }).join('\n')).join('\n\n');
+    const body=`GED 106 · Quiz 2 · Section ${SEC}\nName: ${st.name}\nStudent ID: ${st.id}\nStarted: ${new Date(st.start).toLocaleString('en-GB')}\nSubmitted: ${new Date(st.done).toLocaleString('en-GB')}${st.auto?' (time over)':''}\nAuto-marked: ${st.score} / ${st.auto_max}   ·   Written answers: ${20-st.auto_max} marks, marked by the professor\n\n${lines}`;
     const c=await code(body); const txt=body+`\n\nCheck code: ${c}\n`;
-    gl.innerHTML=`<div class="res"><p style="margin:0">Submitted · ${E(st.name)} · ${E(st.id)}</p><p class="big">${st.score} / 20</p><p>Check code <code>${c}</code></p>
+    gl.innerHTML=`<div class="res"><p style="margin:0">Submitted · ${E(st.name)} · ${E(st.id)}</p><p class="big">${st.score} / ${st.auto_max}</p><p>Auto-marked questions. Your written answers (${20-st.auto_max} marks) are marked by your professor.</p><p>Check code <code>${c}</code></p>
       <div class="xlb"><button class="btn" id="dl" type="button">Download my answer sheet</button></div><p class="gl-tip">Upload the file to <b>Quiz 2</b> on Moodle now. Do not edit it: the check code will no longer match.</p></div>`;
     gl.querySelector('#dl').onclick=()=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'})); a.download=`Quiz2_${SEC}_${st.id.replace(/\W+/g,'')}.txt`; a.click(); };
     tick(); }
