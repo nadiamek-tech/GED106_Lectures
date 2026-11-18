@@ -35,6 +35,7 @@
 .rep-top b{display:block;font-size:1.1rem}
 .rep-top span{color:var(--muted);font-size:.9rem}
 .rep-top a{background:var(--wk);color:var(--on-wk,#fff);text-decoration:none;font-weight:800;padding:10px 18px;border-radius:10px;white-space:nowrap}
+.cg{overflow-x:auto;margin:6px 0 12px}.cg table{width:100%;border-collapse:collapse;font-size:.88rem}.cg th{background:var(--wk-soft);text-align:left;padding:6px 8px;font-weight:800}.cg td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 /* teams table */
 .tt{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
 .tt-t{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.93rem}
@@ -81,7 +82,7 @@
 <script src="assets/search-index.js?v=20261111"></script>
 <script src="assets/assistant.js?v=20261111"></script>
 <script src="assets/onepage.js?v=20261111b"></script>
-<script src="assets/projects.js?v=20261118"></script>
+<script src="assets/projects.js?v=20261118b"></script>
 <script>
 const {W}=Lecture;
 let pick=null; try{ pick=localStorage.getItem('g106-proj'); }catch(e){}
@@ -93,11 +94,11 @@ function chooser(el){
   const grid=el.querySelector('.pgrid'), det=el.querySelector('.pdet');
   const show=id=>{ const p=getP(id); if(!p){ det.hidden=true; return; }
     det.hidden=false; det.innerHTML=`<small style="font:700 .7rem var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)">Section ${p.sec} · ${p.th}</small><h3>${p.t}</h3>
-    <div class="row"><b>Open data</b><span>${p.src}</span><b>One row is</b><span>${p.row}</span><b>Key columns</b><span><code>${p.cols}</code></span></div>
-    <b style="color:var(--wk)">Questions to guide your study</b><ol>${p.qs.map((q,i)=>`<li>${q} <span class="hint">→ ${p.viz[i]}</span></li>`).join('')}</ol>
+    <div class="row"><b>Data</b><span>${p.src}${p.n?` · <b>${p.n.toLocaleString('en-US')} rows</b>`:''}${p.sheets&&p.sheets.length>1?` · ${p.sheets.length} sheets: ${p.sheets.join(', ')}`:''}</span><b>One row is</b><span>${p.row}</span><b>Key columns</b><span><code>${p.cols}</code></span></div>
+    ${p.g?`<b style="color:var(--wk)">Columns to use</b><div class="cg"><table><tr><th>Column</th><th>Type</th><th>What it is</th><th>Use it for</th></tr>${p.g.map(r=>`<tr><td><code>${r[0]}</code></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table></div>`:''}${p.note?`<p class="hint">${p.note}</p>`:''}<b style="color:var(--wk)">Questions to guide your study</b><ol>${p.qs.map((q,i)=>`<li>${q} <span class="hint">→ ${p.viz[i]}</span></li>`).join('')}</ol>
     <p class="note"><b>Power BI tip:</b> ${p.tip}</p>
     <div class="btns"><a class="x" href="${p.url}" ${p.url.startsWith('assets/')?'download':'target="_blank" rel="noopener"'}>${p.url.startsWith('assets/')?'⬇ Download the data (Excel)':'Open the data ↗'}</a>${p.alt?`<a href="${p.alt[1]}" target="_blank" rel="noopener">${p.alt[0]} ↗</a>`:''}<a href="https://www.google.com/search?q=${encodeURIComponent(p.src.split(' · ').slice(1).join(' ')+' dataset download')}" target="_blank" rel="noopener">Backup: search it ↗</a><button type="button" class="p pick">${pick===p.id?'✓ Our project':'Choose this project'}</button></div>
-    <p class="hint">${p.url.includes('kaggle')?'Kaggle: sign in free with Google or your CUD email, then click <b>Download</b>. If Kaggle is blocked on campus Wi-Fi, use your phone’s data or the backup link.':p.url.includes('mavenanalytics')?'Maven Analytics: click <b>Download</b> (free, no sign-in needed).':p.url.startsWith('assets/')?'One click: the Excel file downloads straight from the course site, no sign-in.':p.url.includes('huggingface')?'Hugging Face: open <b>Files and versions</b> → download the CSV.':'Free, no sign-in needed: look for <b>Download</b> or <b>CSV</b>.'} Write a fourth question of your own.</p>`;
+    <p class="hint">${p.url.includes('kaggle')?'Kaggle: sign in free with Google or your CUD email, then click <b>Download</b>. If Kaggle is blocked on campus Wi-Fi, use your phone’s data or the backup link.':p.url.includes('mavenanalytics')?'Maven Analytics: click <b>Download</b> (free, no sign-in needed).':p.url.startsWith('assets/')?'Ready Excel file: one click, no sign-in. It also has a <b>Columns to use</b> sheet. The original source is the second button.':p.url.includes('huggingface')?'Hugging Face: open <b>Files and versions</b> → download the CSV.':'Free, no sign-in needed: look for <b>Download</b> or <b>CSV</b>.'} Write a fourth question of your own.</p>`;
     det.querySelector('.pick').onclick=()=>{ pick=p.id; try{ localStorage.setItem('g106-proj',p.id); }catch(e){} paint(); show(p.id); document.dispatchEvent(new CustomEvent('g106proj')); }; };
   const paint=()=>{ el.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===sec));
     grid.innerHTML=P.filter(p=>p.sec===sec).map((p,i)=>`<button type="button" class="pcard" data-id="${p.id}" aria-pressed="${pick===p.id}"><small>${i+1} · ${p.th}</small><b>${p.t}</b><span>${p.src.split(' · ')[0]}</span>${tname(p.id)?`<span class="tm">${esc(tname(p.id))}</span>`:''}</button>`).join('');
