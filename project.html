@@ -49,7 +49,7 @@ table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width
 .hint2{font-size:.9rem;color:var(--muted)}
 @media (max-width:760px){.tl,.deliv{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.split{grid-template-columns:minmax(0,1fr)}}
-@media print{#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
+@media print{@page{size:A4 landscape;margin:10mm}html,body{font-size:10.5pt}#portal{max-width:none!important;padding:0!important}.pt h1.pg{font-size:20pt;margin:0 0 2pt}.lead2{margin:2pt 0 6pt}h2{font-size:13pt;margin:10pt 0 4pt}h3{font-size:11pt;margin:6pt 0 3pt}.tl{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5pt}.deliv{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6pt}.tl div,.deliv div{padding:5pt 7pt;break-inside:avoid}.chips{margin:4pt 0}.rb tr{break-inside:avoid}#rubric,h2.pb{break-before:page}.pres{break-before:auto}table.req{min-width:0!important}.tw:has(table.req){break-inside:avoid}.note{break-inside:avoid}#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
 </style>
 </head>
 <body>
@@ -77,7 +77,7 @@ table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width
  <div><b>3 · Presentation</b><span>5–7 minutes, live dashboard, every member speaks</span><em>8 marks</em></div>
 </div>
 
-<h2>The report, section by section</h2>
+<h2 class="pb">The report, section by section</h2>
 <div class="tw"><table class="rb req"><tr><th>Section</th><th>What to complete</th><th>Marks</th><th>Revise</th></tr>
 <tr><td>1 · Questions</td><td>Why the topic, who uses the dashboard, one main measurable question + 3 supporting questions</td><td class="m" rowspan="2">2</td><td><a href="week-09.html">Week 9 · Ask</a> · <a href="lab-09.html">Scoping lab</a></td></tr>
 <tr><td>2 · The data</td><td>Source, publisher, year, link · one row is · rows and columns · key variables with type and unit</td><td><a href="week-03.html">Week 3 · Data collection</a> · <a href="lab-11.html">Columns to use</a></td></tr>
