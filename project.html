@@ -45,11 +45,13 @@ h3{font-size:1.1rem;margin:16px 0 8px}
 .deliv div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:4px}
 .deliv b{font-size:1.05rem}.deliv span{font-size:.92rem}.deliv em{font-style:normal;font:800 .85rem var(--f-mono);color:var(--wk)}
 .pres3 div{border-left:5px solid #B4562F}
+.tpl{grid-template-columns:repeat(2,minmax(0,1fr))}.tpl a.go{justify-self:start;margin-top:6px;background:var(--wk);color:var(--on-wk,#fff);text-decoration:none;font-weight:800;padding:9px 14px;border-radius:10px}.tpl a.go.alt{background:#185ABD;color:#fff}
+.pdates{grid-template-columns:repeat(2,minmax(0,1fr))}.pdates div{border-top:5px solid #B4562F}.tlist{margin:6px 0 0;padding-left:1.2em;font-size:.92rem}.tlist li.e{list-style:none;margin-left:-1.2em;color:var(--muted);font-style:italic}
 table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width:26%;font-size:.88rem}
 .hint2{font-size:.9rem;color:var(--muted)}
-@media (max-width:760px){.tl,.deliv{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.tl,.deliv,.tpl,.pdates{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.split{grid-template-columns:minmax(0,1fr)}}
-@media print{@page{size:A4 landscape;margin:10mm}html,body{font-size:10.5pt}#portal{max-width:none!important;padding:0!important}.pt h1.pg{font-size:20pt;margin:0 0 2pt}.lead2{margin:2pt 0 6pt}h2{font-size:13pt;margin:10pt 0 4pt}h3{font-size:11pt;margin:6pt 0 3pt}.tl{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5pt}.deliv{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6pt}.tl div,.deliv div{padding:5pt 7pt;break-inside:avoid}.chips{margin:4pt 0}.rb tr{break-inside:avoid}#rubric,h2.pb{break-before:page}.pres{break-before:auto}table.req{min-width:0!important}.tw:has(table.req){break-inside:avoid}.note{break-inside:avoid}#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
+@media print{@page{size:A4 landscape;margin:10mm}html,body{font-size:10.5pt}#portal{max-width:none!important;padding:0!important}.pt h1.pg{font-size:20pt;margin:0 0 2pt}.lead2{margin:2pt 0 6pt}h2{font-size:13pt;margin:10pt 0 4pt}h3{font-size:11pt;margin:6pt 0 3pt}.tl{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5pt}.deliv{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6pt}.tpl,.pdates{grid-template-columns:repeat(2,minmax(0,1fr))!important}.tl div,.deliv div{padding:5pt 7pt;break-inside:avoid}.chips{margin:4pt 0}.rb tr{break-inside:avoid}#rubric,h2.pb{break-before:page}.pres{break-before:auto}table.req{min-width:0!important}.tw:has(table.req){break-inside:avoid}.note{break-inside:avoid}#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
 </style>
 </head>
 <body>
@@ -65,16 +67,29 @@ table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width
 <div class="tl">
  <div><b>Week 11</b><span>Choose a project, sketch, first build, 10 peer reviews</span><em>Lab</em></div>
  <div><b>Week 12</b><span>Feedback and refinement</span><em>Graded Lab 2 · 10%</em></div>
- <div><b>Week 13</b><span>Draft report on Moodle · practise presenting</span><em>Draft</em></div>
- <div><b>Week 14</b><span>Final dashboard and report · rehearse</span><em>Build</em></div>
- <div class="fin"><b>Week 15</b><span>Presentation in class · final files on Moodle</span><em>20%</em></div>
+ <div><b>Week 13</b><span>Draft report on Moodle · choose your presentation date</span><em>Draft</em></div>
+ <div class="fin"><b>Tue 1 Dec</b><span>Presentations · day 1 (Week 14)</span><em>Option A</em></div>
+ <div class="fin"><b>Tue 8 Dec</b><span>Presentations · day 2 (Week 15) · all final files on Moodle</span><em>Option B</em></div>
 </div>
+
+<h2>Report template</h2>
+<div class="deliv tpl">
+ <div><b>Online report (recommended)</b><span>Fills itself from your lab project and sketch. Choose your presentation date on the cover. Save as Word for Moodle.</span><a class="go" href="project-report.html">Open the report template →</a></div>
+ <div><b>Word template</b><span>The same 9 sections as an empty Word file, if your team prefers to write in Word.</span><a class="go alt" href="assets/projects/GED106_Project_Report_Template.docx" download>⬇ Download Word template</a></div>
+</div>
+
+<h2>Presentations · choose one date</h2>
+<div class="deliv pdates">
+ <div><b>Option A · Tuesday 1 December 2026</b><span>Week 14 · in class</span><ul id="pdA" class="tlist"></ul></div>
+ <div><b>Option B · Tuesday 8 December 2026</b><span>Week 15 · in class</span><ul id="pdB" class="tlist"></ul></div>
+</div>
+<p class="hint2">Each team ticks one date on the <b>cover of the report template</b> and lists every member’s name and student ID. Final files for all teams are due on Moodle by 8 December.</p>
 
 <h2>What you submit</h2>
 <div class="deliv">
  <div><b>1 · Report</b><span>Word or PDF from the <a href="project-report.html">report builder</a>, 9 sections</span><em>12 marks</em></div>
  <div><b>2 · Dashboard</b><span>.pbix file + PDF export (File → Export → PDF)</span><em>part of the report marks</em></div>
- <div><b>3 · Presentation</b><span>5–7 minutes, live dashboard, every member speaks</span><em>8 marks</em></div>
+ <div><b>3 · Presentation</b><span>5–7 minutes, live dashboard, every member speaks · 1 or 8 December</span><em>8 marks</em></div>
 </div>
 
 <h2 class="pb">The report, section by section</h2>
@@ -129,6 +144,9 @@ const PRE=[
 const fill=(id,rows,tot)=>{ document.getElementById(id).innerHTML=`<tr><th>Criterion</th><th>Marks</th><th class="l">Excellent · full</th><th class="l">Good · ¾</th><th class="l">Developing · ½</th><th class="l">Missing · 0</th></tr>`+
   rows.map(r=>`<tr><td>${r[0]}<small>${r[1]}</small></td><td class="m">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td></tr>`).join('')+`<tr class="tot"><td>Total</td><td class="m">${tot}</td><td colspan="4"></td></tr>`; };
 fill('rep',REP,12); fill('pre',PRE,8);
+/* Presentation schedule, published by the professor once teams confirm: team names only */
+const PRES={A:[],B:[]};
+['A','B'].forEach(k=>{ const ul=document.getElementById('pd'+k); ul.innerHTML=PRES[k].length?PRES[k].map(t=>`<li>${t}</li>`).join(''):'<li class="e">Teams appear here once confirmed.</li>'; });
 </script>
 </body>
 </html>

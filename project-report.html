@@ -57,6 +57,7 @@ input.fld{min-height:0;font-family:var(--f-display);font-weight:600}
 .meta{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px 14px;align-items:center;max-width:680px}
 .meta dt{font:600 .74rem var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--pm)}
 .meta dd{margin:0;font-weight:600}
+.pdr{display:flex;flex-wrap:wrap;gap:8px}.pdr label{display:flex;gap:6px;align-items:center;border:1.5px dashed #B9D6DE;border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700}.pdr label:has(input:checked){border-style:solid;border-color:var(--pa);background:#E3F1F5}.pdr input{accent-color:var(--pa)}
 .tw{overflow-x:auto}
 table.g{width:100%;border-collapse:collapse;font-size:.92rem}
 table.g th{background:#E3F1F5;color:var(--pa2);text-align:left;font:700 .78rem var(--f-display);padding:6px;border:1px solid var(--pl)}
@@ -120,7 +121,7 @@ table.g td .view{font-size:.92rem;padding:4px}
   </section>
 </main>
 <div id="print-root"></div>
-<footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Eng. Nadia Mek</b></footer>
+<footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Nadia</b></footer>
 <script src="assets/supports.js?v=20261111"></script>
 <script src="assets/course.js?v=20261111"></script>
 <script src="assets/kb.js?v=20261111"></script>
@@ -141,7 +142,7 @@ const WHY={'Card':'One key number, shown big with its unit.','Bar (sorted)':'Com
 const RATE=['The title tells the main message','Key numbers found in 5 seconds','Each chart fits its question','Layout is easy to follow','Labels, units and colours are clear','The recommendation is convincing'];
 
 /* ---------- worked example (fictional) ---------- */
-const EX={title:'Lunch is the rush hour: one month at a campus café',team:'Team Latte',members:'Student A · 2024XXXX\nStudent B · 2024XXXX\nStudent C · 2024XXXX',section:'201',
+const EX={title:'Lunch is the rush hour: one month at a campus café',team:'Team Latte',pdate:'Tuesday 1 December 2026',members:'Student A · 2024XXXX\nStudent B · 2024XXXX\nStudent C · 2024XXXX',section:'201',
  intro:'Students queue for coffee between classes, and the café often runs out of popular drinks. We analysed one month of sales to help the owner plan staff and stock.',aud:'The café owner and the shift manager.',
  mq:'When is the café busiest, and which products bring most of the revenue?',sq0:'How much revenue did the café make in October, and is it growing week by week?',sq1:'Which items bring the most revenue?',sq2:'At which hours are most orders placed?',
  dsName:'Bean There café sales, October 2026 (fictional teaching data)',dsPub:'GED 106 course',dsYear:'2026',dsLink:'week-11.html',dsLic:'Teaching use',row:'one item sold in one order',nrows:'2,400',ncols:'8',
@@ -183,6 +184,8 @@ const REQ=['dash','forms'];
 let mode='edit';
 const src=()=>mode==='ex'?EX:D;
 const V=k=>String(src()[k]||'').trim();
+const PDATES=['Tuesday 1 December 2026','Tuesday 8 December 2026'];
+function PD(){ if(mode==='ex') return `<div class="view">${E(EX.pdate)}</div>`; return `<div class="pdr">${PDATES.map(d=>`<label><input type="radio" name="pdate" data-k="pdate" value="${d}" ${D.pdate===d?'checked':''}> ${d}</label>`).join('')}</div>`; }
 function F(k,ph,rows=2,tag='textarea'){ if(mode==='ex') return `<div class="view${V(k)?'':' empty'}">${E(V(k))||'—'}</div>`;
   return tag==='input'?`<input class="fld" data-k="${k}" value="${E(D[k]||'')}" placeholder="${E(ph)}" aria-label="${E(ph)}">`:`<textarea class="fld" data-k="${k}" rows="${rows}" placeholder="${E(ph)}" aria-label="${E(ph)}">${E(D[k]||'')}</textarea>`; }
 const H=(n,t,tag)=>`<div class="pg-h"><span class="n">${n}</span><h2>${t}</h2>${tag?`<span class="t">${tag}</span>`:''}</div>`;
@@ -192,7 +195,7 @@ function draw(){
   const doc=document.getElementById('doc');
   doc.innerHTML=`<div class="rp">
   <section class="pg cover" id="p0"><div><span class="k">GED 106 · Smart Decisions: Data Literacy &amp; Visualization · Project report</span><h1>${mode==='ex'?E(EX.title):F('title','Report title: your main message',1,'input')}</h1></div>
-   <dl class="meta"><dt>Team</dt><dd>${F('team','Team name',1,'input')}</dd><dt>Members</dt><dd>${F('members','Name · Student ID (one per line)',3)}</dd><dt>Section</dt><dd>${F('section','201 or 202',1,'input')}</dd><dt>Instructor</dt><dd>Eng. Nadia Mek</dd><dt>Tool</dt><dd>Microsoft Power BI Desktop</dd></dl></section>
+   <dl class="meta"><dt>Team</dt><dd>${F('team','Team name',1,'input')}</dd><dt>Members</dt><dd>${F('members','Name · Student ID (one per line)',3)}</dd><dt>Section</dt><dd>${F('section','201 or 202',1,'input')}</dd><dt>Presentation</dt><dd>${PD()}</dd><dt>Instructor</dt><dd>Nadia</dd><dt>Tool</dt><dd>Microsoft Power BI Desktop</dd></dl></section>
 
   <section class="pg" id="p1">${H('1','Introduction and research questions','≈ 150 words')}
    ${Q('intro','Why this topic? What problem or decision does it help?','',3)}${Q('aud','Who will use the dashboard?','',1)}
@@ -251,7 +254,7 @@ function drawFigs(){
     box.innerHTML=IMGS.filter(m=>m.slot===s).map(m=>`<figure class="fig"><img src="${m.src}" alt="${E(SLOTS[s])}"><div class="cap">Figure ·<input data-cap="${m.id}" value="${E(m.cap||'')}" placeholder="${E(SLOTS[s])}" aria-label="Caption"></div><button type="button" class="x" data-del="${m.id}" aria-label="Remove">✕</button></figure>`).join(''); });
   document.querySelectorAll('[data-req]').forEach(r=>{ const ok=IMGS.some(m=>m.slot===r.dataset.req); r.textContent=ok?'added ✓':'required'; r.className='req'+(ok?' ok':''); }); }
 function counts(){ if(mode!=='edit'){ document.getElementById('prog').textContent=''; return; }
-  const parts=[V('title')&&V('team')&&V('members'),V('mq')&&V('intro'),V('dsName')&&V('row')&&V('v0t'),V('p0s')&&V('after'),V('tables'),V('z0')&&IMGS.some(m=>m.slot==='dash'),V('i0f')&&V('i1f')&&V('i2f'),V('action'),V('nrev')&&IMGS.some(m=>m.slot==='forms'),V('lim')];
+  const parts=[V('title')&&V('team')&&V('members')&&V('pdate'),V('mq')&&V('intro'),V('dsName')&&V('row')&&V('v0t'),V('p0s')&&V('after'),V('tables'),V('z0')&&IMGS.some(m=>m.slot==='dash'),V('i0f')&&V('i1f')&&V('i2f'),V('action'),V('nrev')&&IMGS.some(m=>m.slot==='forms'),V('lim')];
   document.getElementById('prog').textContent=`${parts.filter(Boolean).length} of 10 parts complete`; }
 function fillNote(){ const n=document.getElementById('fillnote'); let pid=null; try{ pid=localStorage.getItem('g106-proj'); }catch(e){} const p=pid&&getP(pid);
   n.innerHTML=p?`<span>Your lab project: <b>${E(p.t)}</b> (Section ${p.sec}).</span><button type="button" class="bbtn" id="refill">Fill again from my lab choices</button>`:`<span>No project chosen yet. <a href="lab-11.html">Choose one in the Project lab</a>, then come back: the report fills itself.</span>`;
@@ -282,7 +285,7 @@ async function makeDocx(blank){
   k.push(new Paragraph({children:[new TextRun({text:'GED 106 · SMART DECISIONS: DATA LITERACY & VISUALIZATION',size:20,color:TEAL,bold:true})],spacing:{before:1800,after:200},border:{top:{style:BorderStyle.SINGLE,size:48,color:TEAL,space:12}}}));
   k.push(new Paragraph({children:[new TextRun({text:'Project report',size:28,color:'5D6B78'})],spacing:{after:120}}));
   k.push(new Paragraph({children:[new TextRun({text:v('title')||(blank?'Report title: your main message':'Project report'),bold:true,size:52,color:DARK})],spacing:{after:600}}));
-  k.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[['Team',v('team')],['Members',v('members')],['Section',v('section')],['Instructor','Eng. Nadia Mek'],['Tool','Microsoft Power BI Desktop'],['Date',blank?'':new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})]].map(([a,b])=>new TableRow({children:[cell(a,{b:1,sh:SOFT,c:DARK}),cell(b)]}))}));
+  k.push(new Table({width:{size:100,type:WidthType.PERCENTAGE},rows:[['Team',v('team')],['Members',v('members')],['Section',v('section')],['Presentation date',v('pdate')||(blank?'☐ Tuesday 1 December 2026     ☐ Tuesday 8 December 2026':'')],['Instructor','Nadia'],['Tool','Microsoft Power BI Desktop'],['Date',blank?'':new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})]].map(([a,b])=>new TableRow({children:[cell(a,{b:1,sh:SOFT,c:DARK}),cell(b)]}))}));
   k.push(new Paragraph({children:[new PageBreak()]}));
   for(const b of blocks(blank)){
     if(b.h) k.push(new Paragraph({heading:HeadingLevel.HEADING_1,children:[new TextRun({text:b.h,color:TEAL,bold:true,size:32})],spacing:{before:360,after:120},border:{bottom:{style:BorderStyle.SINGLE,size:8,color:TEAL,space:4}}}));
@@ -302,7 +305,7 @@ function dl(blob,name){ const a=document.createElement('a'); a.href=URL.createOb
 function printPDF(){ const r=document.getElementById('print-root');
   const b=blocks(false).map(x=>x.h?`<h2>${E(x.h)}</h2>`:x.h3?`<h4>${E(x.h3)}</h4>`:x.p!=null?`<p>${E(x.p).replace(/\n/g,'<br>')}</p>`:x.list?`<ol>${x.list.map(i=>`<li>${E(i)}</li>`).join('')}</ol>`:x.ref?`<p class="rf">${E(x.ref)}</p>`:x.fig?`<figure><img src="${x.fig.src}" alt=""><figcaption>Figure · ${E(x.fig.cap||SLOTS[x.fig.slot])}</figcaption></figure>`:x.table?`<table>${x.table.map((row,i)=>`<tr>${row.map((c,j)=>`<${(x.head&&i===0)||(x.key&&j===0)?'th':'td'}>${E(c).replace(/\n/g,'<br>')}</${(x.head&&i===0)||(x.key&&j===0)?'th':'td'}>`).join('')}</tr>`).join('')}</table>`:'').join('');
   r.innerHTML=`<style>#print-root{font:10.5pt/1.5 Calibri,Arial,sans-serif;color:#14202B}#print-root h1{font:800 26pt Arial;color:#0B3B4A;margin:0 0 30pt}#print-root h2{font:700 15pt Arial;color:#0E7490;border-bottom:1.5pt solid #0E7490;padding-bottom:3pt;margin:18pt 0 6pt}#print-root h4{font:700 11pt Arial;color:#0B3B4A;margin:8pt 0 2pt}#print-root table{border-collapse:collapse;width:100%;margin:4pt 0 8pt}#print-root td,#print-root th{border:1px solid #B9D6DE;padding:4pt;vertical-align:top;text-align:left}#print-root tr:first-child th{background:#0E7490;color:#fff}#print-root th{background:#E3F1F5;color:#0B3B4A}#print-root img{max-width:100%;max-height:120mm;display:block;margin:0 auto}#print-root figcaption{text-align:center;font-style:italic;color:#5D6B78;font-size:9pt}#print-root .rf{padding-left:2em;text-indent:-2em}#print-root .cv{min-height:250mm;display:flex;flex-direction:column;justify-content:center;break-after:page;border-top:10pt solid #0E7490;padding-top:20pt}#print-root .cv .k{color:#0E7490;font-weight:700;letter-spacing:.08em;font-size:9pt}</style>
-  <div class="cv"><p class="k">GED 106 · SMART DECISIONS: DATA LITERACY &amp; VISUALIZATION</p><p style="color:#5D6B78;font-size:13pt;margin:0">Project report</p><h1>${E(V('title')||'Project report')}</h1><table>${[['Team',V('team')],['Members',V('members')],['Section',V('section')],['Instructor','Eng. Nadia Mek'],['Tool','Microsoft Power BI Desktop']].map(([a,c])=>`<tr><th>${a}</th><td>${E(c).replace(/\n/g,'<br>')}</td></tr>`).join('')}</table></div>${b}`;
+  <div class="cv"><p class="k">GED 106 · SMART DECISIONS: DATA LITERACY &amp; VISUALIZATION</p><p style="color:#5D6B78;font-size:13pt;margin:0">Project report</p><h1>${E(V('title')||'Project report')}</h1><table>${[['Team',V('team')],['Members',V('members')],['Section',V('section')],['Presentation date',V('pdate')],['Instructor','Nadia'],['Tool','Microsoft Power BI Desktop']].map(([a,c])=>`<tr><th>${a}</th><td>${E(c).replace(/\n/g,'<br>')}</td></tr>`).join('')}</table></div>${b}`;
   setTimeout(()=>window.print(),150); }
 
 /* ---------- wiring ---------- */
