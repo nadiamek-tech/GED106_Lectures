@@ -49,9 +49,17 @@ h3{font-size:1.1rem;margin:16px 0 8px}
 .pdates{grid-template-columns:repeat(2,minmax(0,1fr))}.pdates div{border-top:5px solid #B4562F}.tlist{margin:6px 0 0;padding-left:1.2em;font-size:.92rem}.tlist li.e{list-style:none;margin-left:-1.2em;color:var(--muted);font-style:italic}
 table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width:26%;font-size:.88rem}
 .hint2{font-size:.9rem;color:var(--muted)}
+.namer{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end;border:2px solid var(--wk);background:var(--wk-soft);border-radius:14px;padding:12px 16px;margin:0 0 10px}
+.namer b{width:100%}.namer label{display:grid;gap:4px;font-size:.86rem;font-weight:700}
+.namer select,.namer input{font:700 1rem var(--f-display);padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);min-width:0}
+table.subm{min-width:760px}.subm td{vertical-align:middle}.subm small{color:var(--muted)}
+.subm code.fn{font:700 .86rem var(--f-mono);background:var(--bg);border:1px dashed var(--wk);border-radius:6px;padding:3px 7px;word-break:break-all;cursor:copy}
+.fmt{display:inline-block;font:800 .78rem var(--f-display);border-radius:999px;padding:3px 10px;background:var(--wk-soft)}.fmt.w{background:#185ABD;color:#fff}.fmt.pb{background:#F2C811;color:#1a1a1a}.fmt.pdf{background:#B4262E;color:#fff}
+.rules2{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 0}.rules2 div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;display:grid;gap:3px}.rules2 b{color:var(--wk)}.rules2 span{font-size:.88rem}
+@media (max-width:760px){.rules2{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:760px){.tl,.deliv,.tpl,.pdates{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:640px){.split{grid-template-columns:minmax(0,1fr)}}
-@media print{@page{size:A4 landscape;margin:10mm}html,body{font-size:10.5pt}#portal{max-width:none!important;padding:0!important}.pt h1.pg{font-size:20pt;margin:0 0 2pt}.lead2{margin:2pt 0 6pt}h2{font-size:13pt;margin:10pt 0 4pt}h3{font-size:11pt;margin:6pt 0 3pt}.tl{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5pt}.deliv{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6pt}.tpl,.pdates{grid-template-columns:repeat(2,minmax(0,1fr))!important}.tl div,.deliv div{padding:5pt 7pt;break-inside:avoid}.chips{margin:4pt 0}.rb tr{break-inside:avoid}#rubric,h2.pb{break-before:page}.pres{break-before:auto}table.req{min-width:0!important}.tw:has(table.req){break-inside:avoid}.note{break-inside:avoid}#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
+@media print{@page{size:A4 landscape;margin:10mm}html,body{font-size:10.5pt}#portal{max-width:none!important;padding:0!important}.pt h1.pg{font-size:20pt;margin:0 0 2pt}.lead2{margin:2pt 0 6pt}h2{font-size:13pt;margin:10pt 0 4pt}h3{font-size:11pt;margin:6pt 0 3pt}.tl{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5pt}.deliv{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6pt}.tpl,.pdates{grid-template-columns:repeat(2,minmax(0,1fr))!important}.rules2{grid-template-columns:repeat(4,minmax(0,1fr))!important}.namer{display:none!important}table.subm{min-width:0!important}.tl div,.deliv div{padding:5pt 7pt;break-inside:avoid}.chips{margin:4pt 0}.rb tr{break-inside:avoid}#rubric,h2.pb{break-before:page}.pres{break-before:auto}table.req{min-width:0!important}.tw:has(table.req){break-inside:avoid}.note{break-inside:avoid}#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
 </style>
 </head>
 <body>
@@ -72,6 +80,24 @@ table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width
  <div class="fin"><b>Tue 8 Dec</b><span>Presentations · day 2 (Week 15) · all final files on Moodle</span><em>Option B</em></div>
 </div>
 
+<h2>What to submit · exactly</h2>
+<div class="namer"><b>Write your team’s details, and your file names appear below:</b>
+ <label>Section<select id="nmSec"><option>201</option><option>202</option></select></label>
+ <label>Team name (one word)<input id="nmTeam" placeholder="e.g. Latte" maxlength="20"></label></div>
+<div class="tw"><table class="rb subm"><tr><th>#</th><th>What</th><th>Format</th><th>File name (copy it)</th><th>Where and when</th></tr>
+<tr><td class="m">1</td><td><b>Draft report</b><br><small>Sections 1–5 at least</small></td><td><span class="fmt w">Word .docx</span></td><td><code class="fn" data-f="Report_DRAFT.docx"></code></td><td>Moodle · <b>Project draft</b><br>Week 13</td></tr>
+<tr><td class="m">2</td><td><b>Final report</b><br><small>All 9 sections, from the report template</small></td><td><span class="fmt w">Word .docx</span></td><td><code class="fn" data-f="Report.docx"></code></td><td rowspan="3">Moodle · <b>Final project</b><br>Before your presentation<br><b>Last day: Tue 8 Dec</b></td></tr>
+<tr><td class="m">3</td><td><b>Dashboard file</b><br><small>Power BI: File → Save as</small></td><td><span class="fmt pb">Power BI .pbix</span></td><td><code class="fn" data-f="Dashboard.pbix"></code></td></tr>
+<tr><td class="m">4</td><td><b>Dashboard PDF</b><br><small>Power BI: File → Export → Export to PDF</small></td><td><span class="fmt pdf">PDF</span></td><td><code class="fn" data-f="Dashboard.pdf"></code></td></tr>
+<tr><td class="m">5</td><td><b>Presentation</b><br><small>5–7 minutes, live dashboard</small></td><td><span class="fmt">In class</span></td><td>Slides optional: <code class="fn" data-f="Slides.pptx"></code></td><td>Tue 1 Dec <b>or</b> Tue 8 Dec<br>(ticked on your report cover)</td></tr>
+</table></div>
+<div class="rules2">
+ <div><b>One member uploads</b><span>for the whole team. Everyone checks it is there.</span></div>
+ <div><b>Report title</b><span>Your main message, e.g. “Lunch is our rush hour”, not “GED 106 project”.</span></div>
+ <div><b>Cover page</b><span>Team name, every member’s name and student ID, section, presentation date.</span></div>
+ <div><b>Inside the report</b><span>Keep the 9 section headings of the template. Add the screenshots: Applied Steps, dashboard, Forms summary.</span></div>
+</div>
+
 <h2>Report template</h2>
 <div class="deliv tpl">
  <div><b>Online report (recommended)</b><span>Fills itself from your lab project and sketch. Choose your presentation date on the cover. Save as Word for Moodle.</span><a class="go" href="project-report.html">Open the report template →</a></div>
@@ -84,13 +110,6 @@ table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width
  <div><b>Option B · Tuesday 8 December 2026</b><span>Week 15 · in class</span><ul id="pdB" class="tlist"></ul></div>
 </div>
 <p class="hint2">Each team ticks one date on the <b>cover of the report template</b> and lists every member’s name and student ID. Final files for all teams are due on Moodle by 8 December.</p>
-
-<h2>What you submit</h2>
-<div class="deliv">
- <div><b>1 · Report</b><span>Word or PDF from the <a href="project-report.html">report builder</a>, 9 sections</span><em>12 marks</em></div>
- <div><b>2 · Dashboard</b><span>.pbix file + PDF export (File → Export → PDF)</span><em>part of the report marks</em></div>
- <div><b>3 · Presentation</b><span>5–7 minutes, live dashboard, every member speaks · 1 or 8 December</span><em>8 marks</em></div>
-</div>
 
 <h2 class="pb">The report, section by section</h2>
 <div class="tw"><table class="rb req"><tr><th>Section</th><th>What to complete</th><th>Marks</th><th>Revise</th></tr>
@@ -144,6 +163,11 @@ const PRE=[
 const fill=(id,rows,tot)=>{ document.getElementById(id).innerHTML=`<tr><th>Criterion</th><th>Marks</th><th class="l">Excellent · full</th><th class="l">Good · ¾</th><th class="l">Developing · ½</th><th class="l">Missing · 0</th></tr>`+
   rows.map(r=>`<tr><td>${r[0]}<small>${r[1]}</small></td><td class="m">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td></tr>`).join('')+`<tr class="tot"><td>Total</td><td class="m">${tot}</td><td colspan="4"></td></tr>`; };
 fill('rep',REP,12); fill('pre',PRE,8);
+/* file-name builder */
+(function(){ const sec=document.getElementById('nmSec'), tm=document.getElementById('nmTeam'), K='g106-namer';
+  let v={}; try{ v=JSON.parse(localStorage.getItem(K)||'{}'); }catch(e){} if(v.s) sec.value=v.s; if(v.t) tm.value=v.t;
+  const paint=()=>{ const t=(tm.value||'').replace(/[^A-Za-z0-9]+/g,'')||'TeamName'; document.querySelectorAll('code.fn').forEach(c=>c.textContent=`GED106_${sec.value}_${t}_${c.dataset.f}`); try{ localStorage.setItem(K,JSON.stringify({s:sec.value,t:tm.value})); }catch(e){} };
+  sec.onchange=paint; tm.oninput=paint; document.querySelectorAll('code.fn').forEach(c=>c.onclick=()=>{ try{ navigator.clipboard.writeText(c.textContent); c.style.borderStyle='solid'; setTimeout(()=>c.style.borderStyle='',800); }catch(e){} }); paint(); })();
 /* Presentation schedule, published by the professor once teams confirm: team names only */
 const PRES={A:[],B:[]};
 ['A','B'].forEach(k=>{ const ul=document.getElementById('pd'+k); ul.innerHTML=PRES[k].length?PRES[k].map(t=>`<li>${t}</li>`).join(''):'<li class="e">Teams appear here once confirmed.</li>'; });
