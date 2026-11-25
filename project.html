@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 106 · Final Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=20261125">
+<link rel="stylesheet" href="assets/portal.css?v=20261125">
+<style>
+:root{--wk:#0E7490;--wk-soft:rgba(14,116,144,.10);--wk-d:#67E8F9;--wk-soft-d:rgba(103,232,249,.14)}
+body{font-family:var(--f-display)}
+.rb-wrap{max-width:1180px}
+.pt h1.pg{font-size:clamp(1.9rem,5vw,2.8rem);font-weight:800;letter-spacing:-.02em;margin:22px 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.chips span{border:1.5px solid var(--wk);color:var(--wk);border-radius:999px;padding:4px 12px;font-weight:700;font-size:.9rem}
+.split{display:grid;grid-template-columns:12fr 8fr;gap:12px;margin:0 0 18px}
+.split div{border-radius:14px;padding:14px 16px;color:#fff;font-weight:800}
+.split div small{display:block;font-weight:500;opacity:.9}
+.split .r{background:#0E7490}.split .p{background:#B4562F}
+h2{font-size:1.35rem;margin:26px 0 8px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+table.rb{width:100%;border-collapse:collapse;font-size:.92rem;min-width:860px}
+.rb th{background:var(--wk-soft);text-align:left;padding:9px 10px;font-weight:800;border-bottom:1px solid var(--line)}
+.rb td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+.rb td:first-child{font-weight:800;width:20%}
+.rb td:first-child small{display:block;font-weight:500;color:var(--muted);margin-top:2px}
+.rb td.m{font:800 1rem var(--f-mono);color:var(--wk);text-align:center;width:6%}
+.rb th.l{width:18%}
+.rb tr.tot td{font-weight:800;background:var(--wk-soft)}
+.pres .rb td.m{color:#B4562F}
+.note{border:1px dashed var(--wk);background:var(--wk-soft);border-radius:12px;padding:10px 14px;margin:16px 0;font-size:.93rem}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.btns a,.btns button{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font:700 .92rem var(--f-display);padding:9px 14px;border-radius:10px;border:1px solid var(--line);color:var(--ink);background:var(--surface);cursor:pointer}
+.btns .p{background:var(--wk);border-color:var(--wk);color:var(--on-wk,#fff)}
+.lead2{font-size:1.08rem;max-width:820px;margin:0 0 10px}
+h3{font-size:1.1rem;margin:16px 0 8px}
+.tl{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tl div{border:1px solid var(--line);border-top:5px solid var(--wk);border-radius:12px;background:var(--surface);padding:10px 12px;display:grid;gap:4px}
+.tl div.fin{border-top-color:#B4562F;background:rgba(180,86,47,.07)}
+.tl b{font-size:1rem}.tl span{font-size:.88rem}.tl em{font-style:normal;font:700 .72rem var(--f-mono);color:var(--wk);text-transform:uppercase;letter-spacing:.05em}
+.deliv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.deliv div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px 14px;display:grid;gap:4px}
+.deliv b{font-size:1.05rem}.deliv span{font-size:.92rem}.deliv em{font-style:normal;font:800 .85rem var(--f-mono);color:var(--wk)}
+.pres3 div{border-left:5px solid #B4562F}
+table.req{min-width:760px}.req td:first-child{width:14%}.req td:last-child{width:26%;font-size:.88rem}
+.hint2{font-size:.9rem;color:var(--muted)}
+@media (max-width:760px){.tl,.deliv{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.split{grid-template-columns:minmax(0,1fr)}}
+@media print{#hub,.btns,.pt-foot{display:none!important}body{background:#fff;color:#000}.tw{border:0;overflow:visible}table.rb{min-width:0;font-size:9pt}h2{break-before:auto}.pres{break-before:page}}
+</style>
+</head>
+<body>
+<div id="hub"></div>
+<main class="pt pt-wrap rb-wrap" id="portal">
+<h1 class="pg">Final Project · Requirements</h1>
+<p class="sub">GED 106 · Team project · Weeks 11–15 · Nadia</p>
+<div class="chips"><span>Final project · 20%</span><span>+ Graded Lab 2 · 10% (Week 12)</span><span>CLO-4 · CLO-5</span><span>Power BI dashboard</span></div>
+<p class="lead2">Your team turns one real data set into a Power BI dashboard, a short report and a 5–7 minute presentation.</p>
+<div class="btns"><a class="p" href="lab-11.html">1 · Choose your project</a><a class="p" href="project-report.html">2 · Write the report</a><a href="#rubric">Rubric</a><button type="button" onclick="print()">Print or PDF</button></div>
+
+<h2>Timeline</h2>
+<div class="tl">
+ <div><b>Week 11</b><span>Choose a project, sketch, first build, 10 peer reviews</span><em>Lab</em></div>
+ <div><b>Week 12</b><span>Feedback and refinement</span><em>Graded Lab 2 · 10%</em></div>
+ <div><b>Week 13</b><span>Draft report on Moodle · practise presenting</span><em>Draft</em></div>
+ <div><b>Week 14</b><span>Final dashboard and report · rehearse</span><em>Build</em></div>
+ <div class="fin"><b>Week 15</b><span>Presentation in class · final files on Moodle</span><em>20%</em></div>
+</div>
+
+<h2>What you submit</h2>
+<div class="deliv">
+ <div><b>1 · Report</b><span>Word or PDF from the <a href="project-report.html">report builder</a>, 9 sections</span><em>12 marks</em></div>
+ <div><b>2 · Dashboard</b><span>.pbix file + PDF export (File → Export → PDF)</span><em>part of the report marks</em></div>
+ <div><b>3 · Presentation</b><span>5–7 minutes, live dashboard, every member speaks</span><em>8 marks</em></div>
+</div>
+
+<h2>The report, section by section</h2>
+<div class="tw"><table class="rb req"><tr><th>Section</th><th>What to complete</th><th>Marks</th><th>Revise</th></tr>
+<tr><td>1 · Questions</td><td>Why the topic, who uses the dashboard, one main measurable question + 3 supporting questions</td><td class="m" rowspan="2">2</td><td><a href="week-09.html">Week 9 · Ask</a> · <a href="lab-09.html">Scoping lab</a></td></tr>
+<tr><td>2 · The data</td><td>Source, publisher, year, link · one row is · rows and columns · key variables with type and unit</td><td><a href="week-03.html">Week 3 · Data collection</a> · <a href="lab-11.html">Columns to use</a></td></tr>
+<tr><td>3 · Cleaning</td><td>Every Power Query step and why · rows before and after · Applied Steps screenshot</td><td class="m" rowspan="2">2</td><td><a href="week-06.html">Week 6 · Three Cs</a> · <a href="lab-powerbi.html">Power BI lab</a></td></tr>
+<tr><td>4 · Model</td><td>Tables, relationships (keys), calculated columns or measures with the formula</td><td><a href="week-11.html">Week 11 · Relationships</a></td></tr>
+<tr><td>5 · Dashboard</td><td>Sketch → final screenshot · one visual per question and why · message title, KPI cards, slicer, layout</td><td class="m">4</td><td><a href="week-10.html">Week 10 · Charts</a> · <a href="week-11.html">Week 11 · Dashboards</a></td></tr>
+<tr><td>6 · Findings</td><td>Three insights, each with a number and what it means</td><td class="m" rowspan="2">2</td><td><a href="week-05.html">Week 5 · Reading data</a></td></tr>
+<tr><td>7 · Data story</td><td>Setup → insight → action: who should do what, when</td><td><a href="week-11.html">Week 11 · Data story</a></td></tr>
+<tr><td>8 · Peer review</td><td>10+ reviews (Forms summary) · what you changed</td><td class="m" rowspan="2">2</td><td><a href="lab-11.html">Lab · Step 4</a></td></tr>
+<tr><td>9 · Ethics and limits</td><td>Privacy, consent, bias, fair use of the source · what the data cannot tell · next steps</td><td><a href="week-07.html">Week 7</a> · <a href="week-08.html">Week 8 · Data ethics</a></td></tr>
+<tr class="tot"><td>Total</td><td></td><td class="m">12</td><td></td></tr></table></div>
+
+<h2>The presentation</h2>
+<div class="deliv pres3">
+ <div><b>Story · 3</b><span>Message first, then question → data → findings → action. 5–7 minutes.</span></div>
+ <div><b>Live demo · 2</b><span>Open the dashboard, use the slicer, explain one chart choice.</span></div>
+ <div><b>Q&amp;A · 3</b><span>Every member speaks and answers one question with numbers.</span></div>
+</div>
+<p class="hint2">Revise: <a href="week-05.html">Week 5 · Speaking data</a> · <a href="week-11.html">Week 11 · Data stories</a></p>
+
+<h2 id="rubric">Grading rubric</h2>
+<h3>Report · 12 marks</h3>
+<div class="tw"><table class="rb" id="rep"></table></div>
+
+<div class="pres"><h3>Presentation · 8 marks</h3>
+<div class="tw"><table class="rb" id="pre"></table></div></div>
+
+<p class="note"><b>Group work, individual marks:</b> the report mark is shared by the team. In the presentation, each member is marked on their own part, so every member must speak and answer one question.</p>
+</main>
+<footer class="pt-foot">This website is interactive course support. It does not replace classes, attendance or class activities.<br> <b>Nadia</b></footer>
+<script src="assets/supports.js?v=20261125"></script>
+<script src="assets/course.js?v=20261125"></script>
+<script src="assets/professor.js?v=20261125"></script>
+<script src="assets/course-info.js?v=20261125"></script>
+<script src="assets/portal.js?v=20261125"></script>
+<script>
+Portal.header('labs');
+/* [criterion, CLO / report sections, marks, excellent, good, developing, missing] */
+const REP=[
+ ['Question and data','CLO-4 · sections 1–2',2,'Clear, measurable question; source, year and link cited; one row explained; key variables typed (category, number, date).','Clear question; source cited; variables listed with small gaps.','Vague question or source incomplete; variables not explained.','No question or no source.'],
+ ['Data preparation','CLO-4 · section 3',2,'Cleaning log matches the Applied Steps screenshot; each step has a reason; rows before and after.','Main steps done and listed; some reasons missing.','Few steps; log and screenshot do not match.','No cleaning shown.'],
+ ['Dashboard design','CLO-5 · sections 4–5',4,'Message title; KPI cards with units; one fitting visual per question; title and KPIs top-left; one main colour; working slicer; sketch to build explained.','Most visuals fit; layout clear; small issues (units, sorting, colours).','Some wrong chart types (pie for time, 3-D, truncated axis) or cluttered layout; no slicer.','No dashboard, or charts do not answer the questions.'],
+ ['Insights and data story','CLO-5 · sections 6–7',2,'Three insights, each with a number; story = setup → insight → action; a realistic recommendation.','Insights with numbers; recommendation present but general.','Insights describe the chart without numbers or meaning.','No insights.'],
+ ['Ethics, limitations and peer review','CLO-4, CLO-5 · sections 8–9',2,'Ethical reflection on the data (privacy, consent, bias, fair use of the source); clear limitations; 10+ peer reviews summarised and acted on.','Ethics and limitations present; peer review summarised.','One short line on ethics; fewer than 10 reviews or no changes made.','Missing.']];
+const PRE=[
+ ['Story and clarity','CLO-5',3,'Starts with the message; question → data → findings → action; plain language; within time (5–7 min).','Clear order; message comes late; slightly over or under time.','Reads the slides; no clear message.','Not presented.'],
+ ['Live dashboard demo','CLO-5',2,'Uses the dashboard live: filters with the slicer and explains why one chart type was chosen.','Shows the dashboard live; brief explanation.','Screenshots only, no explanation.','No dashboard shown.'],
+ ['Q&A and teamwork','CLO-5 · individual',3,'Every member speaks; answers questions using numbers from the data.','Most members speak; answers mostly correct.','One or two members do everything; weak answers.','No answers.']];
+const fill=(id,rows,tot)=>{ document.getElementById(id).innerHTML=`<tr><th>Criterion</th><th>Marks</th><th class="l">Excellent · full</th><th class="l">Good · ¾</th><th class="l">Developing · ½</th><th class="l">Missing · 0</th></tr>`+
+  rows.map(r=>`<tr><td>${r[0]}<small>${r[1]}</small></td><td class="m">${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td></tr>`).join('')+`<tr class="tot"><td>Total</td><td class="m">${tot}</td><td colspan="4"></td></tr>`; };
+fill('rep',REP,12); fill('pre',PRE,8);
+</script>
+</body>
+</html>

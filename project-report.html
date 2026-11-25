@@ -323,7 +323,7 @@ document.getElementById('dx').onclick=()=>doDocx(false); document.getElementById
 document.getElementById('pdf').onclick=printPDF;
 document.getElementById('save').onclick=()=>{ dl(new Blob([JSON.stringify({v:1,app:'g106-report',data:D,imgs:IMGS})],{type:'application/json'}),`${(D.team||'team').replace(/[^\w\- ]+/g,'').replace(/\s+/g,'_')}_GED106_Report.json`); msg('File saved. Share it with your team: they open it here to continue.'); };
 document.getElementById('open').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; f.text().then(async t=>{ try{ const o=JSON.parse(t); if(!o||!o.data) throw 0; D=o.data; store(); await IDB.clear(); IMGS=o.imgs||[]; for(const m of IMGS) await IDB.put(m); mode='edit'; draw(); msg('Opened. Your report is back.'); }catch(x){ msg('This is not a GED 106 report file.'); } }); e.target.value=''; });
-document.getElementById('chips').innerHTML=`<span>Team</span><span>Draft · <b>Week 11–12</b></span><span>Final · <b>20%</b>, Weeks 14–15</span><span>CLO <b>3, 4, 5</b></span><span><b>9</b> sections + references</span>`;
+document.getElementById('chips').innerHTML=`<span>Team</span><span>Draft · <b>Week 11–12</b></span><span>Final · <b>20%</b>, Weeks 14–15 · <a href="project.html">requirements</a></span><span>CLO <b>3, 4, 5</b></span><span><b>9</b> sections + references</span>`;
 const fixBar=()=>{ const h=document.getElementById('hub'); document.getElementById('bar').style.top=(h?h.offsetHeight:0)+'px'; }; fixBar(); addEventListener('resize',fixBar);
 if(!Object.keys(D).length) prefill(false);
 draw();

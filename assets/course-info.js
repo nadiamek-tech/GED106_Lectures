@@ -35,7 +35,7 @@ window.COURSE={
     {id:'draft',name:'Project draft',type:'Lab',weight:'Part of 20%',when:'Week 13',covers:['Problem, data set, first charts and storyboard'],clos:'4, 5',
       submit:{link:'',due:'',dueText:'Week 13'}},
     {id:'proj',name:'Final project: report and presentation',short:'Final project',type:'Lab',weight:'20%',when:'Weeks 14–15',covers:['Report with a data dashboard and insights','Group presentation'],clos:'4, 5',
-      submit:{link:'',due:'',dueText:'Week 15'}}
+      submit:{link:'',due:'',dueText:'Week 15'},revise:[['Requirements and rubric','project.html'],['Project lab','lab-11.html'],['Report builder','project-report.html']]}
   ],
 
   weeks:[
