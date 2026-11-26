@@ -1,7 +1,7 @@
 /* Professor details shared by every course site (same file in each repo).
    Change office hours, links or the weekly schedule here once; copy the file to each repo. */
 window.PROF={
-  name:'Eng. Nadia Mek', email:'Nadia.mekhfi@cud.ac.ae', office:'HUB Office',
+  name:'Nadia', email:'Nadia.mekhfi@cud.ac.ae', office:'HUB Office',
   officeHours:'Mon 11–12 · Tue 1–3 PM · Thu 1–3 PM',
   bookingNote:'To book office hours, a library study room or an incubator support session, email the professor first.',
   links:{

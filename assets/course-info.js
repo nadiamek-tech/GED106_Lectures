@@ -2,7 +2,7 @@
    To update the site, edit only this file. Empty links show "coming soon" until you paste them. */
 window.COURSE={
   code:'GED 106', title:['Smart Decisions:','Data Literacy & Visualization'], eyebrow:'GED 106 · Fall 2026 · 3 credit hours · on campus',
-  instructor:'Eng. Nadia Mek', classTime:'Wednesday 5–7 PM',
+  instructor:'Nadia', classTime:'Wednesday 5–7 PM',
   pages:{lectures:'lectures.html', labs:'labs.html', exams:'exams.html'},
   short:'Data Literacy & Visualization',
   navExtra:[['credentials.html','My Credentials','credentials']],

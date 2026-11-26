@@ -207,7 +207,7 @@
     const shell=h('div',{class:'shell'});
     const toc=h('nav',{class:'toc','aria-label':'Scenes'});
     toc.innerHTML=`<div class="eyebrow">Week ${cfg.week} · CLO ${cfg.clo}</div><h1>${esc(cfg.title)}</h1>
-      <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Eng. Nadia Mek')}</b></div>`;
+      <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Nadia')}</b></div>`;
     const ol=h('ol'); toc.appendChild(ol);
     S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
     const stage=h('main',{class:'stage',id:'stage'});
@@ -333,7 +333,7 @@
       if(!box){ box=document.createElement('div'); box.className='sr-wrap'; box.innerHTML=`<div class="sr" role="dialog" aria-modal="true" aria-label="Search the course">
         <div class="sr-top"><input type="search" id="sr-q" placeholder="Search the course or ask a question" autocomplete="off"><button type="button" class="pill sr-x" aria-label="Close">✕</button></div>
         <div class="sr-out"></div>
-        <div class="sr-ask">Still unsure? Ask Eng. Nadia: <span class="mono">Nadia.mekhfi@cud.ac.ae</span> <button type="button" class="pill sr-copy">Copy email</button></div></div>`;
+        <div class="sr-ask">Still unsure? Ask Nadia: <span class="mono">Nadia.mekhfi@cud.ac.ae</span> <button type="button" class="pill sr-copy">Copy email</button></div></div>`;
         document.body.appendChild(box);
         const inp=box.querySelector('input'); let tm; inp.addEventListener('input',()=>{ clearTimeout(tm); tm=setTimeout(draw,120); });
         box.querySelector('.sr-x').addEventListener('click',close); box.addEventListener('click',e=>{ if(e.target===box) close(); });

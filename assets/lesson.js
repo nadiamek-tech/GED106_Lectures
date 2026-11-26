@@ -91,7 +91,7 @@
     const main=el('main',{class:'lmain'});
     const head=el('section',{class:'lhead',id:'top'});
     head.innerHTML=`<span class="eyebrow">Week ${cfg.week} · ${esc(cfg.clo)}</span><h1>${esc(cfg.title)}</h1>
-      <p class="lmeta">${esc(cfg.chapter)} · Instructor: <b>Eng. Nadia Mek</b></p>
+      <p class="lmeta">${esc(cfg.chapter)} · Instructor: <b>Nadia</b></p>
       <p class="lintro say">${cfg.intro}</p>
       <div class="lplan"><span class="eyebrow">In this lecture</span><ol>${secs.map(s=>`<li><a href="#${s.id}">${esc(s.t)}</a></li>`).join('')}</ol>
       <p class="lhow">${cfg.how||'Every topic: <b>Definition</b> → <b>Around us</b> → <b>Formula, step by step</b> → <b>What it means</b>.'}</p></div>`;
@@ -155,7 +155,7 @@
           .ex{page-break-inside:avoid;margin-bottom:14px}.ex b{font-size:14px}.ex p{font-size:13px;margin:4px 0 6px}
           .box{border:1px solid #999;height:85mm}.grid{background-image:linear-gradient(#ccc 1px,transparent 1px),linear-gradient(90deg,#ccc 1px,transparent 1px);background-size:5mm 5mm}
           .lines{background-image:linear-gradient(transparent 7mm,#ccc 7mm);background-size:100% 7.25mm}
-          @page{size:A4;margin:0}</style></head><body><h1>${esc(cfg.course||'MTH 105')} · Week ${cfg.week} · ${esc(cfg.title)}</h1><p class="m">In-class handout · Eng. Nadia Mek · solved together on the board</p>
+          @page{size:A4;margin:0}</style></head><body><h1>${esc(cfg.course||'MTH 105')} · Week ${cfg.week} · ${esc(cfg.title)}</h1><p class="m">In-class handout · Nadia · solved together on the board</p>
           <div class="nm"><span>Name:</span><span>Student ID:</span><span>Section:</span></div>
           ${ic.items.map((x,i)=>`<div class="ex"><b>Exercise ${i+1}</b><p>${x.q}</p><div class="box ${x.draw?'grid':'lines'}"></div></div>`).join('')}
           <script>setTimeout(()=>print(),300)<\/script></body></html>`); w.document.close(); });
