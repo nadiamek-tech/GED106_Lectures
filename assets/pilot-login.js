@@ -1,8 +1,7 @@
-/* Pilot sign-in for the course websites. Signing in once on a device opens all five courses
-   (they share one web address). This keeps casual visitors out; it is not real security on a public site.
+/* Pilot sign-in for the course websites. Each course asks once per device (stored per course). This keeps casual visitors out; it is not real security on a public site.
    To change the login: set HASH to pilotLogin.hash('username|password') in the browser console. */
 (function(){
-  var HASH = '622dd0d', KEY = 'cud-pilot-login';
+  var HASH = '622dd0d', KEY = 'cud-course-login:' + ((location.pathname.split('/')[1] || 'site').toLowerCase());
   function hash(s){var x=0x811c9dc5;for(var c of String(s)){x^=c.codePointAt(0);x=Math.imul(x,0x01000193)>>>0;}return x.toString(16);}
   window.pilotLogin = { hash: hash, signOut: function(){ try{localStorage.removeItem(KEY);}catch(e){} location.reload(); } };
   var ok = false; try { ok = localStorage.getItem(KEY) === HASH; } catch(e) {}
