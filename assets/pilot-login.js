@@ -1,6 +1,8 @@
 /* Pilot sign-in for the course websites. Each course asks once per device (stored per course). This keeps casual visitors out; it is not real security on a public site.
    To change the login: set HASH to pilotLogin.hash('username|password') in the browser console. */
 (function(){
+  /* Only on the public website. Inside Moodle (or opened from the ZIP) Moodle handles sign-in, so no password is asked. */
+  if (location.hostname !== 'nadiamek-tech.github.io') return;
   var HASH = '622dd0d', KEY = 'cud-course-login:' + ((location.pathname.split('/')[1] || 'site').toLowerCase());
   function hash(s){var x=0x811c9dc5;for(var c of String(s)){x^=c.codePointAt(0);x=Math.imul(x,0x01000193)>>>0;}return x.toString(16);}
   window.pilotLogin = { hash: hash, signOut: function(){ try{localStorage.removeItem(KEY);}catch(e){} location.reload(); } };
